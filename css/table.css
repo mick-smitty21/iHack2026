@@ -31,12 +31,11 @@
 .clickable-box::before,
 .clickable-twine::before,
 .clickable-binder::before,
-.clickable-radio::before,
 .clickable-kettle::before {
   content: '';
   position: absolute;
-  left: 2%;
-  right: -6%;
+  left: 0;
+  right: 0;
   bottom: -3%;
   height: 16%;
   z-index: -1;
@@ -44,9 +43,15 @@
   background: radial-gradient(ellipse, rgba(59, 38, 22, 0.42), transparent 70%);
   pointer-events: none;
 }
-.clickable-lamp::before { left: 20%; right: 5%; height: 8%; bottom: -2%; }
-.clickable-flowers::before { left: 15%; right: 5%; height: 9%; bottom: -2%; }
-.clickable-binder::before { left: 10%; right: 0; height: 30%; bottom: -2%; }
+.clickable-lamp::before { left: 12%; right: 12%; height: 8%; bottom: -2%; }
+.clickable-flowers::before { left: 10%; right: 10%; height: 9%; bottom: -2%; }
+.clickable-binder::before { left: 4%; right: 4%; height: 24%; bottom: -3%; }
+
+/* WHY these two turns: the shelf is painted sloping away to the right, and the
+   binder is painted lying at an angle. Turning them lines the radio up with the
+   shelf and squares the binder to the table's front edge. */
+.clickable-radio { transform: rotate(4.5deg); }
+.clickable-binder > .asset { transform: rotate(-22deg); }
 
 /* A picture fills its button. Buttons with an explicit height stretch their picture. */
 .clickable > .asset { pointer-events: none; }

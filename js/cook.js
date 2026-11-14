@@ -25,10 +25,6 @@ const MAX_TIMERS = 3;
 const MAX_MINUTES = 60;
 const PHOTO_MAX_SIZE = 1200;
 
-// The two panes of glass in the painted window of bg-kitchen-cook.jpg, as fractions
-// of the .cook-window box (left, top, width, height), like the table's window.
-const WINDOW_PANES = [[0.03, 0, 0.97, 0.333], [0, 0.405, 0.99, 0.595]];
-
 let scene;        // #scene-cook
 let onLeave;      // main.js callback: (card, wasCooked) => back to the table
 const parts = {}; // cardHolder, steno pieces, timerRow...
@@ -71,15 +67,21 @@ export function initCook(sceneElement, callbacks) {
   background.classList.add('cook-bg');
 
   parts.cardHolder = el('div', 'cook-card');
-  const stand = el('div', 'cook-stand');
-  stand.append(createAsset('obj-card-stand'));
+  // WHY two copies of the stand: the card has to sit IN its slot. The back copy is
+  // drawn, then the card, then a front copy that cook.css clips to just the front
+  // lip, which hides the card's bottom edge (the same trick as the recipe box).
+  const standBack = el('div', 'cook-stand');
+  standBack.append(createAsset('obj-card-stand'));
+  const standFront = el('div', 'cook-stand cook-stand-front');
+  standFront.append(createAsset('obj-card-stand'));
 
   scene.append(
     background,
     buildWindow(),
     el('div', 'cook-wash'),            // the soft colour of the time of day over everything
+    standBack,
     parts.cardHolder,
-    stand,
+    standFront,
     buildDoneTag(),
     buildSteno(),
     buildTimerShelf(),
@@ -89,22 +91,16 @@ export function initCook(sceneElement, callbacks) {
   document.addEventListener('keydown', handleKey);
 }
 
+// The view through the window: cook.css places this exactly over the strip of glass
+// that shows between the painted curtains.
 function buildWindow() {
-  const frame = el('div', 'cook-window');
-  const rects = WINDOW_PANES
-    .map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>`)
-    .join('');
-  frame.innerHTML = `<svg width="0" height="0" aria-hidden="true" style="position:absolute">
-    <clipPath id="cook-panes" clipPathUnits="objectBoundingBox">${rects}</clipPath></svg>`;
-
-  const glass = el('div', 'cook-glass');
+  const glass = el('div', 'cook-window');
   const day = el('div', 'view view-day');
   day.append(createAsset('view-day'));
   const night = el('div', 'view view-night');
   night.append(createAsset('view-night'));
   glass.append(day, night, el('div', 'cook-sky')); // the sky tint sits over the view
-  frame.append(glass);
-  return frame;
+  return glass;
 }
 
 function buildDoneTag() {
@@ -299,7 +295,9 @@ function addTimer() {
     return;
   }
   const timer = { minutes: 0, endsAt: null, ticking: null, ringing: false, dragged: false };
-  timer.hand = el('div', 'timer-hand');
+  // The dial: a dotted ring round the egg with one knob on it that marks the minutes.
+  timer.hand = el('div', 'timer-dial');
+  timer.hand.append(el('span', 'timer-knob'));
   timer.readout = el('span', 'timer-readout');
   timer.element = el('div', 'timer');
   timer.element.tabIndex = 0;
@@ -307,7 +305,7 @@ function addTimer() {
   timer.element.setAttribute('aria-label', 'Egg timer: drag the dial, or use the arrow keys, to set minutes');
   timer.element.setAttribute('aria-valuemin', '0');
   timer.element.setAttribute('aria-valuemax', String(MAX_MINUTES));
-  timer.element.append(createAsset('obj-egg-timer'), timer.hand, timer.readout);
+  timer.element.append(timer.hand, createAsset('obj-egg-timer'), timer.readout);
 
   listenToDial(timer);
   timers.push(timer);

@@ -36,7 +36,8 @@ from PIL import Image, ImageChops, ImageFilter, ImageMath, PngImagePlugin
 FOLDER = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "assets" / "img"
 
 # Pictures that are swapped for each other must share one crop box.
-PAIRS = [("obj-lamp-off", "obj-lamp-on"), ("obj-twine", "obj-twine-loose")]
+PAIRS = [("obj-lamp-off", "obj-lamp-on"), ("obj-twine", "obj-twine-loose"),
+         ("obj-cat-asleep", "obj-cat-awake")]
 
 # Full-card textures: tidy the white, crop to the texture, but never to a "drawing".
 FULL_FRAME = {"age-yellowing", "age-pencil"}
@@ -60,7 +61,7 @@ MAX_WIDTH = {
     "ill-soup": 280, "ill-sides": 280, "ill-canning": 280,
     "age-fingerprint": 280, "age-grease": 340, "age-coffee-ring": 440, "age-corner": 280,
     "age-tape": 420, "age-yellowing": 800, "age-pencil": 800,   # soft textures: fine when stretched
-    "obj-curtain": 480, "divider-tab": 640,
+    "obj-curtain": 480, "divider-tab": 640, "obj-cat-asleep": 420, "obj-cat-awake": 420,
 }
 JPG_QUALITY = 84           # plenty for painted art; well under half the file size
 JPG_HEAVY = 0.42           # bytes per pixel: above this a JPG is worth re-saving

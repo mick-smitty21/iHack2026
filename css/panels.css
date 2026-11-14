@@ -163,6 +163,19 @@
   accent-color: var(--avocado);
 }
 
+/* The four background-sound switches sit two by two, tucked under the Ambiance slider. */
+.almanac-ambient {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.6em;
+  margin: 0 0 0.3em;
+  padding: 0 0 0 0.9em;
+  border: 0;
+  font-size: 0.86em;
+}
+/* WHY the padding: it makes each row tall enough to hit with a thumb on the iPad. */
+.almanac-ambient .almanac-switch { margin-top: 0; padding: 0.42em 0; }
+
 /* On the cream paper the gold outline would vanish, so use burnt orange here. */
 .almanac :focus-visible { outline-color: var(--burnt-orange); }
 

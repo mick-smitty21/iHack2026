@@ -1,4 +1,4 @@
-"""Synthesize the 18 non-music sounds (+2 optional) for Grandma's Recipe Box.
+"""Synthesize the 19 non-music sounds (+2 optional) for Grandma's Recipe Box.
 
 Every sound is generated from noise and sine waves, so there is nothing to license.
 Output: WAV files in ./wav, converted to 128 kbps MP3 by convert.sh.
@@ -184,6 +184,32 @@ def snow_wind(dur):
         out += b * lfo ** 2
     gust = 0.55 + 0.45 * np.sin(2 * np.pi * 0.045 * t) * np.sin(2 * np.pi * 0.011 * t + 2)
     return lp(out * gust, 1500)
+
+
+def purr(dur):
+    """A sleeping cat: a slow rattle of soft thumps that rises and falls with each breath."""
+    n = int(dur * SR)
+    t = t_axis(dur)
+    # One breath is about 2.9 s: in (a little slower and softer), a tiny pause, then out.
+    breath_s = 2.9
+    phase = (t / breath_s) % 1.0
+    breathing_in = phase < 0.45
+    rate = np.where(breathing_in, 22.5, 26.0) + 0.8 * np.sin(2 * np.pi * 0.11 * t)   # thumps per second
+    loud = np.where(breathing_in, np.abs(np.sin(np.pi * phase / 0.45)) ** 0.6 * 0.8,
+                    np.abs(np.sin(np.pi * (phase - 0.45) / 0.55)) ** 0.6)
+    loud = lp(np.nan_to_num(loud), 12, 2)             # no clicks where a breath turns round
+    # The rattle: a sawtooth-ish pulse at the thump rate, roughened so no two thumps match.
+    cycle = (np.cumsum(rate) / SR) % 1.0
+    thump = np.exp(-cycle * 7.0) * (1 + 0.25 * lp(noise(n), 30, 2) * 8)
+    # WHY so little deep bass: tablet and laptop speakers can't play it, so the purr
+    # has to live mostly between 150 and 1400 Hz to be heard at all.
+    # Each thump shakes the chest (a low body tone) and the throat (soft breathy noise).
+    body = bp(thump, 70, 420, 2)
+    throat = bp(noise(n), 250, 1400, 2) * thump * 0.5
+    air = bp(noise(n), 900, 3200, 2) * loud * 0.02     # the faint hiss of the breath itself
+    out = (body / (np.max(np.abs(body)) + 1e-9) + throat / (np.max(np.abs(throat)) + 1e-9) * 1.3) * loud + air
+    drift = 0.85 + 0.15 * np.sin(2 * np.pi * 0.031 * t + 2)   # some breaths deeper than others
+    return out * drift
 
 
 # ---------- effects ----------
@@ -379,6 +405,7 @@ if __name__ == "__main__":
     save("loop-clock", seamless(clock, 60), -3)
     save("loop-rain", seamless(rain, 75), -3)
     save("loop-snow", seamless(snow_wind, 75), -3)
+    save("loop-purr", seamless(purr, 60), -3)   # M6: the cat under the table
     save("fx-lamp", fx_lamp())
     save("fx-lid", fx_lid())
     save("fx-lid-close", fx_lid_close())

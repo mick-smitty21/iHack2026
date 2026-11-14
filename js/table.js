@@ -1,5 +1,5 @@
 /*
- * table.js - scene 1: the kitchen table, its 12 clickable objects and ambient motion.
+ * table.js - scene 1: the kitchen table, its 13 clickable objects and ambient motion.
  *
  * Talks to: assets.js (pictures), sky.js (clock hands, moon, weather), audio.js
  *           (effects, radio), almanac.js (opens settings, saves the station),
@@ -13,7 +13,7 @@
 
 import { createAsset } from './assets.js';
 import { createClockHands, createMoon, createWeather } from './sky.js';
-import { playEffect, tuneToNextStation } from './audio.js';
+import { playEffect, tuneToNextStation, swellPurr } from './audio.js';
 import { openAlmanac, updateSettings } from './almanac.js';
 import { openBinder, openTwine } from './importer.js';
 import { motionReduced, randomBetween, repeatAtRandom, fadeIn } from './motion.js';
@@ -36,6 +36,7 @@ const LAYOUT = {
   binder:   { x: 15.5, y: 54,   w: 12 },
   twine:    { x: 55.5, y: 58,   w: 6.5 },         // well inside the table's right edge
   lamp:     { x: 9.3,  y: 47.4, w: 6.5 },
+  cat:      { x: 33,   y: 86.2, w: 12 },           // on the braided rug, between the table legs
 };
 
 // The seven panes of glass in the painted window, as fractions of the .window-glass
@@ -57,6 +58,7 @@ let weather;               // the window's weather canvas controller
 let curtainsClosed = false;
 let dialTurns = 0;
 let mugNudged = false;
+let catNapTimer = null;     // counts down to the cat putting its head back down
 
 /* ---------- Building the scene (back to front) ---------- */
 
@@ -75,6 +77,7 @@ export function buildTable(sceneElement, { onLampClick, onBoxClick }) {
   addRecipeBox(onBoxClick);
   addBinder();
   addTwineStack();
+  addCat();
 
   // Light and shadow sit over the objects; the lamp floats above them (z-index in
   // table.css) so it stays visible and clickable in the dark.
@@ -160,6 +163,11 @@ export function setLampLit(isLit) {
   for (const [name, button] of Object.entries(clickables)) {
     if (name !== 'lamp') button.disabled = !isLit;
   }
+  // Lights out: the cat settles straight back to sleep, so nothing stirs in the dark.
+  if (!isLit && clickables.cat) {
+    clearTimeout(catNapTimer);
+    clickables.cat.classList.remove('is-awake');
+  }
 }
 
 /** The pictures this scene draws: main.js fetches these first, before the lamp. */
@@ -167,7 +175,7 @@ export const TABLE_ART = [
   'bg-table', 'view-day', 'view-night', 'obj-curtain', 'obj-clock', 'obj-calendar', 'obj-radio',
   'obj-radio-dial', 'obj-kettle', 'obj-pitcher', 'obj-petal', 'obj-sugar-body', 'obj-sugar-lid',
   'obj-mug', 'obj-box-closed', 'obj-binder', 'obj-twine', 'obj-twine-loose', 'obj-lamp-off',
-  'obj-lamp-on', 'obj-done-tag',
+  'obj-lamp-on', 'obj-done-tag', 'obj-cat-asleep', 'obj-cat-awake',
 ];
 
 /** One of the table's objects, by name (e.g. the box, so a card can slide into it). */
@@ -373,6 +381,30 @@ function addCalendar() {
   button.append(createAsset('obj-calendar'));
 }
 
+/* ---------- 13. The cat under the table ---------- */
+
+// Two pictures of the same cat, one asleep and one looking up, stacked in one button.
+// table.css fades between them when the button gains or loses the class "is-awake".
+function addCat() {
+  const button = makeClickable('cat', 'Cat: give it a pat', patCat);
+  button.append(
+    makePart('cat-picture cat-asleep', createAsset('obj-cat-asleep')),
+    makePart('cat-picture cat-awake', createAsset('obj-cat-awake')),
+  );
+}
+
+function patCat() {
+  catLooksUp(randomBetween(3, 6));
+  swellPurr();
+}
+
+/** The cat lifts its head for a few seconds, then goes back to sleep. */
+function catLooksUp(seconds) {
+  clickables.cat.classList.add('is-awake');
+  clearTimeout(catNapTimer);   // a second pat restarts the countdown
+  catNapTimer = setTimeout(() => clickables.cat.classList.remove('is-awake'), seconds * 1000);
+}
+
 /* ---------- Steam (drawn in code) ---------- */
 
 // Adds soft round puffs to `host` that rise and fade. `at` is where they start,
@@ -400,6 +432,10 @@ function startAmbientMotion() {
   repeatAtRandom(6, 10, swayCurtains);
   repeatAtRandom(20, 40, () => {
     if (isLit()) puffSteam(clickables.kettle, 2, { left: 55, top: -10 });
+  });
+  // The cat only stirs while the lamp is on: nothing should move in the dark.
+  repeatAtRandom(25, 60, () => {
+    if (isLit()) catLooksUp(randomBetween(3, 6));
   });
   flickerFire();
   // The pendulum and the lamp chain swing with CSS animations (see table.css).

@@ -19,6 +19,7 @@ const state = {
   started: false,       // have the sounds been created yet? (only after the first click)
   lampOn: false,
   cardFocused: false,   // M2 sets this while a recipe card is held up
+  catPatted: false,     // true for a few seconds after the cat is patted
   settings: null,
   nextFadeMs: 300,     // how gently the next settings change fades in
 };
@@ -191,12 +192,23 @@ export function setCardFocused(isFocused) {
 
 /* ---------- Deciding what plays, and how loud ---------- */
 
+// Which almanac switch silences each background loop (rain and snow share one).
+const AMBIENT_SWITCH = {
+  'loop-fire': 'fire', 'loop-clock': 'clock', 'loop-purr': 'purr',
+  'loop-rain': 'weather', 'loop-snow': 'weather',
+};
+const PURR_LEVEL = 0.5;        // the purr sits at about half the fire's level
+const PURR_PATTED_LEVEL = 1;   // ...and swells to this for a moment after a pat
+const PAT_SECONDS = 3;
+let patTimer = null;
+
 function shouldPlay(id) {
-  const { weather, station } = state.settings;
+  const { weather, station, ambient } = state.settings;
+  if (SOUNDS[id].channel === 'music') return id === STATIONS[station];
+  if (!ambient[AMBIENT_SWITCH[id]]) return false;   // switched off in the almanac
   if (id === 'loop-rain') return weather === 'rain';
   if (id === 'loop-snow') return weather === 'snow';
-  if (SOUNDS[id].channel === 'music') return id === STATIONS[station];
-  return true; // the fire and the clock always play
+  return true; // the fire, the clock and the cat
 }
 
 function loopVolume(id) {
@@ -209,7 +221,19 @@ function loopVolume(id) {
   if (id === 'loop-fire') volume *= mode === 'dark' ? 1 : 0.8;
   // With the radio silent you notice the clock, so its tick comes up a little.
   if (id === 'loop-clock') volume *= volumes.music === 0 ? 1 : 0.75;
+  if (id === 'loop-purr') volume *= state.catPatted ? PURR_PATTED_LEVEL : PURR_LEVEL;
   return volume;
+}
+
+/** The cat was patted: the purr swells, holds for three seconds, then settles again. */
+export function swellPurr() {
+  state.catPatted = true;
+  refreshLoops(500);
+  clearTimeout(patTimer);
+  patTimer = setTimeout(() => {
+    state.catPatted = false;
+    refreshLoops(1500);
+  }, PAT_SECONDS * 1000);
 }
 
 /** Looks at the lamp and the settings and starts, stops or re-levels every loop. */

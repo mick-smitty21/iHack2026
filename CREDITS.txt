@@ -12,6 +12,7 @@ then trimmed and cleaned with tools/prepare-art.py.
 
 SOUND EFFECTS AND AMBIENT LOOPS
 Generated with code (tools/synth-sounds.py). No recordings or samples were used.
+This includes the cat's purr (loop-purr.mp3), which is not a recording of a real cat.
 
 RADIO MUSIC  <-- TEAM: FILL THESE IN BEFORE JUDGING
 One line per track: file name, track name, creator, source link, license.

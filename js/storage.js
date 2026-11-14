@@ -20,6 +20,8 @@ export const DEFAULT_SETTINGS = {
   mode: 'dark',            // 'light' = warm afternoon, 'dark' = evening
   weather: 'clear',        // 'clear' | 'clouds' | 'rain' | 'snow'
   volumes: { main: 0.8, music: 0.35, ambiance: 0.6 },
+  // One on/off switch for each background sound (rain and snow share 'weather').
+  ambient: { fire: true, clock: true, purr: true, weather: true },
   reducedMotion: false,
   station: 0,              // 0 soft rock, 1 country, 2 jazz
 };
@@ -31,6 +33,9 @@ export async function loadSettings() {
     ...DEFAULT_SETTINGS,
     ...saved,
     volumes: { ...DEFAULT_SETTINGS.volumes, ...(saved && saved.volumes) },
+    // WHY merged separately: settings saved before the cat arrived have no `ambient`
+    // at all, and those visitors should get every sound switched on, not an error.
+    ambient: { ...DEFAULT_SETTINGS.ambient, ...(saved && saved.ambient) },
   };
 }
 

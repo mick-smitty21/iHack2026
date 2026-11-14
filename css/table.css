@@ -31,6 +31,7 @@
 .clickable-box::before,
 .clickable-twine::before,
 .clickable-binder::before,
+.clickable-cat::before,
 .clickable-kettle::before {
   content: '';
   position: absolute;
@@ -46,6 +47,7 @@
 .clickable-lamp::before { left: 12%; right: 12%; height: 8%; bottom: -2%; }
 .clickable-flowers::before { left: 10%; right: 10%; height: 9%; bottom: -2%; }
 .clickable-binder::before { left: 2%; right: 2%; height: 12%; bottom: -4%; }
+.clickable-cat::before { left: 3%; right: 1%; height: 26%; bottom: -5%; }
 
 /* WHY the turn: the shelf is painted sloping away to the right; a small turn sets
    the radio's flat base along it. */
@@ -246,6 +248,20 @@
 .twine-loose { transition: opacity 0.6s ease; }
 .is-untied .twine-tied { opacity: 0; }
 .is-untied .twine-loose { opacity: 1; }
+
+/* ---------- The cat: two pictures that swap with a fade ---------- */
+.cat-awake {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+/* WHY the two different timings: if both pictures were half see-through at the same
+   moment you would see the rug through the cat. So the new picture fades in on top
+   first, and only then does the old one underneath fade away. */
+.cat-asleep { transition: opacity 0.3s ease; }
+.cat-awake { transition: opacity 0.3s ease 0.3s; }
+.is-awake .cat-asleep { opacity: 0; transition: opacity 0.3s ease 0.3s; }
+.is-awake .cat-awake { opacity: 1; transition: opacity 0.3s ease; }
 
 /* ---------- Petals and steam ---------- */
 .petal-layer {

@@ -393,5 +393,27 @@ PROMPT:
 Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A walnut wooden recipe box sitting on a cream lace tablecloth under warm lamplight in a cozy farmhouse kitchen at evening, a coffee mug and dried flowers nearby, with calm empty space on the left side.
 AFTER: None. JPG. Shown when the site link is shared.
 
-TOTAL IMAGES: 56
+############################################################
+9. THE CAT (added in M6)
+############################################################
+The team painted these two before this entry was written. The prompts below are the
+ones to use if either picture ever needs to be made again. The two MUST show the same
+cat, the same size, lying in the same spot and facing the same way, because the site
+fades from one to the other: generate [57] first, then give it to Gemini as a
+reference picture when generating [58].
+
+[57] obj-cat-asleep
+FILE: assets/img/obj-cat-asleep.png    SIZE: 16:9, 1408x768    TYPE: OBJECT (transparent)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. An orange tabby cat curled up fast asleep, seen from the front and slightly above, body lying left to right with its head on the left resting on its front paws, eyes closed, tail wrapped along the front of its body. Soft striped fur in burnt orange and cream. Isolated on a plain flat background, nothing else in the image, no floor, no shadow.
+AFTER: Remove the background (transparent PNG). Run tools/prepare-art.py: it crops
+both cat pictures to one shared box and shrinks them.
+
+[58] obj-cat-awake
+FILE: assets/img/obj-cat-awake.png    SIZE: 16:9, 1408x768    TYPE: OBJECT (transparent)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same orange tabby cat as the reference picture, in exactly the same place, the same size and the same curled-up body and tail, but now it has lifted its head and is looking calmly straight at the viewer with green eyes, ears up, front paws tucked under its chest. Only the head and front paws differ from the reference. Isolated on a plain flat background, nothing else in the image, no floor, no shadow.
+AFTER: Same as [57]. Check that the body and tail line up with [57] before saving.
+
+TOTAL IMAGES: 58
 Not generated (drawn in code): clock hands, pendulum, steam, fire flicker, rain, snow, moon, cursor.

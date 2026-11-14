@@ -59,6 +59,14 @@ const VOLUMES = [
   { key: 'music', label: 'Music' },
   { key: 'ambiance', label: 'Ambiance' },
 ];
+// One switch per background sound. The Ambiance slider sets how loud they all are;
+// these choose which of them you hear at all.
+const AMBIENT_SOUNDS = [
+  { key: 'fire', label: 'Fire' },
+  { key: 'clock', label: 'Clock tick' },
+  { key: 'purr', label: "Cat's purr" },
+  { key: 'weather', label: 'Weather' },
+];
 
 /** Opens the almanac. `opener` is the wall-calendar button, so focus can return to it. */
 export function openAlmanac(opener) {
@@ -77,6 +85,7 @@ function buildAlmanac() {
   const rightPage = makePage(
     makeHeading('Sound'),
     ...VOLUMES.map(makeVolumeSlider),
+    makeAmbientSwitches(),
     makeMotionSwitch(),
   );
 
@@ -149,6 +158,35 @@ function makeVolumeSlider({ key, label }) {
   });
 
   row.append(name, input);
+  return row;
+}
+
+// Four labelled checkboxes under the Ambiance slider.
+function makeAmbientSwitches() {
+  const group = document.createElement('fieldset');
+  group.className = 'almanac-ambient';
+
+  // The group's name is for screen readers; sighted users see it under "Ambiance".
+  group.setAttribute('aria-label', 'Which background sounds play');
+  group.append(...AMBIENT_SOUNDS.map(makeAmbientSwitch));
+  return group;
+}
+
+function makeAmbientSwitch({ key, label }) {
+  const row = document.createElement('label');
+  row.className = 'almanac-switch';
+
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.checked = settings.ambient[key];
+  input.addEventListener('change', () => {
+    updateSettings({ ambient: { ...settings.ambient, [key]: input.checked } });
+  });
+
+  const text = document.createElement('span');
+  text.textContent = label;
+
+  row.append(input, text);
   return row;
 }
 

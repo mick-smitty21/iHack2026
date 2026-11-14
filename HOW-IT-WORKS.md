@@ -11,6 +11,8 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M3 - Adding and moving recipes**
 - [x] **M4 - Cook mode**
 - [x] **M5 - Polish and demo prep**
+- [x] **M6 - The cat, its purr, and a switch for each background sound**
+- [ ] **M7 - First-visit intro** (specified in BUILD-PROMPT.md, not built)
 
 ## The big picture
 
@@ -446,7 +448,7 @@ link is shared.
   that are far bigger than they are ever shown, and re-save heavy JPGs. A mug that is
   about 60 pixels wide on screen was a 600-pixel file. The art went from about 31 MB
   to about 12 MB, and the first screen (the table) to about 4 MB.
-- *Lazy loading after the lamp.* Before the lamp is lit, only the 21 pictures the
+- *Lazy loading after the lamp.* Before the lamp is lit, only the 23 pictures the
   table needs are fetched (`TABLE_ART` in `table.js`). The recipe box and stove scenes
   are built, and their pictures fetched, the first time the lamp is lit
   (`prepareOtherScenes()` in `main.js`), while you are looking around the table.
@@ -493,6 +495,64 @@ address must be changed to the site's full address** (see README, Deploy step 5)
 
 **Not preloaded on purpose.** `card-front.jpg` (unused, see "Art pass") and
 `og-image.jpg` (only for link previews) are marked `unused` in `assets.js`.
+
+---
+
+## M6 - The cat, its purr, and a switch for each background sound
+
+**What it does.** An orange tabby sleeps on the rug under the table. Every 25 to 60
+seconds it lifts its head for 3 to 6 seconds, then settles again. Pat it (click, tap,
+or Tab to it and press Enter) and it looks up at once while its purr swells for three
+seconds. In the almanac, four checkboxes under the Ambiance slider turn the fire, the
+clock's tick, the purr and the weather on or off one by one.
+
+**The cat is the 13th clickable.** It is built exactly like the other twelve: a row in
+`LAYOUT` (`table.js`), a real `<button>` labelled "Cat: give it a pat", and a soft
+contact shadow in `table.css`.
+
+- *Two pictures, one button.* `obj-cat-asleep.png` and `obj-cat-awake.png` are stacked
+  in the button. Adding the class `is-awake` fades to the awake one; removing it fades
+  back. `tools/prepare-art.py` crops the pair to one shared box, so the body does not
+  jump when they swap.
+- *Why the fade is in two halves.* If both pictures were half see-through at the same
+  moment, the rug would show through the cat. So the new picture fades in on top
+  first (0.3 s), then the old one fades out underneath (0.3 s).
+- *One function does the looking up.* `catLooksUp(seconds)` adds the class and sets a
+  timer to remove it. The random timer (`repeatAtRandom(25, 60, ...)`) and a pat both
+  call it. A second pat restarts the countdown.
+- *Nothing in the dark.* The random timer checks the lamp before it does anything, the
+  button is disabled like every other object, and switching the lamp off puts the cat
+  straight back to sleep.
+- *Reduced motion.* The swap is already a fade, so it needs no special case.
+
+**The purr.** `loop-purr.mp3` is a fifth background loop on the Ambiance channel, made
+with code like the others (`purr()` in `tools/synth-sounds.py`): a rattle of about 25
+soft thumps a second that rises and falls with a 2.9-second breath. Most of its energy
+is kept above 150 Hz on purpose, because tablet speakers cannot play deep bass.
+In `audio.js` it plays at half the Ambiance level (about half as loud as the fire).
+`swellPurr()` doubles that for three seconds after a pat, then lets it settle.
+
+**The four switches.** `Settings` gained
+`ambient: { fire, clock, purr, weather }`, all `true` to begin with.
+
+- `almanac.js` draws four real checkboxes from one small list (`AMBIENT_SOUNDS`).
+  Changing one calls `updateSettings()`, which saves and tells `audio.js`, like every
+  other setting.
+- `audio.js` has one table, `AMBIENT_SWITCH`, saying which switch belongs to which loop
+  (rain and snow share `weather`). `shouldPlay()` checks it first. So there are now
+  three questions for every loop: is the lamp on, is its switch on, and (for rain and
+  snow) is that the weather right now.
+- The switches only silence the *loops*. The clock still chimes when clicked and the
+  rain still falls in the window; you just don't hear the tick or the rain.
+- *Old saved settings.* Someone who visited before M6 has settings with no `ambient`
+  in them. `loadSettings()` in `storage.js` fills the gap from the defaults, so they
+  get all four sounds on instead of an error.
+
+**How it was checked.** Automated browser test on desktop Chrome: settings saved in
+the pre-M6 shape load with all four on; each switch stops only its own loop; the
+choices survive a reload; the cat can be reached and patted with the keyboard; the
+chime still plays with the tick off. **Not checked:** how the purr actually sounds
+(it was tuned by measuring it, not by ear) and anything on a real iPad.
 
 ---
 

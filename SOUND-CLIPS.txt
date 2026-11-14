@@ -1,15 +1,15 @@
 GRANDMA'S RECIPE BOX - SOUND CLIP LIST
 ============================================================
 
-21 clips total: 7 loops + 14 short effects.
+22 clips total: 8 loops + 14 short effects.
 Save every file with the exact FILE name below into:  assets/audio/
 The site plays silence for any file that isn't there yet, so add them in any order.
 
 ------------------------------------------------------------
-STATUS (updated Nov 13)
+STATUS (updated Nov 14)
 ------------------------------------------------------------
-DONE - 18 required clips + 2 optional ones are already in assets/audio/:
-  loop-fire, loop-clock, loop-rain, loop-snow,
+DONE - 19 required clips + 2 optional ones are already in assets/audio/:
+  loop-fire, loop-clock, loop-rain, loop-snow, loop-purr,
   all 14 fx- files, plus fx-pageflip and fx-pencil.
   They were generated with code by Claude (tools/synth-sounds.py), not recorded,
   so there is nothing to credit or license. Any of them can be replaced later by
@@ -44,9 +44,13 @@ loop-fire.mp3             Ambiance   Wood fire crackling in a stove or fireplace
 loop-clock.mp3            Ambiance   Slow wall clock ticking, one tick per second, quiet room.
 loop-rain.mp3             Ambiance   Soft steady rain on a window. No thunder.
 loop-snow.mp3             Ambiance   Faint winter wind outside a closed window.
+loop-purr.mp3             Ambiance   A cat purring steadily in its sleep, close and soft. No meows. (Added in M6.)
 radio-softrock.mp3        Music      Mellow instrumental soft rock in an early-80s style. No vocals.
 radio-country.mp3         Music      Gentle instrumental country, acoustic guitar. No vocals.
 radio-jazz.mp3            Music      Soft late-night jazz, piano or trio. No vocals.
+
+Each Ambiance loop has its own on/off switch in the almanac (rain and snow share
+the one called Weather), as well as the shared Ambiance volume slider.
 
 Tip for the radio: run the three music loops through an "AM radio" or
 "telephone" EQ preset (cut below 300 Hz and above 4 kHz) so they sound like

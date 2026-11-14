@@ -1,0 +1,34 @@
+﻿Interaction 1: The recipe box
+When you click the recipe box:
+* The lid opens.
+* Recipe cards slide into view.
+* Categories appear as physical dividers.
+* You can browse by desserts, breads, main dishes, and more.
+
+
+Interaction 2: Pulling out a recipe
+When you select a card:
+* It physically slides out.
+* It enlarges toward the viewer.
+* The handwriting and paper texture become visible.
+* You can flip it to see instructions.
+
+
+Interaction 3: Cooking mode
+This is where your original functionality comes in.
+* Ingredients can be checked off.
+* Instructions advance one at a time.
+* Timers can be started.
+* Serving quantities adjust.
+* The recipe stays visually consistent with the physical card.
+
+
+Interaction 4: AI recipe transformation
+This could be your biggest technological demonstration.
+* A user clicks a small notebook or recipe import area.
+* They paste a modern recipe URL.
+* AI extracts the recipe and creates a new handwritten-style recipe card that gets placed inside the physical recipe box.
+* This combines the nostalgic experience with a genuinely useful modern feature.
+  
+
+recipe card look above

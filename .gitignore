@@ -1,0 +1,14 @@
+# Dependencies and local tooling
+node_modules/
+.netlify/
+.env
+
+# Operating system junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor and temp files
+.vscode/
+*.tmp
+*.log

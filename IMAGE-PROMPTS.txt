@@ -1,0 +1,389 @@
+GRANDMA'S RECIPE BOX - IMAGE PROMPTS FOR GEMINI
+============================================================
+
+HOW TO USE THIS FILE
+1. Start ONE Gemini chat per section. Paste the STYLE BLOCK first and say:
+   'Use this exact style for every image in this chat.' Then paste each prompt.
+2. Every prompt below already includes the style block, so it also works on its own.
+3. NEVER ask for a 'transparent background'. Gemini fakes it with a grey checkerboard.
+   Objects are made on pure white; remove the white in Photopea (photopea.com):
+   Select > Remove BG (or Magic Wand on the white + Delete), then File > Export as PNG.
+4. 'ON WHITE (keep white)' images are NOT cut out. The site blends the white away.
+5. Save every file with the exact FILE name below into:  assets/img/
+   The site shows grey placeholders until a file with that name exists.
+6. If one image doesn't match the others, regenerate just that one in the same chat.
+
+STYLE BLOCK
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people.
+
+
+############################################################
+1. BACKGROUNDS
+############################################################
+
+[01] bg-table
+FILE: assets/img/bg-table.jpg    SIZE: 16:9 landscape, 2560x1440    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. Wide view of a farmhouse kitchen table in front of a back wall. Upper left: a wooden window frame with empty pale-blue glass and no curtains. Upper middle: an empty wall space for a clock. Upper right: empty wall for a calendar. Right side: a black cast-iron wood cookstove with an open firebox glowing orange. Left: a simple empty wooden wall shelf. Foreground: a table covered with a cream lace-edged tablecloth, completely empty.
+AFTER: None. Save as JPG.
+
+[02] bg-box-closeup
+FILE: assets/img/bg-box-closeup.jpg    SIZE: 16:9 landscape, 2560x1440    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. Close-up looking down at a cream lace-edged tablecloth on a wooden table under warm lamp light, softly blurred, with an empty area in the center where a box will sit. Nothing on the table.
+AFTER: None. Save as JPG.
+
+[03] bg-kitchen-cook
+FILE: assets/img/bg-kitchen-cook.jpg    SIZE: 16:9 landscape, 2560x1440    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. Grandma's stove wall: a cream-and-green enamel kitchen range with four burners, harvest-gold canisters on the counter, gingham curtains framing a window with empty pale glass, copper molds on the wall, an avocado wall telephone with a long curly cord. An empty space on the counter to the right of the burners.
+AFTER: None. Save as JPG.
+
+[04] view-day
+FILE: assets/img/view-day.jpg    SIZE: 4:3, 1600x1200    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. Daytime countryside view as seen through a farmhouse window, no window frame: rolling harvest-gold fields, a red barn, a split-rail fence and a line of distant trees under a pale blue sky with a few soft clouds.
+AFTER: None. Save as JPG.
+
+[05] view-night
+FILE: assets/img/view-night.jpg    SIZE: 4:3, 1600x1200    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same countryside view at night, no window frame: deep blue sky with a few faint stars, dark fields, a red barn in silhouette with one warm lit window. No moon.
+AFTER: None. Save as JPG. TIP: generate view-day first, then in the same Gemini chat ask for 'the same view at night' so the layout matches.
+
+############################################################
+2. TABLE-SCENE OBJECTS
+############################################################
+
+[06] obj-box-closed
+FILE: assets/img/obj-box-closed.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A worn walnut wooden recipe box with a closed hinged lid and a small brass label holder on the front, three-quarter view. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background in Photopea. Save as PNG.
+
+[07] obj-box-body-open
+FILE: assets/img/obj-box-body-open.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same walnut recipe box with its lid removed, open top, empty interior visible, same three-quarter view. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: TIP: in the same chat as obj-box-closed, ask 'same box with the lid removed'. Remove background. PNG.
+
+[08] obj-box-lid
+FILE: assets/img/obj-box-lid.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The flat walnut lid of a wooden recipe box on its own, seen straight on from above, small brass hinges along the bottom edge. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[09] obj-binder
+FILE: assets/img/obj-binder.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. An open brown three-ring binder with clear plastic sleeves holding a few cream recipe cards, viewed from above at a slight angle. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[10] obj-binder-spread
+FILE: assets/img/obj-binder-spread.png    SIZE: 16:9 landscape, 2560x1440    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A brown three-ring binder opened completely flat, seen straight on from above, two pages of empty clear plastic sleeves, large enough to fill the frame. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. Used behind the import panel.
+
+[11] obj-twine
+FILE: assets/img/obj-twine.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A stack of aged cream index cards tied with rough brown twine in a bow. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[12] obj-twine-loose
+FILE: assets/img/obj-twine-loose.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same stack of index cards with the twine untied and lying loose beside it. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: TIP: same chat as obj-twine, ask 'same cards, twine untied'. Remove background. PNG.
+
+[13] obj-mug
+FILE: assets/img/obj-mug.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A speckled stoneware coffee mug, half full of black coffee. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[14] obj-pitcher
+FILE: assets/img/obj-pitcher.png    SIZE: 3:4 portrait, 1200x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A grey stoneware pitcher holding a bunch of dried baby's breath and small golden dried flowers. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[15] obj-petal
+FILE: assets/img/obj-petal.png    SIZE: 1:1, 512x512    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. One small golden dried flower petal. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. Falls when the flowers are clicked.
+
+[16] obj-sugar-body
+FILE: assets/img/obj-sugar-body.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A speckled stoneware sugar pot without its lid. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[17] obj-sugar-lid
+FILE: assets/img/obj-sugar-lid.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The round speckled stoneware lid of a sugar pot with a small knob, on its own. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[18] obj-lamp-off
+FILE: assets/img/obj-lamp-off.png    SIZE: 3:4 portrait, 1200x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small brass table lamp with a pleated cream fabric shade and a short brass pull-chain, switched off. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[19] obj-lamp-on
+FILE: assets/img/obj-lamp-on.png    SIZE: 3:4 portrait, 1200x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same brass table lamp switched on, the pleated shade glowing warm amber from inside. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: TIP: same chat as obj-lamp-off, ask 'same lamp, switched on'. Remove background. PNG.
+
+[20] obj-radio
+FILE: assets/img/obj-radio.png    SIZE: 4:3, 1600x1200    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A wood-cased 1970s tabletop AM/FM radio with a large round tuning dial and a cloth speaker grille. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[21] obj-radio-dial
+FILE: assets/img/obj-radio-dial.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The round cream tuning dial of a vintage radio, seen face on, by itself. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. It rotates when clicked.
+
+[22] obj-clock
+FILE: assets/img/obj-clock.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A round wooden kitchen wall clock with a cream face and simple tick marks but NO hands, with a small glass pendulum window below the face. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. Hands and pendulum are drawn in code.
+
+[23] obj-calendar
+FILE: assets/img/obj-calendar.png    SIZE: 3:4 portrait, 1200x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A feed-store wall calendar hanging on a nail, a painted farm scene on the top half and a blank grid on the bottom half. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[24] obj-almanac-open
+FILE: assets/img/obj-almanac-open.png    SIZE: 4:3, 1600x1200    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A large open farmer's almanac lying flat, seen straight on from above, two blank cream pages with faint printed borders. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. Used behind the settings panel.
+
+[25] obj-kettle
+FILE: assets/img/obj-kettle.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A red enamel tea kettle with a black handle. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[26] obj-curtain
+FILE: assets/img/obj-curtain.png    SIZE: 1:2 portrait, 800x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. One red-and-cream gingham cafe curtain panel hanging from a thin rod, gently gathered. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. The code mirrors it for the right side.
+
+############################################################
+3. CARD CONTROLS AND COOK-MODE PROPS
+############################################################
+
+[27] obj-wastebasket
+FILE: assets/img/obj-wastebasket.png    SIZE: 1:1, 512x512    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small round wicker wastebasket. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[28] obj-pencil
+FILE: assets/img/obj-pencil.png    SIZE: 1:1, 512x512    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A short, well-used yellow pencil with a worn pink eraser, lying diagonally. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[29] obj-card-stand
+FILE: assets/img/obj-card-stand.png    SIZE: 1:1, 1500x1500    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small wooden recipe card holder with a slot on top, empty, three-quarter view. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[30] obj-egg-timer
+FILE: assets/img/obj-egg-timer.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A white wind-up kitchen egg timer shaped like an egg, with a rotating dial and no numbers. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[31] obj-steno
+FILE: assets/img/obj-steno.png    SIZE: 3:4 portrait, 1200x1600    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A green-tinted steno pad with a spiral binding at the top, blank pages. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+[32] obj-done-tag
+FILE: assets/img/obj-done-tag.png    SIZE: 1:1, 1024x1024    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small blank kraft-paper hang tag with a loop of red string. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG. Also used as the 'Pull me' lamp tag.
+
+############################################################
+4. CARDS AND DIVIDERS
+############################################################
+
+[33] card-front
+FILE: assets/img/card-front.jpg    SIZE: 5:3, 1500x900    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A blank 3x5 cream index card filling the entire frame edge to edge, flat and straight-on, one thin red line near the top and faint blue ruled lines below, subtle paper grain, no writing.
+AFTER: Crop tight to the card edges. JPG.
+
+[34] card-back
+FILE: assets/img/card-back.jpg    SIZE: 5:3, 1500x900    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The plain back of a cream index card filling the entire frame edge to edge, flat and straight-on, no lines, subtle paper grain.
+AFTER: Crop tight to the card edges. JPG.
+
+[35] divider-tab
+FILE: assets/img/divider-tab.png    SIZE: 5:3, 1500x900    TYPE: OBJECT (remove background)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A blank kraft-paper recipe box divider card with one tab on top, flat and straight-on. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove background. PNG.
+
+############################################################
+5. AGING OVERLAYS (keep the white: the site blends it away)
+############################################################
+
+[36] age-yellowing
+FILE: assets/img/age-yellowing.png    SIZE: 5:3, 1500x900    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A soft, uneven yellow-brown age discoloration pattern filling the frame, strongest at the edges, as on old paper. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[37] age-coffee-ring
+FILE: assets/img/age-coffee-ring.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A single faded coffee mug ring stain. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[38] age-grease
+FILE: assets/img/age-grease.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A translucent butter grease spot. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[39] age-fingerprint
+FILE: assets/img/age-fingerprint.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. One faint floury fingerprint smudge. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[40] age-tape
+FILE: assets/img/age-tape.png    SIZE: 2:1, 1200x600    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A strip of old yellowed cellophane tape, slightly wrinkled. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[41] age-corner
+FILE: assets/img/age-corner.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A dog-eared folded corner of a cream index card, top-right corner only. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[42] age-pencil
+FILE: assets/img/age-pencil.png    SIZE: 5:3, 1500x900    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. Faint grey pencil smudges and erased marks scattered loosely. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+############################################################
+6. CATEGORY ILLUSTRATIONS (pen-and-watercolor vignettes, keep the white)
+############################################################
+
+[43] ill-main
+FILE: assets/img/ill-main.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of a proud rooster standing in a little patch of grass. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[44] ill-bread
+FILE: assets/img/ill-bread.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of a wheat sheaf tied with a ribbon. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[45] ill-pie
+FILE: assets/img/ill-pie.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of three red apples and a lattice-top pie. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[46] ill-cake
+FILE: assets/img/ill-cake.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of a layer cake on a cake stand. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[47] ill-cookie
+FILE: assets/img/ill-cookie.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of a glass cookie jar full of cookies. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[48] ill-soup
+FILE: assets/img/ill-soup.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of a steaming soup pot with a ladle. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[49] ill-sides
+FILE: assets/img/ill-sides.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of carrots, a potato and a bunch of radishes. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[50] ill-canning
+FILE: assets/img/ill-canning.png    SIZE: 1:1, 1024x1024    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A small pen-and-watercolor vignette of two Mason jars of preserves with gingham lids. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+############################################################
+7. MARGIN DOODLES (keep the white)
+############################################################
+
+[51] doodle-daisy
+FILE: assets/img/doodle-daisy.png    SIZE: 1:1, 512x512    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A tiny loose grey pencil doodle of a daisy, as if drawn in a margin. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[52] doodle-cup
+FILE: assets/img/doodle-cup.png    SIZE: 1:1, 512x512    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A tiny loose grey pencil doodle of a steaming coffee cup, as if drawn in a margin. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[53] doodle-heart
+FILE: assets/img/doodle-heart.png    SIZE: 1:1, 512x512    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A tiny loose grey pencil doodle of a heart, as if drawn in a margin. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG. Also used as the favorite mark.
+
+[54] doodle-star
+FILE: assets/img/doodle-star.png    SIZE: 1:1, 512x512    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A tiny loose grey pencil doodle of a five-point star, as if drawn in a margin. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+[55] doodle-spoon
+FILE: assets/img/doodle-spoon.png    SIZE: 1:1, 512x512    TYPE: ON WHITE (keep white)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A tiny loose grey pencil doodle of a wooden spoon, as if drawn in a margin. On a plain flat pure-white background, nothing else in the image.
+AFTER: None. PNG.
+
+############################################################
+8. SHARE IMAGE
+############################################################
+
+[56] og-image
+FILE: assets/img/og-image.jpg    SIZE: 1.91:1, 1200x630    TYPE: BACKGROUND
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A walnut wooden recipe box sitting on a cream lace tablecloth under warm lamplight in a cozy farmhouse kitchen at evening, a coffee mug and dried flowers nearby, with calm empty space on the left side.
+AFTER: None. JPG. Shown when the site link is shared.
+
+TOTAL IMAGES: 56
+Not generated (drawn in code): clock hands, pendulum, steam, fire flicker, rain, snow, moon, cursor.

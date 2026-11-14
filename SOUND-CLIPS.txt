@@ -1,0 +1,68 @@
+GRANDMA'S RECIPE BOX - SOUND CLIP LIST
+============================================================
+
+21 clips total: 7 loops + 14 short effects.
+Save every file with the exact FILE name below into:  assets/audio/
+The site plays silence for any file that isn't there yet, so add them in any order.
+
+FORMAT
+- MP3, 128 kbps, stereo or mono.
+- Loops: 60-90 seconds. Trim so the end flows into the start; the code adds a
+  2-second crossfade, so small seams are fine.
+- Effects: 0.3-3 seconds. Trim silence off the front so they play the instant you click.
+- Keep total audio under about 10 MB.
+
+COPYRIGHT - READ THIS FIRST
+The site will be a public link. Clips of real songs (80s hits, radio broadcasts,
+movie or TV audio) are copyrighted and can get the site taken down or disqualified.
+For the three radio stations use ONLY:
+  - music you or a friend play and record yourselves, or
+  - tracks marked free to use / CC0 (for example Pixabay Music or the YouTube
+    Audio Library), and keep a note of each track's name and source for the credits.
+Effects you record yourselves (a real mug, a real kettle) are the safest and most fun.
+If you take effects from freesound.org, use ones marked CC0 and note the link.
+
+------------------------------------------------------------
+LOOPS
+------------------------------------------------------------
+FILE                      CHANNEL    WHAT TO CAPTURE
+loop-fire.mp3             Ambiance   Wood fire crackling in a stove or fireplace. Steady, no pops louder than the rest.
+loop-clock.mp3            Ambiance   Slow wall clock ticking, one tick per second, quiet room.
+loop-rain.mp3             Ambiance   Soft steady rain on a window. No thunder.
+loop-snow.mp3             Ambiance   Faint winter wind outside a closed window.
+radio-softrock.mp3        Music      Mellow instrumental soft rock in an early-80s style. No vocals.
+radio-country.mp3         Music      Gentle instrumental country, acoustic guitar. No vocals.
+radio-jazz.mp3            Music      Soft late-night jazz, piano or trio. No vocals.
+
+Tip for the radio: run the three music loops through an "AM radio" or
+"telephone" EQ preset (cut below 300 Hz and above 4 kHz) so they sound like
+they come out of Grandma's radio rather than headphones.
+
+------------------------------------------------------------
+EFFECTS
+------------------------------------------------------------
+FILE                      WHEN IT PLAYS                  WHAT TO CAPTURE
+fx-lamp.mp3               Lamp clicked                   Small metal pull-chain click
+fx-lid.mp3                Recipe box opens               Wooden lid creaking open on a small hinge
+fx-lid-close.mp3          Recipe box closes              Small wooden lid closing with a soft thud
+fx-shuffle.mp3            Dividers appear / riffling     Index cards shuffling softly
+fx-ting.mp3               Card filed into the box        One bright ting (spoon tapped on a glass once)
+fx-binder.mp3             Binder clicked                 Three-ring binder snapping open
+fx-twine.mp3              Twine stack clicked            Rough string pulled and untied
+fx-clink.mp3              Mug clicked                    Ceramic mug set down on a wooden table
+fx-rattle.mp3             Sugar pot clicked              Ceramic lid rattling briefly
+fx-curtain.mp3            Window clicked                 Curtain rings sliding on a rod
+fx-chime.mp3              Clock clicked                  One soft warm clock chime
+fx-kettle.mp3             Kettle clicked                 Kettle whistle rising for ~2 seconds, then fading
+fx-static.mp3             Radio dial clicked             Half a second of AM radio tuning static
+fx-timer-ding.mp3         Egg timer finishes             Wind-up egg timer bell
+
+OPTIONAL (only if there's time)
+fx-pageflip.mp3           Almanac opens                  One paper page flip
+fx-pencil.mp3             Ingredient checked off         Short pencil scratch
+
+------------------------------------------------------------
+CREDITS
+------------------------------------------------------------
+Write one line per clip you didn't record yourselves in CREDITS.txt next to
+this file: file name, track or sound name, creator, source link, license.

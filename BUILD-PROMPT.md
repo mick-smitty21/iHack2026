@@ -56,7 +56,9 @@ The full product spec is in the appendix below. When the spec and this list disa
 
 **M7 - First-visit intro (about 2 hours; added by the team after M5).** On the first visit only, handwritten notes with hand-drawn arrows point out the vitals and nothing else, then get out of the way. Spec: "M7: first-visit intro" in the appendix.
 
-M6 and M7 follow the same rules as M0-M5: build one, report in the five-section format, update HOW-IT-WORKS.md, stop and wait for "go". They replace the old rule that nothing is added after M5; nothing beyond M7 is added without the team asking.
+**M8 - Title sign (about 1 hour; added by the team after M7; the last milestone).** A painted sign reading "Grandma's Recipe Box" hangs over the dark kitchen whenever the lamp is off. Pulling the lamp chain is still the way in: the sign fades away as the room lights up, and comes back when the lamp is switched off. No new button. Spec: "M8: title sign" in the appendix.
+
+M6, M7 and M8 follow the same rules as M0-M5: build one, report in the five-section format, update HOW-IT-WORKS.md, stop and wait for "go". They replace the old rule that nothing is added after M5; nothing beyond M8 is added without the team asking.
 
 **Rules for the code itself.**
 - Every file starts with a header comment: what the file does, which files it talks to, and one sentence the team could say to a judge.
@@ -307,6 +309,41 @@ Nothing is said about the mug, flowers, window, sugar pot, clock, radio, kettle 
 **Files.** New module `js/intro.js` (notes, arrows, when to show them); styles in `css/panels.css`; one line each in `main.js`, `box.js` and `cook.js` to announce "the lamp was lit / the box opened / cooking started"; the replay control in `almanac.js`.
 
 **Done when:** a fresh browser shows the lamp note, then the four table notes and the encouragement; none of them blocks a click; they do not return on reload; "Show me around again" brings step 2 back; and with a screen reader each step is announced once.
+
+### M8: title sign
+
+**Goal.** The site gets a front door. Before the lamp is lit, and again whenever it is switched off, the site's name hangs over the dark kitchen, so the page has a beginning to come back to. The lamp and its "Pull me" tag stay exactly as they are and remain the only way in.
+
+**Decided by the team.** No "Enter the Kitchen" button and no full-screen picture: only the sign. The team's first reference (`tools/originals/bg-title-reference.png`) is kept for its layout, but is not used on the site, because it is a full picture with a button and a photographic kitchen painted in.
+
+**Picture (one new image).**
+[59] `assets/img/obj-title-sign.png` - SIZE 16:9, 1600x900 - OBJECT (remove background)
+PROMPT: (STYLE BLOCK) A blank old-fashioned kitchen sign cut from cream card, wide and low, about two and a half times as wide as it is tall, with a softly scalloped, slightly uneven edge browned with age and a thin hand-inked border line just inside the edge. A small wooden rolling pin lies across the top edge in the middle. A sprig of small red flowers with green leaves is painted at the far left end and a matching sprig at the far right end. A small red heart sits at the bottom centre with a short thin red line on each side of it. The whole middle of the sign is EMPTY plain cream card, with nothing written or drawn on it. Seen flat from straight in front, the whole sign visible with nothing cut off. On a plain flat solid dark teal background, centered, with empty space around it, no shadow on the background.
+CHECK: the middle is completely blank (no letters, no scribbles); the whole sign is inside the picture; the background is one flat colour.
+WHY a dark teal background here instead of white: the sign is cream, and a background remover cannot tell cream from white at the edges.
+WHY blank: image generators misspell lettering. The words are set in code.
+
+**The sign.**
+- A layer over the table scene: above the darkness, below the lamp's glow, below panels and below the first-visit notes. It never catches clicks or taps.
+- The picture is the blank sign. The words "Grandma's Recipe Box" are real text set on it in code, in Homemade Apple (the script font already in `/fonts`), walnut brown, on two lines, sized in stage units so they scale with the sign. They are the page's `<h1>`.
+- It hangs in the upper middle of the stage, about 42% of the stage wide, clear of the lamp, the "Pull me" tag and M7's lamp note. If the note and the sign would touch, the note moves, not the sign.
+- It is fully bright in the dark room, like a sign caught in a little light, with a soft shadow behind it.
+- It is written into `index.html` and styled in `css/base.css`, so it paints before any script has run.
+
+**How it works with the lamp.**
+- Lamp off (including first load): the sign is showing.
+- Lamp on: the sign fades out over about 1.5 s, in step with the room lighting up, then is hidden.
+- Lamp off again: the sign fades back in over about 1 s, as the room goes dark and the sound fades.
+- Nothing about the lamp, the sound unlock or keyboard focus changes.
+- Reduced motion: the same fades. Nothing here moves.
+
+**What stays the same.** The lamp, the "Pull me" tag, the dark kitchen and all of M7 (including "Pull the chain to come in.").
+
+**Loading.** `obj-title-sign.png` joins `TABLE_ART`, the pictures fetched before the lamp. Shrunk by `tools/prepare-art.py` to about 900 px wide.
+
+**Files.** `index.html` (the sign and its `<h1>`), `css/base.css` (its styles), `js/main.js` (one line to show or hide it with the lamp), `js/assets.js`, `js/table.js` (`TABLE_ART`), `js/intro.js` (only if the lamp note has to move), `tools/prepare-art.py`, IMAGE-PROMPTS.txt, README (image count), HOW-IT-WORKS.md.
+
+**Done when:** the sign is the first thing seen on load, over the dark kitchen, with the lamp and its tag clear of it; pulling the chain fades the sign out as the room lights; switching the lamp off brings it back; the sign never blocks a click; a screen reader reads "Grandma's Recipe Box" as the page's heading; and until the picture exists the words still show over a placeholder.
 
 ### ADD LATER (only if the team asks after M5)
 A beagle curled by the stove that sometimes wanders; a Commodore 64 easter egg; a phone layout; page-flip and pencil-scratch sounds.

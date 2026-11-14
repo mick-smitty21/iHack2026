@@ -415,5 +415,19 @@ PROMPT:
 Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. The same orange tabby cat as the reference picture, in exactly the same place, the same size and the same curled-up body and tail, but now it has lifted its head and is looking calmly straight at the viewer with green eyes, ears up, front paws tucked under its chest. Only the head and front paws differ from the reference. Isolated on a plain flat background, nothing else in the image, no floor, no shadow.
 AFTER: Same as [57]. Check that the body and tail line up with [57] before saving.
 
-TOTAL IMAGES: 58
+############################################################
+10. THE TITLE SIGN (for M8)
+############################################################
+
+[59] obj-title-sign
+FILE: assets/img/obj-title-sign.png    SIZE: 16:9, 1600x900    TYPE: OBJECT (transparent)
+PROMPT:
+Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people. A blank old-fashioned kitchen sign cut from cream card, wide and low, about two and a half times as wide as it is tall, with a softly scalloped, slightly uneven edge browned with age and a thin hand-inked border line just inside the edge. A small wooden rolling pin lies across the top edge in the middle. A sprig of small red flowers with green leaves is painted at the far left end and a matching sprig at the far right end. A small red heart sits at the bottom centre with a short thin red line on each side of it. The whole middle of the sign is EMPTY plain cream card, with nothing written or drawn on it. Seen flat from straight in front, the whole sign visible with nothing cut off. On a plain flat solid dark teal background, centered, with empty space around it, no shadow on the background.
+AFTER: Remove the background (transparent PNG). The background is dark teal, not
+white, on purpose: the sign is cream, and a background remover cannot tell cream from
+white at the edges. CHECK before saving: the middle of the sign is completely blank
+(the site writes "Grandma's Recipe Box" on it in code), and the whole sign is inside
+the picture.
+
+TOTAL IMAGES: 59
 Not generated (drawn in code): clock hands, pendulum, steam, fire flicker, rain, snow, moon, cursor.

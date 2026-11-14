@@ -125,6 +125,8 @@ button {
 }
 
 .panels { pointer-events: none; }        /* empty until a panel opens */
+/* WHY: the lamp has a z-index so it shows above the darkness; panels must beat it. */
+.panels { z-index: 10; }
 .panels > * { pointer-events: auto; }
 
 /* ---------- Assets and their placeholders ---------- */

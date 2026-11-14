@@ -449,7 +449,8 @@ function stepBack() {
 
 /* ---------- A card in focus ---------- */
 
-function illustrationFor(card) {
+/** The ill-* picture a card shows: fixed by its divider (pie cards get the pie). */
+export function illustrationFor(card) {
   if (card.dividerId === 'cakes-pies') return /pie/i.test(card.title) ? 'ill-pie' : 'ill-cake';
   const divider = getDividers().find((d) => d.id === card.dividerId);
   return divider ? divider.illustration : null;

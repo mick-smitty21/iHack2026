@@ -165,3 +165,212 @@
 
 /* On the cream paper the gold outline would vanish, so use burnt orange here. */
 .almanac :focus-visible { outline-color: var(--burnt-orange); }
+
+/* ---------- The binder: add a recipe ---------- */
+.binder {
+  position: relative;
+  width: 88%;
+  aspect-ratio: 1265 / 670;            /* the shape of obj-binder-spread.png */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 100%;            /* pages are exactly as tall as the binder */
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.7);
+}
+.binder > .asset {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto !important;
+}
+.binder > .asset .asset-label { align-self: end; }
+
+/* Each page keeps its writing inside the plastic sleeve painted on the binder. */
+.binder-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+  min-height: 0;
+  padding: 10% 8% 9% 18%;
+  overflow: hidden;
+}
+.binder-page + .binder-page { padding: 10% 18% 9% 10%; }
+
+/* The three sleeves' tabs. */
+.binder-tabs {
+  display: flex;
+  gap: 0.3em;
+}
+.binder-tab {
+  flex: 1;
+  min-height: calc(var(--u) * 3.4);
+  padding: 0 0.3em;
+  font-family: var(--font-typed);
+  font-size: 0.62em;
+  color: var(--walnut);
+  background: rgba(201, 168, 118, 0.45);
+  border-radius: calc(var(--u) * 0.5) calc(var(--u) * 0.5) 0 0;
+  border-bottom: calc(var(--u) * 0.2) solid transparent;
+  transition: background 0.4s ease;
+}
+.binder-tab[aria-selected='true'] {
+  color: var(--ink);
+  background: #c9a876;
+  border-bottom-color: var(--burnt-orange);
+}
+
+.binder-sleeve {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4em;
+  min-height: 0;
+  padding-top: 0.4em;
+}
+.binder-sleeve .binder-field { width: 100%; flex: none; }
+.binder-hint,
+.binder-status {
+  margin: 0;
+  line-height: 1.2;
+}
+.binder-status { color: var(--burnt-orange); min-height: 1.2em; }
+.binder-photo {
+  min-height: 0;
+  max-height: 58%;
+  max-width: 100%;
+  object-fit: contain;
+  align-self: center;
+  border-radius: calc(var(--u) * 0.3);
+}
+
+/* Form fields: a small typed label over a handwritten, underlined answer. */
+.binder-field {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.binder-field span {
+  font-family: var(--font-typed);
+  font-size: 0.5em;
+  color: var(--walnut);
+}
+.binder-field input,
+.binder-field textarea,
+.binder-divider select {
+  width: 100%;
+  min-height: calc(var(--u) * 2.8);
+  padding: 0 0.2em;
+  border: 0;
+  border-bottom: calc(var(--u) * 0.1) solid var(--pencil);
+  border-radius: 0;
+  resize: none;
+  background: rgba(250, 243, 224, 0.55);
+  font-family: var(--font-hand);
+  font-size: 1em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.binder-form .binder-field:has(textarea) { flex: 1; }
+.binder-form textarea { flex: 1; }
+.binder-row {
+  display: grid;
+  grid-template-columns: 1fr 5em;
+  gap: 0.6em;
+}
+.binder-next { align-self: flex-end; color: var(--burnt-orange); font-weight: 700; }
+.binder :focus-visible { outline-color: var(--burnt-orange); }
+
+/* A file picker: the real input is invisible but still focusable, and the label
+   around it looks like any other pencil mark. */
+.binder-picker { position: relative; }
+.binder-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.binder-picker:focus-within {
+  outline: calc(var(--u) * 0.3) solid var(--burnt-orange);
+  outline-offset: calc(var(--u) * 0.2);
+  border-radius: calc(var(--u) * 0.5);
+}
+
+/* The preview: the finished card laid on the open binder. */
+.binder-preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 0.9);
+}
+.binder-preview-card {
+  --card-w: 46;
+  filter: drop-shadow(0 calc(var(--u) * 0.4) calc(var(--u) * 0.8) rgba(23, 17, 13, 0.45));
+}
+.binder-preview-card .card { --card-w: 46; }
+.binder-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.1em 0.8em;
+  background: var(--paper);
+  border-radius: calc(var(--u) * 0.3);
+}
+.binder-divider select { width: auto; min-width: 9em; background: transparent; }
+.binder-preview-buttons {
+  display: flex;
+  gap: 1.5em;
+  padding: 0 0.8em;
+  background: var(--paper);
+  border-radius: calc(var(--u) * 0.3);
+}
+
+/* The little card that slides into the recipe box when a recipe is filed. */
+.flying-card {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: calc(var(--u) * 30);
+  aspect-ratio: 5 / 3;
+  margin-left: calc(var(--u) * -15);
+  margin-top: calc(var(--u) * -9);
+  padding: 0.5em 0.8em;
+  font-size: calc(var(--u) * 1.9 * var(--font-scale, 1));
+  color: var(--ink);
+  background:
+    linear-gradient(to bottom, transparent 16%, rgba(181, 82, 74, 0.55) 16% 17%, transparent 17%),
+    var(--paper);
+  border-radius: calc(var(--u) * 0.3);
+  box-shadow: 0 calc(var(--u) * 0.4) calc(var(--u) * 1) rgba(23, 17, 13, 0.5);
+  pointer-events: none;
+}
+
+/* ---------- The twine stack: a note about bundles ---------- */
+.twine-slip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4em;
+  width: 44%;
+  padding: calc(var(--u) * 2) calc(var(--u) * 2.5);
+  transform: rotate(-1deg);
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.8);
+  background: var(--cream);
+  border-radius: calc(var(--u) * 0.3);
+  box-shadow: 0 calc(var(--u) * 0.5) calc(var(--u) * 1.5) rgba(23, 17, 13, 0.6);
+}
+.twine-heading {
+  margin: 0;
+  font-family: var(--font-typed);
+  font-weight: 400;
+  font-size: 1.05em;
+}
+.twine-slip .binder-status { align-self: stretch; }

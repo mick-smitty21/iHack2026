@@ -8,7 +8,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M0 - Foundation**
 - [x] **M1 - The table scene**
 - [x] **M2 - The recipe box**
-- [ ] M3 - Adding and moving recipes
+- [x] **M3 - Adding and moving recipes**
 - [ ] M4 - Cook mode
 - [ ] M5 - Polish and demo prep
 
@@ -282,7 +282,70 @@ nudge are `LAYOUT` and `WINDOW_PANES` (`table.js`), `CLOCK_CENTER` (`sky.js`), a
 
 ## M3 - Adding and moving recipes
 
-_Not built yet._
+**What it does.** The binder on the table adds a recipe three ways: from a web link,
+from a photo, or by writing it out. All three end at the same place: a card form you
+can correct, a preview of the finished card with a suggested divider, and the card
+sliding into the box with a ting. The twine-tied stack saves the whole box to one
+file, or adds the cards from such a file.
+
+**Which files.**
+
+- `js/importer.js` - the binder panel, the photo clean-up, Tesseract, the preview,
+  the filing animation, and the twine panel.
+- `netlify/functions/fetch-recipe.js` - the only server code: fetches a page and
+  returns its recipe.
+- `js/storage.js` - `makeBundle()` and `mergeBundle()` for export and import.
+- `css/panels.css` - the binder and twine styles.
+- `js/table.js` - the binder and twine objects now open their panels.
+
+**One form, three ways to fill it.** The binder's right-hand page is always the same
+card form. The left-hand page has three tabs ("sleeves") that are just three ways of
+filling that form in: fetch a link, read a photo, or do nothing and type. Whatever
+the link or photo gives is only a first draft the user corrects. That is why there is
+one `fillForm()` and one `readForm()`, not three separate paths.
+
+**From a link.** A browser is not allowed to read another website's pages (a security
+rule called the same-origin policy), so the site asks our Netlify Function to do it.
+Recipe sites publish their recipe as structured data for search engines, in a
+`<script type="application/ld+json">` block using the schema.org "Recipe" format. The
+function finds that block and returns title, ingredients, steps and servings. Nothing
+is guessed and no AI is involved; if a site doesn't publish that data, or blocks us,
+the user gets Grandma's note and writes it out instead.
+
+**Tricky part: keeping the function safe.** A function that fetches any address could
+be tricked into fetching private addresses inside Netlify's own network. So it only
+accepts http/https, looks up where the name really points and refuses private and
+local addresses, follows redirects itself so every hop gets the same check, and gives
+up after 8 seconds.
+
+**From a photo.** Everything happens in the browser; the photo never leaves the
+device. `prepareForReading()` cleans the picture on a `<canvas>`: grey it, stretch the
+contrast, then an *adaptive threshold* marks a pixel as ink if it is clearly darker
+than its own neighbourhood. That handles shadows and yellowed paper, where one fixed
+cut-off would fail. Tesseract.js (loaded from `/vendor` only when first needed) reads
+the cleaned picture. `sortLinesIntoRecipe()` makes the first line the title, lines
+starting with an amount ingredients, and the rest steps. Tesseract reads print well
+and handwriting poorly, which is exactly why the result lands in an editable form
+beside the photo ("copy it out"). The original photo is saved (shrunk to 1200 px) and
+shown on the card's back.
+
+**Suggesting a divider.** `suggestDivider()` looks for words in the title in a fixed
+order: cookie, soup, pie or cake, bread or biscuit, chicken/beef/pork, jam or pickle.
+The first match wins (so "Chicken Pot Pie" suggests Cakes & Pies), and the user can
+change it on the preview.
+
+**Filing.** The card is saved first, then a small paper card animates from the middle
+of the screen to wherever the recipe box is, and `fx-ting` plays as it lands.
+
+**Bundles.** "Tie up a bundle" writes every card, divider and photo into one JSON
+file named `grandmas-recipe-box-YYYY-MM-DD.json`. A JSON file can only hold text, so
+photos are stored as base64 text. "Untie a bundle" adds the cards from a file and
+skips any card whose id is already in the box, so loading the same bundle twice
+changes nothing. Dividers the box doesn't have yet come along with their cards.
+
+**Needs `npx netlify dev`.** "From a link" only works when the site is served by
+Netlify (locally with `npx netlify dev`, or deployed), because that is what runs the
+function. Photos, writing out and bundles work anywhere.
 
 ## M4 - Cook mode
 

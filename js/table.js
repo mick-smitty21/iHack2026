@@ -3,7 +3,7 @@
  *
  * Talks to: assets.js (pictures), sky.js (clock hands, moon, weather), audio.js
  *           (effects, radio), almanac.js (opens settings, saves the station),
- *           panels.js (Grandma's notes), motion.js (reduced motion, random timing).
+ *           importer.js (binder and twine panels), motion.js (reduced motion, timing).
  *           main.js builds it and tells it when the lamp or the settings change.
  *
  * Say it to a judge: "Every object on the table is a real button placed by
@@ -15,7 +15,7 @@ import { createAsset } from './assets.js';
 import { createClockHands, createMoon, createWeather } from './sky.js';
 import { playEffect, tuneToNextStation } from './audio.js';
 import { openAlmanac, updateSettings } from './almanac.js';
-import { showNote } from './panels.js';
+import { openBinder, openTwine } from './importer.js';
 import { motionReduced, randomBetween, repeatAtRandom, fadeIn } from './motion.js';
 
 // Where each clickable sits: x, y, w, h are percentages of the stage (x and w of its
@@ -171,7 +171,7 @@ function isLit() {
   return scene.classList.contains('is-lit');
 }
 
-/* ---------- 2-4. Recipe box (opens scene 2), binder and twine stack (M3) ---------- */
+/* ---------- 2-4. Recipe box (scene 2), binder (add a recipe), twine stack (bundles) ---------- */
 
 function addRecipeBox(onBoxClick) {
   const button = makeClickable('box', 'Recipe box: open it', onBoxClick);
@@ -184,7 +184,7 @@ function addRecipeBox(onBoxClick) {
 function addBinder() {
   const button = makeClickable('binder', 'Binder: add a recipe', () => {
     playEffect('fx-binder');
-    showNote('Adding recipes arrives in milestone 3.');
+    openBinder(button, clickables.box);
   });
   button.append(createAsset('obj-binder'));
 }
@@ -192,19 +192,13 @@ function addBinder() {
 function addTwineStack() {
   const button = makeClickable('twine', 'Twine-tied stack: save or load a bundle of recipes', () => {
     playEffect('fx-twine');
-    showNote('Tying up a bundle arrives in milestone 3.');
-    showTwineUntied(button);
+    button.classList.add('is-untied');   // shows obj-twine-loose while the panel is open
+    openTwine(button, () => button.classList.remove('is-untied'));
   });
   button.append(
     makePart('twine-tied', createAsset('obj-twine')),
     makePart('twine-loose', createAsset('obj-twine-loose')),
   );
-}
-
-// M3 will keep the twine untied for as long as its panel is open.
-function showTwineUntied(button) {
-  button.classList.add('is-untied');
-  setTimeout(() => button.classList.remove('is-untied'), 3500);
 }
 
 /* ---------- 5. Mug ---------- */

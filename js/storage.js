@@ -7,7 +7,7 @@
  * Say it to a judge: "Everything is saved in the browser's own database after every
  * change, so there are no accounts and nothing is lost on reload."
  *
- * Status: settings (M1), cards, dividers and photos (M2). Export/import arrives in M3.
+ * Status: settings (M1), cards, dividers and photos (M2), bundles to export/import (M3).
  */
 
 import { get, set } from '../vendor/idb-keyval.js';
@@ -129,7 +129,7 @@ export function addDivider(label) {
   return divider;
 }
 
-/* ---------- Photos (used from M3 and M4) ---------- */
+/* ---------- Photos ---------- */
 
 /** Stores a picture (a Blob) under its own key and returns the id to keep on the card. */
 export async function savePhoto(blob) {
@@ -142,4 +142,81 @@ export async function savePhoto(blob) {
 export async function loadPhotoUrl(photoId) {
   const blob = await readSafely('photo:' + photoId);
   return blob ? URL.createObjectURL(blob) : null;
+}
+
+/* ---------- Bundles: the whole box in one file ---------- */
+
+const BUNDLE_NAME = 'grandmas-recipe-box';
+
+/** Everything in the box as one object: cards, dividers, and photos as text. */
+export async function makeBundle() {
+  const photos = {};
+  for (const photoId of listPhotoIds(cards)) {
+    const blob = await readSafely('photo:' + photoId);
+    if (blob) photos[photoId] = await blobToDataUrl(blob);
+  }
+  return { app: BUNDLE_NAME, version: 1, exportedAt: new Date().toISOString(), dividers, cards, photos };
+}
+
+/** "grandmas-recipe-box-2026-11-14.json" for today's date. */
+export function bundleFileName(date = new Date()) {
+  const pad = (number) => String(number).padStart(2, '0');
+  return `${BUNDLE_NAME}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}.json`;
+}
+
+/**
+ * Adds a bundle's cards to the box. A card whose id is already in the box is
+ * skipped, so untying the same bundle twice changes nothing.
+ * Returns { added, skipped }. Throws if the file isn't one of our bundles.
+ */
+export async function mergeBundle(bundle) {
+  if (!bundle || bundle.app !== BUNDLE_NAME || !Array.isArray(bundle.cards)) {
+    throw new Error('Not a recipe box bundle');
+  }
+  addMissingDividers(bundle.dividers || []);
+
+  const newCards = bundle.cards.filter((card) => !cards.some((existing) => existing.id === card.id));
+  for (const photoId of listPhotoIds(newCards)) {
+    const dataUrl = (bundle.photos || {})[photoId];
+    if (dataUrl) await writeSafely('photo:' + photoId, await dataUrlToBlob(dataUrl));
+  }
+  cards.push(...newCards);
+  await writeSafely(CARDS_KEY, cards);
+  return { added: newCards.length, skipped: bundle.cards.length - newCards.length };
+}
+
+// A card from someone else's box may sit behind a divider this box doesn't have.
+function addMissingDividers(bundleDividers) {
+  let nextOrder = Math.max(0, ...dividers.map((d) => d.order)) + 1;
+  for (const divider of bundleDividers) {
+    if (dividers.some((existing) => existing.id === divider.id)) continue;
+    dividers.push({ ...divider, order: nextOrder });
+    nextOrder += 1;
+  }
+  writeSafely(DIVIDERS_KEY, dividers);
+}
+
+// Every photo a list of cards points at: the scanned original and cook-log photos.
+function listPhotoIds(cardList) {
+  const ids = [];
+  for (const card of cardList) {
+    if (card.photoId) ids.push(card.photoId);
+    for (const entry of card.cookLog || []) if (entry.photoId) ids.push(entry.photoId);
+  }
+  return ids;
+}
+
+// WHY: a JSON file can only hold text, so each photo is turned into a long
+// "data:image/jpeg;base64,..." string on the way out, and back into a picture on the way in.
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function dataUrlToBlob(dataUrl) {
+  return (await fetch(dataUrl)).blob();
 }

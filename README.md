@@ -19,6 +19,7 @@ Stop it with Ctrl+C.
 **Testing on the iPad:** put the iPad and the laptop on the same Wi-Fi, find the laptop's
 IP address (`ipconfig` on Windows, look for "IPv4 Address"), and open `http://THAT-ADDRESS:8888`
 in Safari. If it won't connect, allow Node.js through Windows Firewall when Windows asks.
+No sound on the iPad? Turn the volume up and switch off Silent Mode (the bell in Control Center).
 
 > Opening `index.html` by double-clicking will not work: browsers block JavaScript
 > modules on `file://` pages. Always use `npx netlify dev`.

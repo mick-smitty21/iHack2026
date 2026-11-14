@@ -173,8 +173,21 @@ button {
   overflow-wrap: anywhere;
 }
 
+/* ---------- Cursor: a wooden classroom pointer ----------
+   The picture is a tiny SVG written straight into the CSS (no extra file to load).
+   "3 3" is the hot spot: the red rubber tip is the part that clicks.
+   WHY: buttons need the rule too, or the browser swaps back to its own arrow. */
+html,
+button,
+label,
+input {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cline x1=%224%22 y1=%224%22 x2=%2228%22 y2=%2228%22 stroke=%22%233b2616%22 stroke-width=%225%22 stroke-linecap=%22round%22/%3E%3Cline x1=%224%22 y1=%224%22 x2=%2228%22 y2=%2228%22 stroke=%22%23b9823f%22 stroke-width=%223%22 stroke-linecap=%22round%22/%3E%3Cline x1=%224%22 y1=%224%22 x2=%227%22 y2=%227%22 stroke=%22%23b5524a%22 stroke-width=%223.4%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%2227.5%22 cy=%2227.5%22 r=%222.4%22 fill=%22%23d9a441%22 stroke=%22%233b2616%22 stroke-width=%221%22/%3E%3C/svg%3E") 3 3, auto;
+}
+
 /* ---------- Reduced motion ----------
-   Scene code checks this too and swaps movement for fades (from M1 on). */
-@media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto !important; }
+   motion.js puts the class "reduce-motion" on <body> when the device or the almanac
+   asks for less movement. JavaScript animations check motion.js themselves; this
+   rule stops the ones written in CSS (pendulum, lamp chain). Fades are still allowed. */
+.reduce-motion .swings {
+  animation: none !important;
 }

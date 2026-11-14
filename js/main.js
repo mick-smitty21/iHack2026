@@ -1,16 +1,21 @@
 /*
  * main.js - startup, the lamp, and switching between the three scenes.
  *
- * Talks to: assets.js (preloading), table.js (builds scene 1). From M1 on it also
- *           starts audio.js, sky.js and almanac.js, and later box.js and cook.js.
+ * Talks to: almanac.js (settings), table.js (scene 1), audio.js (sound), assets.js
+ *           (preloading), panels.js (closing panels). Later: box.js and cook.js.
  *
- * Say it to a judge: "This is the front door. When the page loads it builds the
- * kitchen table, starts fetching the artwork in the background, and it is the one
- * place that decides which of the three scenes is on screen."
+ * Say it to a judge: "This is the front door. It loads your saved settings, builds
+ * the kitchen table, and owns the lamp: one click on the lamp is what lights the
+ * room and unlocks the sound."
  */
 
 import { IMAGES, preloadImages } from './assets.js';
-import { buildTable } from './table.js';
+import { initSettings, onSettingsChange } from './almanac.js';
+import { buildTable, setLampLit, applySettings as applyTableSettings } from './table.js';
+import {
+  preloadSounds, lampSwitchedOn, lampSwitchedOff, applySettings as applyAudioSettings,
+} from './audio.js';
+import { closePanel } from './panels.js';
 
 const scenes = {
   table: document.getElementById('scene-table'),
@@ -18,7 +23,9 @@ const scenes = {
   cook: document.getElementById('scene-cook'),
 };
 
-/** Shows one scene and hides the other two. M1+ adds the animated transitions. */
+let lampIsOn = false;
+
+/** Shows one scene and hides the other two. M2+ adds the animated transitions. */
 export function showScene(name) {
   for (const [key, element] of Object.entries(scenes)) {
     const isActive = key === name;
@@ -28,9 +35,34 @@ export function showScene(name) {
 }
 
 async function start() {
-  buildTable(scenes.table);
+  const settings = await initSettings();
+  buildTable(scenes.table, { onLampClick: toggleLamp });
+  applySettingsEverywhere(settings);
+  onSettingsChange(applySettingsEverywhere);
   showScene('table');
+
+  // While the kitchen is dark, fetch the art and sound in the background.
+  preloadSounds();
   reportMissingArt(await preloadImages());
+}
+
+function applySettingsEverywhere(settings) {
+  applyTableSettings(settings);
+  applyAudioSettings(settings);
+}
+
+// WHY: the audio calls happen directly inside this click handler (not after an
+// await or a timer) because browsers, iPad Safari above all, only allow sound to
+// start during a real click or tap.
+function toggleLamp() {
+  lampIsOn = !lampIsOn;
+  if (lampIsOn) {
+    lampSwitchedOn();
+  } else {
+    closePanel();
+    lampSwitchedOff();
+  }
+  setLampLit(lampIsOn);
 }
 
 // Tells the team (in the browser console) which pictures still need to be dropped

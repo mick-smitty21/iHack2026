@@ -1,9 +1,167 @@
 /*
- * panels.css - the almanac, binder and twine panels that open over a scene.
+ * panels.css - the panels that open over a scene (the almanac now; binder and twine
+ * in M3) and Grandma's little notes.
  *
- * Talks to: js/almanac.js, js/importer.js and js/storage.js build the elements styled here.
+ * Talks to: js/panels.js (wrapper, backdrop, close button, notes) and js/almanac.js.
  *
- * Say it to a judge: "Each panel is drawn on a picture of a real object - an almanac, a binder - instead of a floating window."
- *
- * M0 status: empty. Filled in M1 (almanac) and M3 (binder, twine).
+ * Say it to a judge: "Each panel is drawn on a picture of a real object - an
+ * almanac, a binder - and the controls are ordinary form inputs restyled to look
+ * handwritten, so keyboards and screen readers still understand them."
  */
+
+.panel-wrapper {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.panel-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--night);
+  opacity: 0.55;
+}
+
+/* The X in the top-right corner. */
+.panel-close {
+  position: absolute;
+  top: 3%;
+  right: 2.5%;
+  width: calc(var(--u) * 4);
+  height: calc(var(--u) * 4);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 3.6);
+  line-height: 1;
+  color: var(--cream);
+}
+
+/* ---------- Grandma's note ---------- */
+.grandma-note {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  max-width: 46%;
+  margin: 0;
+  padding: 0.5em 1em;
+  transform: translateX(-50%) rotate(-1.2deg);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.9);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: calc(var(--u) * 0.2);
+  box-shadow: 0 calc(var(--u) * 0.3) calc(var(--u) * 0.8) rgba(23, 17, 13, 0.45);
+  pointer-events: none;
+}
+
+/* ---------- The almanac ---------- */
+.almanac {
+  position: relative;
+  width: 66%;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.9);
+}
+
+/* The open-book picture sits behind both pages. */
+.almanac > .asset {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.almanac > .asset .asset-label { align-self: end; padding-bottom: 0.4em; }
+
+.almanac-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  padding: 13% 11% 10% 14%;
+}
+.almanac-page + .almanac-page { padding: 13% 14% 10% 11%; }
+
+.almanac-heading {
+  margin: 0;
+  font-family: var(--font-typed);
+  font-weight: 400;
+  font-size: 1.15em;
+  letter-spacing: 0.04em;
+  border-bottom: calc(var(--u) * 0.1) solid var(--walnut);
+  padding-bottom: 0.2em;
+}
+
+.almanac-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+}
+.almanac-group legend {
+  padding: 0;
+  font-family: var(--font-typed);
+  font-size: 0.7em;
+  color: var(--walnut);
+}
+
+/* A choice is a real radio button that we hide, and a word we show.
+   The chosen word gets a pencil circle. */
+.almanac-choice { position: relative; }
+.almanac-choice input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.almanac-choice span {
+  display: inline-block;
+  min-height: calc(var(--u) * 3.4);   /* comfortable to tap on an iPad */
+  padding: 0.15em 0.6em;
+  border: calc(var(--u) * 0.16) solid transparent;
+  border-radius: 50% 45% 55% 48% / 60% 55% 60% 50%;  /* a wobbly hand-drawn oval */
+  transition: border-color 0.4s ease;
+}
+.almanac-choice input:checked + span { border-color: var(--pencil); }
+.almanac-choice input:focus-visible + span {
+  outline: calc(var(--u) * 0.3) solid var(--burnt-orange);
+  outline-offset: calc(var(--u) * 0.2);
+}
+
+.almanac-slider {
+  display: grid;
+  grid-template-columns: 5.2em 1fr;
+  align-items: center;
+  gap: 0.4em;
+}
+.almanac-slider input {
+  width: 100%;
+  height: calc(var(--u) * 2.6);
+  margin: 0;
+  accent-color: var(--burnt-orange);
+}
+
+.almanac-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.4em;
+  line-height: 1.1;
+}
+.almanac-switch input {
+  flex: none;
+  width: calc(var(--u) * 2.2);
+  height: calc(var(--u) * 2.2);
+  margin: 0;
+  accent-color: var(--avocado);
+}
+
+/* On the cream paper the gold outline would vanish, so use burnt orange here. */
+.almanac :focus-visible { outline-color: var(--burnt-orange); }

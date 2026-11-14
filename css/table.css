@@ -3,8 +3,9 @@
  *
  * Talks to: js/table.js builds the elements styled here; base.css supplies colours.
  *
- * Say it to a judge: "Each object is absolutely positioned on the stage by
- * percentages, and a dark layer on top is the kitchen with the lamp off."
+ * Say it to a judge: "Each object is a button positioned on the stage by
+ * percentages. Darkness is just layers on top: one for the lamp being off, one for
+ * evening, with soft holes cut in them where the fire, moon and lamp give light."
  */
 
 .table-bg {
@@ -13,20 +14,316 @@
   height: 100%;
 }
 
-.prop {
+/* ---------- Clickable objects ---------- */
+.clickable {
   position: absolute;
+  display: block;
+  transition: filter 0.6s ease;
 }
 
-/* The right-hand curtain is the left-hand picture flipped. */
-.prop.is-mirrored { transform: scaleX(-1); }
-/* ...but its placeholder label should still read left to right. */
-.prop.is-mirrored .asset-label { transform: scaleX(-1); }
+/* A picture fills its button. Buttons with an explicit height stretch their picture. */
+.clickable > .asset { pointer-events: none; }
 
-/* The lamp-off darkness. pointer-events: none lets clicks reach the objects below. */
-.table-darkness {
+/* Desktop: a soft warm glow under the pointer. */
+@media (hover: hover) {
+  .clickable:not(:disabled):hover {
+    filter: drop-shadow(0 0 calc(var(--u) * 0.9) var(--lamp-glow));
+  }
+}
+
+/* Touch screens have no hover, so every 20 seconds each object glows faintly once
+   to show it can be tapped. A glow is a fade, so it's fine with reduced motion. */
+@media (hover: none) {
+  .clickable:not(:disabled) {
+    animation: find-me 20s ease-in-out infinite;
+  }
+}
+@keyframes find-me {
+  0%, 88%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  94% { filter: drop-shadow(0 0 calc(var(--u) * 0.7) var(--lamp-glow)); }
+}
+
+/* ---------- Window ---------- */
+.window-glass {
   position: absolute;
   inset: 0;
-  background: var(--night);
-  opacity: 0.45;
+  overflow: hidden;
+}
+
+.view {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.5s ease;
+}
+.view .asset { height: 100%; aspect-ratio: auto !important; }
+
+.mode-dark .view-day,
+.mode-light .view-night { opacity: 0; }
+
+/* The moon only belongs in the night view, and hides behind heavy weather. */
+.moon {
+  position: absolute;
+  top: 10%;
+  right: 27%;
+  width: 14%;
+  transition: opacity 1.5s ease;
+}
+.mode-light .moon { opacity: 0; }
+.mode-dark.is-overcast .moon { opacity: 0.35; }
+.moon-glow { fill: rgba(250, 243, 224, 0.18); }
+.moon-dark { fill: #2a3048; }
+.moon-lit { fill: var(--paper); }
+
+.weather {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.curtain {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+.curtain-left { left: 0; transform-origin: left center; }
+.curtain-right { right: 0; transform-origin: right center; }
+.curtain-cloth { height: 100%; transform-origin: top center; }
+.curtain .asset { height: 100%; aspect-ratio: auto !important; }
+.curtain img { object-fit: fill; }
+/* The right-hand curtain is the left-hand picture flipped... */
+.curtain-right .asset { transform: scaleX(-1); }
+/* ...but its placeholder label should still read left to right. */
+.curtain-right .asset-label { transform: scaleX(-1); }
+
+/* ---------- Clock ---------- */
+.clock-hands {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
+.clock-hand { stroke: var(--ink); }
+.clock-pin { fill: var(--walnut); }
+
+/* The pendulum: a thin rod with a brass bob, hung under the clock face. */
+.pendulum {
+  position: absolute;
+  left: 49.2%;
+  top: 60%;
+  width: 1.6%;
+  height: 26%;
+  background: var(--walnut);
+  transform-origin: top center;
+  /* WHY: 2s there-and-back means it passes the middle once a second, like the tick. */
+  animation: swing 2s ease-in-out infinite;
+  pointer-events: none;
+}
+.pendulum::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 600%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--harvest-gold);
+  transform: translate(-50%, 40%);
+}
+@keyframes swing {
+  0%, 100% { transform: rotate(7deg); }
+  50% { transform: rotate(-7deg); }
+}
+
+/* ---------- Radio ---------- */
+.radio-dial {
+  position: absolute;
+  left: 60%;
+  top: 28%;
+  width: 24%;
+  pointer-events: none;
+}
+
+/* ---------- Sugar pot: the lid sits on top of the body ---------- */
+.sugar-body,
+.sugar-lid {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.sugar-body { bottom: 0; }
+.sugar-lid { top: 0; transform-origin: 50% 80%; }
+
+/* ---------- Recipe box ---------- */
+.brass-label {
+  position: absolute;
+  left: 30%;
+  top: 62%;
+  width: 40%;
+  padding: 0.1em 0;
+  font-family: var(--font-typed);
+  font-size: calc(var(--u) * 0.5);
+  line-height: 1.1;
+  text-align: center;
+  color: var(--walnut-dark);
+  background: var(--harvest-gold);
+  border-radius: calc(var(--u) * 0.15);
+  pointer-events: none;
+}
+
+/* ---------- Twine stack: tied normally, untied while it's "open" ---------- */
+.twine-loose {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.twine-tied,
+.twine-loose { transition: opacity 0.6s ease; }
+.is-untied .twine-tied { opacity: 0; }
+.is-untied .twine-loose { opacity: 1; }
+
+/* ---------- Petals and steam ---------- */
+.petal-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.petal {
+  position: absolute;
+  width: 1.4%;
+}
+
+.steam-puff {
+  position: absolute;
+  width: 38%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(250, 243, 224, 0.75), rgba(250, 243, 224, 0) 68%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Light and shadow ---------- */
+.table-darkness,
+.table-evening,
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* clicks pass through to the objects underneath */
+}
+
+/* Lamp off: the room is nearly dark, with two soft holes where the moonlight
+   (window) and the firelight (stove) fall.
+   WHY: a mask's black areas show the layer and its see-through areas hide it. Two
+   radial gradients, combined with "intersect", give one dark sheet with two holes.
+   The -webkit- lines are the same thing in Safari's older spelling. */
+.table-darkness {
+  background: var(--night);
+  opacity: 0.9;
+  transition: opacity 1.5s ease;
+  -webkit-mask-image:
+    radial-gradient(ellipse 17% 27% at 18% 22%, rgba(0, 0, 0, 0.45), #000),
+    radial-gradient(ellipse 17% 30% at 86% 52%, rgba(0, 0, 0, 0.5), #000);
+  mask-image:
+    radial-gradient(ellipse 17% 27% at 18% 22%, rgba(0, 0, 0, 0.45), #000),
+    radial-gradient(ellipse 17% 30% at 86% 52%, rgba(0, 0, 0, 0.5), #000);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.is-lit .table-darkness { opacity: 0; }
+
+/* Evening with the lamp on: the corners of the room stay dim and the lamp is the
+   main light, so the shadow has one big hole around the lamp. */
+.table-evening {
+  background: var(--night);
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  -webkit-mask-image: radial-gradient(ellipse 60% 85% at 8% 55%, transparent 20%, #000);
+  mask-image: radial-gradient(ellipse 60% 85% at 8% 55%, transparent 20%, #000);
+}
+.is-lit.mode-dark .table-evening { opacity: 0.5; }
+
+/* Coloured light, added on top with "screen" so it brightens what's beneath. */
+.glow { mix-blend-mode: screen; }
+.glow-fire {
+  background: radial-gradient(ellipse 16% 26% at 86% 54%, rgba(226, 120, 50, 0.5), transparent);
+  opacity: 0.75;
+}
+.glow-moon {
+  background: radial-gradient(ellipse 18% 30% at 18% 24%, rgba(150, 170, 215, 0.3), transparent);
+  transition: opacity 1.5s ease;
+}
+.is-lit .glow-moon,
+.mode-light .glow-moon { opacity: 0; }
+
+/* ---------- Lamp ---------- */
+.clickable-lamp { z-index: 2; } /* above the darkness layers */
+.lamp-picture { transition: opacity 1.5s ease, filter 1.5s ease; pointer-events: none; }
+.lamp-on {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.lamp-off { filter: brightness(0.55); } /* dim, but findable in the dark */
+.is-lit .lamp-on { opacity: 1; }
+.is-lit .lamp-off { opacity: 0; }
+
+.lamp-halo {
+  position: absolute;
+  left: -60%;
+  top: -40%;
+  width: 220%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 207, 122, 0.45), transparent 65%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  pointer-events: none;
+}
+.is-lit .lamp-halo { opacity: 1; }
+
+/* The pull-chain: a thin beaded line hanging under the shade, with the tag on its end. */
+.lamp-chain {
+  position: absolute;
+  left: 66%;
+  top: 42%;
+  width: calc(var(--u) * 0.18);
+  height: 22%;
+  background: repeating-linear-gradient(var(--harvest-gold) 0 55%, transparent 55% 100%);
+  background-size: 100% calc(var(--u) * 0.3);
+  transform-origin: top center;
+  animation: chain-sway 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes chain-sway {
+  0%, 100% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+.lamp-tag {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: calc(var(--u) * 4.2);
+  transform: translateX(-50%) rotate(-4deg);
+  transition: opacity 1.5s ease;
+}
+.lamp-tag-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 18%;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.15);
+  color: var(--ink);
+}
+/* On the grey placeholder, hide the asset id so "Pull me" stays readable. */
+.lamp-tag .asset-label { display: none; }
+/* Once the lamp is on the tag has done its job. */
+.is-lit .lamp-tag { opacity: 0; }

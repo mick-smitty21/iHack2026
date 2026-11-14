@@ -401,14 +401,17 @@ a number, because browsers slow timers down in background tabs and the count wou
 drift. Dragging round the egg sets the minutes from the angle of your finger
 (straight up is 0, a quarter turn is 15); the arrow keys do the same for keyboards.
 
-**Time of day.** `timeOfDay()` reads the device clock and returns dawn, day, dusk or
-night. That one word becomes a class on the scene (`time-dusk`), and `cook.css` has a
-sky tint for the window and a faint colour wash for the room for each. At night the
-window shows the night view.
+**Light in the kitchen.** It follows the almanac first, then the clock. Evening (dark
+mode) is always night. Afternoon (light mode) uses `timeOfDay()`, which reads the
+device clock and returns dawn, day or dusk; if the clock says night, plain daytime is
+shown, so choosing Afternoon always gives a daylight kitchen. That one word becomes a
+class on the scene (`time-dusk`), and `cook.css` has a sky tint for the window and a
+faint colour wash for the room for each.
 
-**The window.** The view is placed exactly over the painted glass, and a `clip-path`
-cuts off the two lower corners where the painted cafe curtains hang in front of it
-(`.cook-window` in `cook.css`).
+**The window.** The view fills the painted pane exactly (`.cook-glass`). Two
+full-length curtain panels, made from the same `obj-curtain.png` as the table scene,
+hang from a rod drawn in CSS. They cover the short half-height curtains that are
+painted into the background.
 
 **The card stands on its rest.** The rest is a long low block seen from the front.
 It is drawn after the card, so its top edge covers the card's bottom edge and the

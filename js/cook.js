@@ -3,7 +3,8 @@
  * follow one step at a time, run egg timers, change the servings, and log the cook.
  *
  * Talks to: card.js (draws the card), aging.js (wear), fractions.js (scaling),
- *           sky.js (time of day), storage.js (saving, photos), audio.js (sounds),
+ *           sky.js (time of day), almanac.js (light/dark setting), storage.js
+ *           (saving, photos), audio.js (sounds),
  *           panels.js (notes), assets.js, motion.js. main.js opens and closes it.
  *
  * Say it to a judge: "Cook mode is the same card propped in a stand. Tapping an
@@ -16,6 +17,7 @@ import { buildCard, flipCard, paginateCard } from './card.js';
 import { agingStage, buildAgingLayer } from './aging.js';
 import { formatIngredient } from './fractions.js';
 import { timeOfDay } from './sky.js';
+import { getSettings } from './almanac.js';
 import { saveCard, savePhoto, loadPhotoUrl } from './storage.js';
 import { playEffect } from './audio.js';
 import { showNote } from './panels.js';
@@ -87,16 +89,26 @@ export function initCook(sceneElement, callbacks) {
   document.addEventListener('keydown', handleKey);
 }
 
-// The view through the window: cook.css places this exactly over the painted glass
-// and cuts away the two corners that the cafe curtains hang in front of.
+// The window: the view fills the painted glass exactly, and two full-length curtain
+// panels (the same obj-curtain.png as the table scene) hang over its edges. They also
+// cover the short half-height curtains that are painted into the background.
 function buildWindow() {
-  const glass = el('div', 'cook-window');
+  const glass = el('div', 'cook-glass');
   const day = el('div', 'view view-day');
   day.append(createAsset('view-day'));
   const night = el('div', 'view view-night');
   night.append(createAsset('view-night'));
   glass.append(day, night, el('div', 'cook-sky')); // the sky tint sits over the view
-  return glass;
+
+  const window = el('div', 'cook-window');
+  window.append(glass, el('div', 'cook-rod'), makeCurtain('left'), makeCurtain('right'));
+  return window;
+}
+
+function makeCurtain(side) {
+  const curtain = el('div', 'cook-curtain cook-curtain-' + side);
+  curtain.append(createAsset('obj-curtain'));
+  return curtain;
 }
 
 function buildDoneTag() {
@@ -154,8 +166,17 @@ export function openCook(recipe, picture) {
   fadeIn(scene, 0.6);
 }
 
+// The light follows the almanac first, then the clock:
+//   Evening (dark mode)    -> always night.
+//   Afternoon (light mode) -> dawn, day or dusk by the device's clock. If the clock
+//                             says it's night, plain daytime is shown, so choosing
+//                             Afternoon always gives a daylight kitchen.
 function setTimeOfDay() {
-  const now = timeOfDay();
+  let now = 'night';
+  if (getSettings().mode === 'light') {
+    now = timeOfDay();
+    if (now === 'night') now = 'day';
+  }
   for (const name of ['dawn', 'day', 'dusk', 'night']) scene.classList.toggle('time-' + name, name === now);
 }
 

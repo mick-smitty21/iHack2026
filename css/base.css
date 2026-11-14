@@ -146,6 +146,52 @@ textarea,
 .panels { z-index: 10; }
 .panels > * { pointer-events: auto; }
 
+/* ---------- The title sign (shown while the lamp is off) ---------- */
+/* Placed by percentages of the stage, clear of the lamp, its tag and the first note.
+   WHY pointer-events: none: the sign only hangs there. It must never catch a click. */
+.title-sign {
+  position: absolute;
+  left: 27%;
+  top: 5.5%;
+  width: 50%;
+  aspect-ratio: 960 / 318;       /* the picture's shape, so the words fit before it loads */
+  z-index: 3;                    /* above the dark kitchen, below the first-visit notes */
+  pointer-events: none;
+  filter: drop-shadow(0 calc(var(--u) * 0.5) calc(var(--u) * 1.1) rgba(0, 0, 0, 0.6));
+  transition: opacity 1s ease;   /* coming back when the lamp goes off */
+}
+/* Lamp on: the sign fades away as the room lights up. It stays in the page at zero
+   opacity, so screen readers can still find the heading. */
+.title-sign.is-away {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.title-sign img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* The words sit in the blank middle of the sign: under the rolling pin, above the
+   heart, between the two sprigs of flowers. */
+.title-sign-words {
+  position: absolute;
+  left: 17%;
+  right: 17%;
+  top: 19%;
+  bottom: 30%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--walnut-dark);
+  /* WHY Caveat and not the thin script font: at this size, across a room on a
+     projector, the script was hard to read. Caveat Bold is the site's own handwriting. */
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 4.5);
+  line-height: 0.92;
+  text-align: center;
+}
+
 /* ---------- Assets and their placeholders ---------- */
 .asset {
   position: relative;

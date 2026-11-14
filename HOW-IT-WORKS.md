@@ -13,6 +13,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M5 - Polish and demo prep**
 - [x] **M6 - The cat, its purr, and a switch for each background sound**
 - [x] **M7 - First-visit intro**
+- [x] **M8 - Title sign** (the last milestone)
 
 ## The big picture
 
@@ -613,6 +614,42 @@ the lamp note, then four notes and the encouragement; a click, a key and a scrol
 dismiss; nothing returns on reload; the replay works by keyboard; arrows stay attached
 when the window is resized; reduced motion gives no errors. **Not checked:** a real
 screen reader, and a real iPad.
+
+---
+
+## M8 - Title sign
+
+**What it does.** While the lamp is off, a painted sign reading "Grandma's Recipe
+Box" hangs over the dark kitchen. Pull the lamp chain and it fades away as the room
+lights up; switch the lamp off and it comes back. It gives the page a front door.
+The lamp and its "Pull me" tag are unchanged and are still the only way in.
+
+**It is the smallest feature in the project.** Three pieces:
+
+- *`index.html`* holds the sign: a `<div id="title-sign">` with the picture and an
+  `<h1>`. It is written in the page itself, not built by a script, so it is on screen
+  before any JavaScript has run.
+- *`css/base.css`* places it by percentages of the stage and fades it. The class
+  `is-away` means "lamp on": opacity 0, reached over 1.5 seconds. Without the class it
+  fades back in over 1 second.
+- *`js/main.js`* has one line in `toggleLamp()`:
+  `titleSign.classList.toggle('is-away', lampIsOn)`.
+
+**The words are not in the picture.** `obj-title-sign.png` is a blank sign (image
+generators misspell lettering). "Grandma's Recipe Box" is real text laid over its
+blank middle, and it is the page's main heading, so a screen reader reads it. It is
+set in Caveat Bold. The spec asked for the script font (Homemade Apple); that was
+tried and was too thin to read from across a room, so it was changed.
+
+**It never blocks anything.** `pointer-events: none`, like the first-visit notes. When
+faded out it stays in the page at zero opacity so the heading can still be found.
+
+**Not changed:** the lamp, the sound unlock, keyboard focus, and all of M7. The M7
+lamp note sits below the sign and did not need to move.
+
+**How it was checked.** Automated browser test on desktop Chrome: sign visible on
+load; fades with the lamp both ways; clicks pass through it; the first-visit notes
+still appear. **Not checked:** a real iPad.
 
 ---
 

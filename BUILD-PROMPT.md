@@ -325,7 +325,7 @@ WHY blank: image generators misspell lettering. The words are set in code.
 
 **The sign.**
 - A layer over the table scene: above the darkness, below the lamp's glow, below panels and below the first-visit notes. It never catches clicks or taps.
-- The picture is the blank sign. The words "Grandma's Recipe Box" are real text set on it in code, in Homemade Apple (the script font already in `/fonts`), walnut brown, on two lines, sized in stage units so they scale with the sign. They are the page's `<h1>`.
+- The picture is the blank sign. The words "Grandma's Recipe Box" are real text set on it in code, in Caveat Bold (first specified as Homemade Apple, which proved too thin to read at a distance when built), walnut brown, on two lines, sized in stage units so they scale with the sign. They are the page's `<h1>`.
 - It hangs in the upper middle of the stage, about 42% of the stage wide, clear of the lamp, the "Pull me" tag and M7's lamp note. If the note and the sign would touch, the note moves, not the sign.
 - It is fully bright in the dark room, like a sign caught in a little light, with a soft shadow behind it.
 - It is written into `index.html` and styled in `css/base.css`, so it paints before any script has run.

@@ -52,6 +52,15 @@
     <section id="scene-box" class="scene" aria-label="The recipe box" hidden></section>
     <section id="scene-cook" class="scene" aria-label="Cooking at the stove" hidden></section>
 
+    <!-- The title sign hangs over the dark kitchen whenever the lamp is off.
+         WHY it is written here and not built by a script: it is the first thing anyone
+         sees, so it should appear before any JavaScript has run. The picture is a blank
+         sign; the words are real text, and they are the page's main heading. -->
+    <div id="title-sign" class="title-sign">
+      <img src="assets/img/obj-title-sign.png" alt="">
+      <h1 class="title-sign-words">Grandma&rsquo;s<br>Recipe Box</h1>
+    </div>
+
     <!-- Panels (almanac, binder, twine) open on top of whichever scene is showing. -->
     <div id="panels" class="panels"></div>
   </main>

@@ -176,6 +176,7 @@ export const TABLE_ART = [
   'obj-radio-dial', 'obj-kettle', 'obj-pitcher', 'obj-petal', 'obj-sugar-body', 'obj-sugar-lid',
   'obj-mug', 'obj-box-closed', 'obj-binder', 'obj-twine', 'obj-twine-loose', 'obj-lamp-off',
   'obj-lamp-on', 'obj-done-tag', 'obj-cat-asleep', 'obj-cat-awake',
+  'obj-title-sign',   // hangs over the dark kitchen (index.html draws it)
 ];
 
 /** One of the table's objects, by name (e.g. the box, so a card can slide into it). */

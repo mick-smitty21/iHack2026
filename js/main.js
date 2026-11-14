@@ -31,6 +31,8 @@ const scenes = {
   cook: document.getElementById('scene-cook'),
 };
 
+const titleSign = document.getElementById('title-sign');   // written in index.html
+
 let lampIsOn = false;
 let otherScenesReady = false;
 let artFound = [];   // what the preloader found, for the console report
@@ -68,6 +70,7 @@ function toggleLamp() {
     lampSwitchedOff();
   }
   setLampLit(lampIsOn);
+  titleSign.classList.toggle('is-away', lampIsOn);   // the sign shows only in the dark
   introLampChanged(lampIsOn);
 }
 

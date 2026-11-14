@@ -60,7 +60,7 @@ No sound on the iPad? Turn the volume up and switch off Silent Mode (the bell in
 
 | What | Folder | Names come from |
 |---|---|---|
-| Images (58) | `assets/img/` | `IMAGE-PROMPTS.txt` |
+| Images (59) | `assets/img/` | `IMAGE-PROMPTS.txt` |
 | Sound clips (22 + 2 optional) | `assets/audio/` | `SOUND-CLIPS.txt` |
 
 Use the exact file names from those two lists. Until a file exists the site shows a grey

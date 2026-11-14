@@ -62,6 +62,7 @@ MAX_WIDTH = {
     "age-fingerprint": 280, "age-grease": 340, "age-coffee-ring": 440, "age-corner": 280,
     "age-tape": 420, "age-yellowing": 800, "age-pencil": 800,   # soft textures: fine when stretched
     "obj-curtain": 480, "divider-tab": 640, "obj-cat-asleep": 420, "obj-cat-awake": 420,
+    "obj-title-sign": 960,
 }
 JPG_QUALITY = 84           # plenty for painted art; well under half the file size
 JPG_HEAVY = 0.42           # bytes per pixel: above this a JPG is worth re-saving

@@ -47,6 +47,7 @@ export const IMAGES = {
   'obj-almanac-open':  { kind: 'object', ratio: 1.47 },
   'obj-kettle':        { kind: 'object', ratio: 0.9 },
   'obj-curtain':       { kind: 'object', ratio: 0.5 },
+  'obj-title-sign':    { kind: 'object', ratio: 3.02 },  // drawn by index.html, not createAsset
   'obj-cat-asleep':    { kind: 'object', ratio: 1.67 },  // the two cat pictures share one
   'obj-cat-awake':     { kind: 'object', ratio: 1.67 },  // crop, so they swap without a jump
   // 3. Card controls and cook-mode props

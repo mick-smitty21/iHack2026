@@ -52,6 +52,12 @@ The full product spec is in the appendix below. When the spec and this list disa
 
 **M5 - Polish and demo prep (about 3 hours).** An iPad Safari pass (audio unlock, touch targets, blur performance, `100dvh`, no double-tap zoom), a performance pass (image sizes, lazy loading after the lamp), an accessibility pass, Open Graph tags using `og-image.jpg`, a favicon, and final versions of README, HOW-IT-WORKS, AI-DISCLOSURE and CREDITS. After M5 nothing new is added.
 
+**M6 - The cat and ambient toggles (about 2 hours; added by the team after M5).** A cat asleep under the table that lifts its head at random intervals and goes back to sleep; a purring loop on the Ambiance channel; and an on/off switch for each ambient sound in the almanac, in addition to the Ambiance slider. Spec: "M6: the cat and ambient toggles" in the appendix. Needs two new images and one new sound, listed there.
+
+**M7 - First-visit intro (about 2 hours; added by the team after M5).** On the first visit only, handwritten notes with hand-drawn arrows point out the vitals and nothing else, then get out of the way. Spec: "M7: first-visit intro" in the appendix.
+
+M6 and M7 follow the same rules as M0-M5: build one, report in the five-section format, update HOW-IT-WORKS.md, stop and wait for "go". They replace the old rule that nothing is added after M5; nothing beyond M7 is added without the team asking.
+
 **Rules for the code itself.**
 - Every file starts with a header comment: what the file does, which files it talks to, and one sentence the team could say to a judge.
 - Add a `// WHY:` comment wherever the reason isn't obvious (browser quirks, timing, workarounds). Don't comment obvious lines; the team can read JavaScript.
@@ -228,6 +234,78 @@ netlify.toml  README.md  HOW-IT-WORKS.md  AI-DISCLOSURE.md  CREDITS.txt
 - Radio music: provided by the team; any outside tracks credited in CREDITS.txt.
 - Sample recipes: adapted from a public-domain cookbook.
 - The live site uses no AI model: link reading uses recipe data that sites already publish, and photo reading runs Tesseract.js in the browser.
+
+### M6: the cat and ambient toggles
+
+**The cat.**
+- A farmhouse cat (orange tabby) curled up asleep on the rug under the table in Scene 1, between the table legs, drawn behind nothing and in front of the background. It sits on the floor, so it gets the same soft contact shadow as the table objects.
+- Two pictures that swap: `obj-cat-asleep.png` and `obj-cat-awake.png` (same cat, same curled body, only the head differs). The swap is a slow crossfade (about 0.6 s), never a jump.
+- **Behaviour:** at a random interval of 25-60 s the cat lifts its head, stays up for 3-6 s, then lowers it and sleeps again. Timing is re-rolled each time. Nothing happens while the lamp is off.
+- **Clickable #13:** the cat is a real `<button>` (aria-label "Cat: give it a pat"). A click or tap makes it look up straight away and the purr swells for about 3 s, then both settle. No new sound effect.
+- **Reduced motion:** unchanged, because the only motion is a fade.
+- **Dark kitchen:** the cat is under the darkness layer like everything else and is disabled until the lamp is lit.
+
+**The purr.**
+- New loop `loop-purr.mp3` on the **Ambiance** channel, played with the same two-copy crossfade as the other loops. Quiet: about half the level of the fire at the same slider position.
+- Plays whenever the lamp is on and its switch (below) is on. It does not stop when the cat looks up.
+- Generated with code like the other ambient loops (extend `tools/synth-sounds.py`), so there is nothing to license. Add it to SOUND-CLIPS.txt, CREDITS.txt and AI-DISCLOSURE.md.
+
+**Ambient switches (almanac).**
+- Under the Ambiance slider, one on/off switch per ambient sound: **Fire**, **Clock tick**, **Cat's purr**, **Weather** (the rain or snow loop, whichever the chosen weather plays). All default to on.
+- The slider still sets how loud the whole Ambiance channel is; a switch that is off silences just that one sound (with the usual short fade). Example: clock off, fire and purr on.
+- The switches are real checkboxes with labels, reachable by Tab, and are saved with the other settings. Settings saved before M6 have no switches stored and must load with everything on.
+- These switches affect only the looping ambient sounds. Clicking the clock still chimes; the Music channel is unchanged.
+
+**Data.** `Settings` gains `ambient: { fire, clock, purr, weather }` (booleans, default true).
+
+**New assets (2 images, 1 sound).** Add these to IMAGE-PROMPTS.txt as [57] and [58], to SOUND-CLIPS.txt, and to the manifest in `js/assets.js`. Pair the two cat pictures in `tools/prepare-art.py` so they are cropped to the same box.
+
+[57] `assets/img/obj-cat-asleep.png` - SIZE 4:3, 1600x1200 - OBJECT (remove background)
+PROMPT: (STYLE BLOCK) An orange tabby farmhouse cat curled up asleep on the floor, seen from the front and slightly above. Its body is curled into a rounded loaf with its tail wrapped round its side, its head resting down on its front paws at the LEFT end of its body, eyes closed, ears relaxed. The whole cat is in the picture, with nothing cut off. No cushion, no basket, no rug, no floor, nothing else in the picture. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+CHECK: eyes closed; head down on the paws; whole cat visible; nothing under or beside it.
+
+[58] `assets/img/obj-cat-awake.png` - SIZE 4:3, 1600x1200 - OBJECT (remove background)
+Make this in the SAME Gemini chat, straight after [57].
+PROMPT: (STYLE BLOCK) The same orange tabby cat in exactly the same curled position, the same size and in exactly the same place in the picture, with its body, legs and tail unchanged. ONLY the head is different: the head is lifted up off the paws and turned to look toward the viewer, eyes open, ears pricked up. No cushion, no basket, no rug, no floor, nothing else in the picture. On a plain flat pure-white background, centered, with empty space around it, no shadow on the background.
+CHECK: body and tail match [57] in size and position; head up, eyes open; looking toward the viewer.
+
+`assets/audio/loop-purr.mp3` - Ambiance loop, 60-90 s, soft steady cat purr, generated with code.
+
+**Done when:** the cat sleeps under the table, looks up on its own now and then and when patted; the purr is audible with the lamp on; each of the four switches silences only its own sound; all of it survives a reload; and a settings record saved before M6 still loads.
+
+### M7: first-visit intro
+
+**Goal.** A first-time visitor learns the few things they must know, and is nudged to explore everything else on their own. It points; it never blocks.
+
+**When.** Only on the first visit (a saved flag). It can be replayed from the almanac with a handwritten "Show me around again".
+
+**Look.** Small scraps of cream paper with handwriting (Caveat), each joined to its object by a hand-drawn pencil arrow drawn in code (SVG). No boxes, no buttons, no dimming of the room. Notes fade in one after another, slowly. Each note's position is worked out from where its object is on screen, so it follows any later layout change.
+
+**Step 1 - the dark kitchen.** One note with an arrow to the lamp: "Pull the chain to come in." (The lamp's own "Pull me" tag stays.) It fades when the lamp is lit.
+
+**Step 2 - the lit table (first time the lamp is lit).** Exactly three notes, the vitals only:
+- Recipe box: "Your recipes live in here."
+- Binder: "Add a recipe: a link, a photo, or write it out."
+- Wall calendar: "Sound, light and weather."
+Plus one line of encouragement with no arrow, low on the screen: "Everything else is yours to find. Go on, poke around."
+Nothing is said about the mug, flowers, window, sugar pot, clock, radio, kettle, twine stack or cat; those are left to be discovered.
+
+**Step 3 - one-line hints inside (first time each is opened).** A single unobtrusive note, no arrows:
+- Recipe box: "Scroll or drag to riffle. Tap a card to pick it up."
+- Cook mode: "Tap an ingredient to tick it off."
+
+**Getting out of the way.**
+- Notes never catch clicks or taps: everything underneath works while they are showing.
+- Step 2's notes fade the moment the visitor clicks, taps or presses a key, or after 15 s, whichever comes first. Step 3's hints fade after 6 s or on the first interaction.
+- Each step is marked as seen once it has been shown, so a reload part-way through does not repeat it.
+
+**Accessibility.** The notes are real text. A screen reader hears them once as a single polite announcement per step. With reduced motion the notes and arrows simply fade in, with no drawing-on effect. Nothing depends on colour alone.
+
+**Data.** `Settings` gains `introSeen: { lamp, table, box, cook }` (booleans, default false). "Show me around again" sets them all back to false and replays step 2 at once.
+
+**Files.** New module `js/intro.js` (notes, arrows, when to show them); styles in `css/panels.css`; one line each in `main.js`, `box.js` and `cook.js` to announce "the lamp was lit / the box opened / cooking started"; the replay control in `almanac.js`.
+
+**Done when:** a fresh browser shows the lamp note, then the three table notes and the encouragement; none of them blocks a click; they do not return on reload; "Show me around again" brings step 2 back; and with a screen reader each step is announced once.
 
 ### ADD LATER (only if the team asks after M5)
 A beagle curled by the stove that sometimes wanders; a Commodore 64 easter egg; a phone layout; page-flip and pencil-scratch sounds.

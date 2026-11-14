@@ -45,13 +45,16 @@
 }
 .clickable-lamp::before { left: 12%; right: 12%; height: 8%; bottom: -2%; }
 .clickable-flowers::before { left: 10%; right: 10%; height: 9%; bottom: -2%; }
-.clickable-binder::before { left: 4%; right: 4%; height: 24%; bottom: -3%; }
+.clickable-binder::before { left: 2%; right: 2%; height: 12%; bottom: -4%; }
 
-/* WHY these two turns: the shelf is painted sloping away to the right, and the
-   binder is painted lying at an angle. Turning them lines the radio up with the
-   shelf and squares the binder to the table's front edge. */
-.clickable-radio { transform: rotate(4.5deg); }
-.clickable-binder > .asset { transform: rotate(-22deg); }
+/* WHY the turn: the shelf is painted sloping away to the right; a small turn sets
+   the radio's flat base along it. */
+.clickable-radio { transform: rotate(3deg); }
+/* The binder is painted from straight above; tipping it back makes it lie on the table. */
+.clickable-binder > .asset {
+  transform: perspective(calc(var(--u) * 40)) rotateX(52deg);
+  transform-origin: 50% 100%;
+}
 
 /* A picture fills its button. Buttons with an explicit height stretch their picture. */
 .clickable > .asset { pointer-events: none; }
@@ -195,12 +198,14 @@
 }
 
 /* ---------- Radio ---------- */
-/* Sits over the tuning dial painted on the radio. */
+/* Sits over the tuning dial painted on the radio. The radio's face is seen at an
+   angle, so the round dial is squeezed a little sideways to match. */
 .radio-dial {
   position: absolute;
-  left: 11.7%;
-  top: 25.6%;
-  width: 29%;
+  left: 61%;
+  top: 23.5%;
+  width: 31%;
+  transform: scaleX(0.86) skewY(3deg);
   pointer-events: none;
 }
 

@@ -272,9 +272,12 @@ behind it.
 front is snipped off with a `clip-path`, and the fold from `age-corner.png` is laid
 over it with its inner edges faded out.
 
-**Squaring things up.** The shelf is painted sloping away, so the radio is turned
-4.5 degrees to sit along it. The binder is painted lying at an angle, so it is turned
-back 22 degrees to sit square to the table's front edge (`table.css`).
+**Sitting right.** The shelf is painted above eye level and sloping away to the
+right, so the radio art is drawn from below with its near end on the left, and is
+turned 3 degrees to set its base along the shelf. The radio's own dial is covered by
+`obj-radio-dial.png`, squeezed slightly sideways to match the angle of the radio's
+face; only the picture inside turns when you click. The binder is painted from
+straight above, so CSS tips it back (`rotateX`) to make it lie on the table.
 
 **Small touches.** Objects on the table and stove get a soft contact shadow.
 The pendulum swings inside the clock's painted glass door. The site name is typed on
@@ -403,22 +406,24 @@ night. That one word becomes a class on the scene (`time-dusk`), and `cook.css` 
 sky tint for the window and a faint colour wash for the room for each. At night the
 window shows the night view.
 
-**The window.** The view is a rectangle placed exactly over the strip of glass that
-shows between the painted curtains (`.cook-window` in `cook.css`).
+**The window.** The view is placed exactly over the painted glass, and a `clip-path`
+cuts off the two lower corners where the painted cafe curtains hang in front of it
+(`.cook-window` in `cook.css`).
 
-**The card stands in its stand.** Same trick as the recipe box: the stand picture is
-drawn twice, once behind the card and once in front, clipped to just its front lip,
-so the card's bottom edge is hidden in the slot. The stand is turned 8 degrees to
-level its painted slot for a card that faces us squarely.
+**The card stands on its rest.** The rest is a long low block seen from the front.
+It is drawn after the card, so its top edge covers the card's bottom edge and the
+card looks like it stands in the groove. The "Done cooking" tag hangs from the
+rest's brass hook.
 
 **The egg timer's dial** is a dotted ring round the egg with one knob on it. The
 code turns the whole ring; the knob rides round with it to mark the minutes.
 
 **Fitted to this background.** The layout was measured against the current
-`bg-kitchen-cook.jpg` (window upper left, stove in the middle, counters either side).
-The steno pad stands on the left counter, the timers along the counter and stove
-front, the stand on the right counter. **If that picture is replaced again, the
-positions in `cook.css` must be re-measured**; nothing adjusts itself.
+`bg-kitchen-cook.jpg`: a plain wall, one window upper left, and a level counter
+across the bottom. The timers stand on the counter under the window, the steno pad
+between the window and the card, the card and its rest on the right. **If that
+picture is replaced again, the positions in `cook.css` must be re-measured**;
+nothing adjusts itself.
 
 **Keys.** Left and Right arrows change the step. Esc closes the log form if it is
 open, otherwise leaves the stove.

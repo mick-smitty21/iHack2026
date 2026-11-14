@@ -27,13 +27,13 @@ const LAYOUT = {
   window:   { x: 19.5, y: 0,    w: 24, h: 46.5 },  // the whole painted window frame
   clock:    { x: 45.5, y: 5.1,  w: 11.6 },         // its face covers the round wall mount
   calendar: { x: 59.8, y: 7,    w: 11 },           // covers the pinned sheet of paper
-  radio:    { x: 4,    y: 18.3, w: 9 },            // stands on the wall shelf
+  radio:    { x: 3.8,  y: 18.6, w: 9.5 },          // stands on the wall shelf
   kettle:   { x: 85.5, y: 34.8, w: 6 },            // on the stove's right-hand burner
   flowers:  { x: 27.5, y: 46.5, w: 6.5 },          // everything below stands on the table
   sugar:    { x: 36,   y: 53.3, w: 4.8, h: 11.7 },
   mug:      { x: 42,   y: 60.4, w: 4 },
   box:      { x: 47,   y: 46.3, w: 12 },
-  binder:   { x: 16.5, y: 54,   w: 10 },
+  binder:   { x: 15.5, y: 54,   w: 12 },
   twine:    { x: 55.5, y: 58,   w: 6.5 },         // well inside the table's right edge
   lamp:     { x: 9.3,  y: 47.4, w: 6.5 },
 };
@@ -335,11 +335,13 @@ function addClock() {
 function addRadio() {
   const button = makeClickable('radio', 'Radio: turn the dial to the next station', () => {
     dialTurns += 1;
-    gsap.to(parts.radioDial, { rotation: dialTurns * 120, duration: motionReduced() ? 0 : 0.6, ease: 'power2.out' });
+    gsap.to(parts.radioNeedle, { rotation: dialTurns * 120, duration: motionReduced() ? 0 : 0.6, ease: 'power2.out' });
     tuneToNextStation((station) => updateSettings({ station }));
   });
-  parts.radioDial = makePart('radio-dial', createAsset('obj-radio-dial'));
-  button.append(createAsset('obj-radio'), parts.radioDial);
+  // WHY two layers: .radio-dial is squeezed sideways once (in table.css) to match the
+  // angle of the radio's face; the picture inside it is the part that turns.
+  parts.radioNeedle = createAsset('obj-radio-dial');
+  button.append(createAsset('obj-radio'), makePart('radio-dial', parts.radioNeedle));
 }
 
 /* ---------- 11. Kettle ---------- */

@@ -67,21 +67,17 @@ export function initCook(sceneElement, callbacks) {
   background.classList.add('cook-bg');
 
   parts.cardHolder = el('div', 'cook-card');
-  // WHY two copies of the stand: the card has to sit IN its slot. The back copy is
-  // drawn, then the card, then a front copy that cook.css clips to just the front
-  // lip, which hides the card's bottom edge (the same trick as the recipe box).
-  const standBack = el('div', 'cook-stand');
-  standBack.append(createAsset('obj-card-stand'));
-  const standFront = el('div', 'cook-stand cook-stand-front');
-  standFront.append(createAsset('obj-card-stand'));
+  // The card rest is drawn after the card, so its top edge covers the card's bottom
+  // edge and the card looks like it is standing in the groove.
+  const stand = el('div', 'cook-stand');
+  stand.append(createAsset('obj-card-stand'));
 
   scene.append(
     background,
     buildWindow(),
     el('div', 'cook-wash'),            // the soft colour of the time of day over everything
-    standBack,
     parts.cardHolder,
-    standFront,
+    stand,
     buildDoneTag(),
     buildSteno(),
     buildTimerShelf(),
@@ -91,8 +87,8 @@ export function initCook(sceneElement, callbacks) {
   document.addEventListener('keydown', handleKey);
 }
 
-// The view through the window: cook.css places this exactly over the strip of glass
-// that shows between the painted curtains.
+// The view through the window: cook.css places this exactly over the painted glass
+// and cuts away the two corners that the cafe curtains hang in front of.
 function buildWindow() {
   const glass = el('div', 'cook-window');
   const day = el('div', 'view view-day');

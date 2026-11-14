@@ -17,9 +17,9 @@ This includes the cat's purr (loop-purr.mp3), which is not a recording of a real
 RADIO MUSIC  <-- TEAM: FILL THESE IN BEFORE JUDGING
 One line per track: file name, track name, creator, source link, license.
 If you made a track yourselves, write "made by the team".
-radio-softrock.mp3 :
-radio-country.mp3  :
-radio-jazz.mp3     :
+radio-softrock.mp3 : Made by Kaden Jones
+radio-country.mp3  : Made by Kaden Jones
+radio-jazz.mp3     : Made by Kaden Jones
 
 SOFTWARE LIBRARIES (local copies in /vendor)
 GSAP 3.15.1            GreenSock            https://gsap.com            GSAP standard "no charge" license

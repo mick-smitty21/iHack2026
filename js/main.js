@@ -1,8 +1,9 @@
 /*
  * main.js - startup, the lamp, and switching between the three scenes.
  *
- * Talks to: almanac.js (settings), table.js (scene 1), audio.js (sound), assets.js
- *           (preloading), panels.js (closing panels). Later: box.js and cook.js.
+ * Talks to: almanac.js (settings), storage.js (loads the cards), table.js (scene 1),
+ *           box.js (scene 2), audio.js (sound), assets.js (preloading), panels.js.
+ *           Later: cook.js (scene 3).
  *
  * Say it to a judge: "This is the front door. It loads your saved settings, builds
  * the kitchen table, and owns the lamp: one click on the lamp is what lights the
@@ -11,7 +12,11 @@
 
 import { IMAGES, preloadImages } from './assets.js';
 import { initSettings, onSettingsChange } from './almanac.js';
-import { buildTable, setLampLit, applySettings as applyTableSettings } from './table.js';
+import {
+  buildTable, setLampLit, focusClickable, applySettings as applyTableSettings,
+} from './table.js';
+import { loadBox } from './storage.js';
+import { initBox, openBox } from './box.js';
 import {
   preloadSounds, lampSwitchedOn, lampSwitchedOff, applySettings as applyAudioSettings,
 } from './audio.js';
@@ -25,21 +30,13 @@ const scenes = {
 
 let lampIsOn = false;
 
-/** Shows one scene and hides the other two. M2+ adds the animated transitions. */
-export function showScene(name) {
-  for (const [key, element] of Object.entries(scenes)) {
-    const isActive = key === name;
-    element.hidden = !isActive;
-    element.classList.toggle('is-active', isActive);
-  }
-}
-
 async function start() {
   const settings = await initSettings();
-  buildTable(scenes.table, { onLampClick: toggleLamp });
+  await loadBox();
+  buildTable(scenes.table, { onLampClick: toggleLamp, onBoxClick: openBox });
+  initBox(scenes.box, scenes.table, { onClosed: () => focusClickable('box') });
   applySettingsEverywhere(settings);
   onSettingsChange(applySettingsEverywhere);
-  showScene('table');
 
   // While the kitchen is dark, fetch the art and sound in the background.
   preloadSounds();

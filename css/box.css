@@ -1,9 +1,225 @@
 /*
- * box.css - scene 2: the open recipe box, dividers and the riffling deck.
+ * box.css - scene 2: the open recipe box, its divider tabs, the riffling deck, and
+ * the layer where one card is held up.
  *
- * Talks to: js/box.js builds the elements styled here.
+ * Talks to: js/box.js builds the elements styled here. card.css styles the cards.
  *
- * Say it to a judge: "The box is layered pictures; the 3D tilt of each card is a CSS transform that JavaScript updates as you riffle."
- *
- * M0 status: empty. Filled in M2.
+ * Say it to a judge: "Cards in the box are stacked on top of each other and
+ * JavaScript slides each one up by a strip, so you see a ladder of titles. The
+ * forward tilt as a card is flicked past is a 3D CSS transform."
  */
+
+.box-bg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+/* Everything that blurs when a card is held up. */
+.box-stage {
+  position: absolute;
+  inset: 0;
+  perspective: calc(var(--u) * 120);   /* gives the lid and the flicked cards depth */
+  transition: filter 0.5s ease;
+}
+.has-focus .box-stage { filter: blur(calc(var(--u) * 0.35)) brightness(0.6); }
+
+/* First-pass positions: tune these three against the real box art. */
+.box-body {
+  position: absolute;
+  left: 27%;
+  top: 16%;
+  width: 46%;
+}
+.box-lid {
+  position: absolute;
+  left: 31%;
+  top: -34%;
+  width: 38%;
+  transform-origin: bottom center;     /* the hinge */
+  transform: rotateX(6deg);
+}
+
+/* ---------- The tab rail ---------- */
+.tab-rail {
+  position: absolute;
+  left: 4%;
+  top: 6%;
+  width: 21%;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 0.5);
+}
+
+.rail-tab {
+  min-height: calc(var(--u) * 3.6);    /* comfortable to tap */
+  padding: 0.1em 0.8em;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.7);
+  text-align: left;
+  color: var(--ink);
+  background: #c9a876;                 /* kraft paper */
+  border-radius: calc(var(--u) * 0.6) calc(var(--u) * 0.6) calc(var(--u) * 0.15) calc(var(--u) * 0.15);
+  box-shadow: 0 calc(var(--u) * 0.15) calc(var(--u) * 0.3) rgba(23, 17, 13, 0.4);
+  transition: filter 0.4s ease;
+}
+.rail-tab:hover { filter: brightness(1.08); }
+.rail-tab-new { color: var(--walnut); font-weight: 400; }
+.rail-tab-input { border: 0; width: 100%; }
+
+/* ---------- The deck ---------- */
+.deck {
+  position: absolute;
+  left: 30%;
+  top: 46%;
+  width: 40%;
+  aspect-ratio: 5 / 3;
+  /* WHY: we handle finger drags ourselves; without this the browser would also
+     try to scroll or zoom the page with the same gesture. */
+  touch-action: none;
+}
+
+.deck-item {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  transform-origin: bottom center;
+  border-radius: calc(var(--u) * 0.3);
+  box-shadow: 0 calc(var(--u) * -0.1) calc(var(--u) * 0.4) rgba(23, 17, 13, 0.35);
+}
+
+.deck-card {
+  text-align: left;
+  color: var(--ink);
+  font-size: calc(var(--u) * 1.75);
+  background:
+    linear-gradient(to bottom, transparent 15.5%, rgba(181, 82, 74, 0.55) 15.5% 16.3%, transparent 16.3%),
+    var(--paper);
+}
+.deck-title {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 0;
+  height: 8.5%;                         /* exactly the strip that stays visible */
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cards yellow as they age, even as strips in the deck. */
+.deck-card.stage-1 { background-color: #f6ecd0; }
+.deck-card.stage-2 { background-color: #f0e2bd; }
+.deck-card.stage-3 { background-color: #e8d5a6; border-radius: calc(var(--u) * 0.7); }
+
+.deck-divider { background: #c9a876; }
+.deck-divider > .asset {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.deck-divider > .asset.is-placeholder { display: none; }  /* the kraft colour stands in */
+/* A divider's label sits in its top strip, staggered left / middle / right like
+   real tabs, without covering the title of the card behind it. */
+.deck-tab {
+  position: absolute;
+  left: calc(4% + var(--tab-slot) * 30%);
+  top: 0;
+  height: 8.5%;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.6);
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* ---------- A card held up ---------- */
+.focus-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;                 /* empty space lets nothing through... */
+}
+.focus-layer > * { pointer-events: auto; }  /* ...but the card and marks work */
+
+.focus-holder {
+  display: flex;
+  align-items: stretch;
+  --card-w: 56;
+  filter: drop-shadow(0 calc(var(--u) * 0.8) calc(var(--u) * 1.5) rgba(23, 17, 13, 0.55));
+}
+
+/* The pencil marks: a strip of the same paper along the card's right edge. */
+.pencil-marks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--u) * 0.2);
+  width: calc(var(--u) * 13);
+  padding: calc(var(--u) * 0.8);
+  background: var(--paper);
+  border-left: calc(var(--u) * 0.12) dashed var(--pencil);
+  border-radius: 0 calc(var(--u) * 0.4) calc(var(--u) * 0.4) 0;
+}
+
+.pencil-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: calc(var(--u) * 3.3);
+  padding: 0 0.4em;
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.7);
+  text-align: left;
+  color: var(--pencil);
+  border-bottom: calc(var(--u) * 0.1) solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.pencil-mark:hover { color: var(--ink); border-bottom-color: var(--pencil); }
+.pencil-mark:focus-visible { outline-color: var(--burnt-orange); }
+.pencil-mark.mark-cook { color: var(--burnt-orange); font-weight: 700; }
+.pencil-mark.has-icon .asset { width: 1.5em; flex: none; }
+.pencil-mark.has-icon .asset-label { display: none; }
+
+/* ---------- Slips: "Throw this card out?" and "Move to..." ---------- */
+.slip {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 0.2);
+  min-width: calc(var(--u) * 24);
+  max-height: 86%;
+  overflow-y: auto;
+  padding: calc(var(--u) * 1.4) calc(var(--u) * 2);
+  transform: rotate(-1.5deg);
+  background: var(--cream);
+  border-radius: calc(var(--u) * 0.3);
+  box-shadow: 0 calc(var(--u) * 0.5) calc(var(--u) * 1.5) rgba(23, 17, 13, 0.6);
+}
+.slip-question {
+  margin: 0 0 0.3em;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 2.2);
+  color: var(--ink);
+}
+
+/* ---------- The X in the top-right corner ---------- */
+.scene-close {
+  position: absolute;
+  top: 3%;
+  right: 2.5%;
+  width: calc(var(--u) * 4);
+  height: calc(var(--u) * 4);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 3.6);
+  line-height: 1;
+  color: var(--cream);
+}

@@ -7,7 +7,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 
 - [x] **M0 - Foundation**
 - [x] **M1 - The table scene**
-- [ ] M2 - The recipe box
+- [x] **M2 - The recipe box**
 - [ ] M3 - Adding and moving recipes
 - [ ] M4 - Cook mode
 - [ ] M5 - Polish and demo prep
@@ -147,7 +147,80 @@ hands sit on the clock face, and the `.radio-dial`, `.pendulum`, `.lamp-chain` a
 
 ## M2 - The recipe box
 
-_Not built yet._
+**What it does.** Clicking the box on the table zooms in, swings the lid open and shows
+the cards standing in a row with their titles showing. You riffle through them with the
+wheel, a finger or the arrow keys, jump with the divider tabs, and click a card to hold
+it up. A held card can be turned over, edited, favorited, moved to another divider or
+thrown out. Ten starter cards are in the box on the first visit.
+
+**Which files.**
+
+- `js/storage.js` - now also keeps the cards, dividers and photos. The lists live in
+  memory and every change is written to IndexedDB straight away.
+- `js/samples.js` - the 10 starter cards. **Each has a `// VERIFY:` comment: they were
+  written from memory of the cookbook and need checking against it.**
+- `js/card.js` + `css/card.css` - makes a new card's data, and draws the front, back
+  and edit form. Also the flip and the second "stapled" page.
+- `js/aging.js` - which wear a card shows and where.
+- `js/fractions.js` - splits "1 1/2 cups flour" into amount, unit and item.
+- `js/box.js` + `css/box.css` - the scene itself: opening, the deck, riffling, the tab
+  rail, the held-up card and its pencil marks, and the little confirm slips.
+
+**How they connect.** `main.js` calls `loadBox()` at startup, so the cards are ready
+before anyone clicks. `table.js` calls `openBox()` when the box is clicked. `box.js`
+asks `storage.js` for the cards and dividers and builds the deck. When a card is picked
+up, `box.js` asks `card.js` to draw the full card. Every change (favorite, edit, move,
+notes, delete) goes `box.js` -> `storage.js` -> IndexedDB, then the card is redrawn
+from the saved data.
+
+**Riffling, the one-number idea.** `position` says which item is at the front; 3.4
+means "almost halfway from item 3 to item 4". The wheel adds to `velocity`; each frame
+`position += velocity` and `velocity *= 0.92` (friction). When it is nearly stopped it
+eases onto the nearest whole number. `layoutDeck()` then places every item from its
+`distance = index - position`: items behind stand one strip higher each; the item
+being flicked past (distance between 0 and -1) tips forward, drops and fades.
+A finger drag changes `position` directly and hands its last speed to `velocity` when
+you let go.
+
+**Deck cards are cheap, held cards are full.** In the deck each card is only a strip of
+paper with its title, so a big box stays smooth. The full card (ingredients, steps,
+stains, back) is built only for the one card you pick up.
+
+**Card sizes.** Everything on a card is sized in `em`. One CSS line sets the card's
+font size to 1/42 of its width, so a card is always 25.2em tall and the same layout
+works at any size. The blue rules are 1.45em apart and the text's line height is
+1.45em, which is why the writing sits on the lines.
+
+**Fonts.** A card gets one of four handwritings when it is created and keeps it
+(`card.font`). Because the fonts have different natural sizes, each has a
+`--font-scale` in `card.css` that evens them out.
+
+**Tricky part: long recipes.** The browser only knows how tall text is once it is on
+screen. So after a card is shown, `paginateCard()` checks whether the steps run past
+the bottom; if so it moves steps one at a time onto a second page until the first
+fits, and the card gains a "Next page" pencil mark and a stapled sheet behind it.
+
+**Tricky part: the flip.** Front and back are two layers in the same place; the back is
+pre-turned 180 degrees and `backface-visibility: hidden` hides whichever faces away.
+Turning the wrapper 180 degrees swaps them. The hidden face is marked `inert` so Tab
+and clicks can't reach it. With reduced motion the faces fade instead.
+
+**Aging.** `agingStage(uses)` gives 0-3. Stage 1 warms the paper and rounds the
+corners (pure CSS, no art needed). Stages 2 and 3 add stain pictures. Their positions
+were rolled once in `makeAgingLayout()` when the card was created and saved with it.
+Until the stain art exists you see faint dashed outlines where each will go.
+
+**Paper before the art arrives.** Until `card-front.jpg` exists, the card paper, red
+line and blue rules are drawn with CSS gradients, so cards are fully readable now.
+
+**Esc backs out one layer:** slip -> edit form -> held card -> box. The X closes the box.
+
+**Not built yet.** "Cook this recipe" shows a note (M4), so use counts don't change yet;
+the samples start with different use counts so every aging stage is visible.
+
+**When the art arrives.** Tune `.box-body`, `.box-lid` and `.deck` in `box.css` so the
+deck sits inside the painted box, and the `4.2em` / `1.45em` numbers in `card.css` if
+the painted rules are spaced differently.
 
 ## M3 - Adding and moving recipes
 

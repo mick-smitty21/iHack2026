@@ -49,7 +49,7 @@ let mugNudged = false;
 
 /* ---------- Building the scene (back to front) ---------- */
 
-export function buildTable(sceneElement, { onLampClick }) {
+export function buildTable(sceneElement, { onLampClick, onBoxClick }) {
   scene = sceneElement;
   scene.append(makeBackground());
 
@@ -61,7 +61,7 @@ export function buildTable(sceneElement, { onLampClick }) {
   addFlowers();
   addSugarPot();
   addMug();
-  addRecipeBox();
+  addRecipeBox(onBoxClick);
   addBinder();
   addTwineStack();
 
@@ -151,17 +151,19 @@ export function setLampLit(isLit) {
   }
 }
 
+/** Puts keyboard focus back on one of the table's objects (after a scene closes). */
+export function focusClickable(name) {
+  clickables[name].focus({ preventScroll: true });
+}
+
 function isLit() {
   return scene.classList.contains('is-lit');
 }
 
-/* ---------- 2-4. Recipe box, binder, twine stack (their scenes come later) ---------- */
+/* ---------- 2-4. Recipe box (opens scene 2), binder and twine stack (M3) ---------- */
 
-function addRecipeBox() {
-  const button = makeClickable('box', 'Recipe box: open it', () => {
-    playEffect('fx-lid');
-    showNote('The lid is stuck for now. The box opens in the next milestone.');
-  });
+function addRecipeBox(onBoxClick) {
+  const button = makeClickable('box', 'Recipe box: open it', onBoxClick);
   const brassLabel = document.createElement('span');
   brassLabel.className = 'brass-label';
   brassLabel.textContent = "Grandma's Recipe Box";

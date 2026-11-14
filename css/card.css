@@ -1,9 +1,340 @@
 /*
- * card.css - a recipe card: paper, handwriting, ruled lines, illustrations and aging overlays.
+ * card.css - a recipe card: paper, handwriting, ruled lines, illustration, doodle,
+ * the back, the 3D flip, the wear, and the edit form.
  *
  * Talks to: js/card.js and js/aging.js build the elements styled here.
  *
- * Say it to a judge: "The stains are separate pictures blended with 'multiply' so their white backgrounds vanish into the paper."
- *
- * M0 status: empty. Filled in M2.
+ * Say it to a judge: "Everything on a card is sized in 'em', and one line sets the
+ * card's font size from its width, so the same card works small in the box and
+ * large when you hold it up. Stains are separate pictures blended with 'multiply'
+ * so their white backgrounds vanish into the paper."
  */
+
+/* --card-w is the card's width in stage units; whoever shows the card sets it.
+   Font size follows it, so 1em is always 1/42 of the card's width, and a 5:3 card
+   is always 25.2em tall. All the measurements below rely on that. */
+.card {
+  --card-w: 40;
+  --font-scale: 1;
+  position: relative;
+  width: calc(var(--u) * var(--card-w));
+  aspect-ratio: 5 / 3;
+  flex: none;
+  font-size: calc(var(--u) * var(--card-w) / 42);
+  color: var(--ink);
+  perspective: 80em;
+}
+
+/* Each handwriting has its own natural size; these even them out. */
+.font-homemade-apple { font-family: var(--font-script); --font-scale: 0.74; }
+.font-caveat         { font-family: var(--font-hand);   --font-scale: 1.08; }
+.font-reenie-beanie  { font-family: var(--font-scrawl); --font-scale: 1.22; }
+.font-special-elite  { font-family: var(--font-typed);  --font-scale: 0.78; }
+
+/* ---------- The flip ---------- */
+.card-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.9s ease;
+}
+.card.is-flipped .card-inner { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 0.3em;
+  background: var(--paper);
+  /* WHY: hides a face when it's turned away, so you never see mirrored writing. */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.card-back { transform: rotateY(180deg); }
+
+/* Reduced motion: no turning, the two faces just fade into each other. */
+.reduce-motion .card-inner { transition: none; }
+.reduce-motion .card-face { transition: opacity 0.5s ease; }
+.reduce-motion .card.is-flipped .card-front,
+.reduce-motion .card:not(.is-flipped) .card-back { opacity: 0; }
+
+/* ---------- Paper ---------- */
+.card-paper {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+/* Until card-front.jpg / card-back.jpg exist, draw the paper in CSS: one red line
+   and blue rules every 1.45em, which is exactly the text's line height. */
+.card-paper.is-placeholder {
+  border: 0;
+  border-radius: 0;
+  align-items: end;
+  background:
+    linear-gradient(to bottom, transparent 4.1em, rgba(181, 82, 74, 0.6) 4.1em 4.2em, transparent 4.2em),
+    repeating-linear-gradient(to bottom, transparent 0 1.38em, rgba(90, 130, 170, 0.35) 1.38em 1.45em) 0 4.2em,
+    var(--paper);
+}
+.card-back .card-paper.is-placeholder { background: var(--paper); }
+.card-paper .asset-label { font-size: 0.45em; opacity: 0.5; }
+
+/* ---------- Front ---------- */
+.card-page {
+  position: absolute;
+  inset: 0;
+}
+.page-2 { display: none; }
+.card.showing-page-2 .page-1 { display: none; }
+.card.showing-page-2 .page-2 { display: block; }
+
+.card-kitchen {
+  position: absolute;
+  left: 1.6em;
+  top: 0.55em;
+  margin: 0;
+  font-family: var(--font-typed);
+  font-size: 0.6em;
+  color: var(--pencil);
+}
+.card-kitchen-name {
+  display: inline-block;
+  min-width: 9em;
+  padding: 0 0.3em;
+  border-bottom: 0.08em solid var(--pencil);
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.card-title {
+  position: absolute;
+  left: 0.75em;
+  right: 3.6em;
+  top: 0.85em;
+  height: 1.35em;
+  margin: 0;
+  font-weight: 700;
+  font-size: calc(1.55em * var(--font-scale));
+  line-height: 1.35em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.page-2 .card-title { top: 0.6em; }
+
+/* The body sits on the blue rules: line-height equals the gap between rules. */
+.card-body {
+  position: absolute;
+  left: 1.1em;
+  right: 0.9em;
+  top: 4.2em;
+  bottom: 0.7em;
+  display: grid;
+  grid-template-columns: 36% 1fr;
+  gap: 1em;
+  overflow: hidden;
+  line-height: 1.45em;
+}
+.page-2 .card-body { grid-template-columns: 1fr; }
+
+.card-ingredients,
+.card-steps {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}
+.card-ingredients { list-style: none; }
+.card-ingredients li,
+.card-steps li {
+  font-size: calc(1em * var(--font-scale));
+}
+.card-ingredients li {
+  padding-left: 0.8em;
+  text-indent: -0.8em;          /* wrapped lines hang under the first word */
+}
+.card-servings { color: var(--pencil); }
+
+.card-illustration {
+  position: absolute;
+  right: 0.5em;
+  top: 0.35em;
+  width: 3.5em;
+}
+.card-heart {
+  position: absolute;
+  right: 4.2em;
+  top: 0.5em;
+  width: 1.6em;
+}
+.card-doodle {
+  position: absolute;
+  left: 0.9em;
+  bottom: 0.5em;
+  width: 2em;
+  opacity: 0.8;
+}
+.card-illustration .asset-label,
+.card-heart .asset-label,
+.card-doodle .asset-label { font-size: 0.32em; }
+
+/* A long recipe: a second sheet peeks out behind, held by a staple. */
+.card.has-second-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translate(0.5em, 0.5em) rotate(0.6deg);
+  border-radius: 0.3em;
+  background: #efe5c9;
+}
+.card.has-second-page .card-front::after {
+  content: '';
+  position: absolute;
+  left: 1em;
+  top: 0.5em;
+  width: 1.5em;
+  height: 0.22em;
+  transform: rotate(-12deg);
+  border-radius: 0.1em;
+  background: #8d8b86;
+}
+
+/* ---------- Back ---------- */
+.card-back-content {
+  position: absolute;
+  inset: 1.2em 1.5em 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  overflow-y: auto;
+  line-height: 1.4em;
+}
+.card-back-heading {
+  display: block;
+  font-family: var(--font-typed);
+  font-size: 0.6em;
+  letter-spacing: 0.05em;
+  color: var(--pencil);
+}
+.card-notes textarea {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  resize: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: calc(1.05em * var(--font-scale));
+  line-height: 1.4em;
+  color: var(--ink);
+}
+.card-notes textarea::placeholder { color: var(--pencil); opacity: 0.6; }
+.card-log-entry {
+  margin: 0;
+  font-size: calc(1em * var(--font-scale));
+}
+.card-photo {
+  display: block;
+  max-width: 40%;
+  max-height: 7em;
+  margin-top: 0.3em;
+  border-radius: 0.2em;
+}
+.card-source {
+  margin: auto 0 0;                 /* pushed to the bottom of the card */
+  font-family: var(--font-typed);
+  font-size: 0.55em;
+  line-height: 1.4;
+  color: var(--pencil);
+}
+.card-source a { color: var(--walnut); }
+.card-back :focus-visible { outline-color: var(--burnt-orange); }
+
+/* ---------- Wear ---------- */
+.card-aging {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;             /* you can still click and select through stains */
+}
+.age-mark {
+  position: absolute;
+  opacity: 0.55;
+}
+.age-mark.age-yellowing { opacity: 0.4; height: 100%; }
+.age-mark.age-yellowing .asset,
+.age-mark.age-pencil .asset { height: 100%; aspect-ratio: auto !important; }
+.age-mark.age-pencil { height: 100%; opacity: 0.4; }
+.stage-3 .age-mark.age-yellowing { opacity: 0.75; }
+
+/* Missing stain art: show only a faint dashed outline, never a grey block over the recipe. */
+.age-mark .asset.is-placeholder {
+  background: transparent;
+  border-color: rgba(111, 106, 99, 0.35);
+}
+.age-mark .asset-label { font-size: 0.3em; opacity: 0.5; }
+.age-yellowing .asset.is-placeholder,
+.age-pencil .asset.is-placeholder { border: 0; }
+.age-yellowing .asset-label,
+.age-pencil .asset-label { display: none; }
+
+/* Wear that needs no pictures: corners soften and the paper warms. */
+.stage-1 .card-face,
+.stage-2 .card-face { border-radius: 0.7em; }
+.stage-3 .card-face { border-radius: 1em; }
+.stage-1 .card-face { background-color: #f6ecd0; }
+.stage-2 .card-face { background-color: #f0e2bd; }
+.stage-3 .card-face { background-color: #e8d5a6; }
+.stage-1 .card-paper.is-placeholder,
+.stage-2 .card-paper.is-placeholder,
+.stage-3 .card-paper.is-placeholder { background-color: inherit; }
+
+/* ---------- Edit form ---------- */
+.card-editing .card-face {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.9em 1.2em 0.7em;
+}
+.card-editing .card-paper.is-placeholder { background: var(--paper); }
+.edit-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2fr 1.4fr 0.6fr;
+  gap: 0.8em;
+}
+.edit-row-tall {
+  flex: 1;
+  grid-template-columns: 36% 1fr;
+  min-height: 0;
+}
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.edit-field span {
+  font-family: var(--font-typed);
+  font-size: 0.55em;
+  color: var(--pencil);
+}
+.edit-field input,
+.edit-field textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 2em;
+  padding: 0.1em 0.3em;
+  border: 0;
+  border-bottom: 0.08em solid rgba(90, 130, 170, 0.5);
+  resize: none;
+  background: rgba(250, 243, 224, 0.6);
+  font-family: inherit;
+  font-size: calc(1em * var(--font-scale));
+  line-height: 1.4;
+  color: var(--ink);
+}
+.edit-field :focus-visible { outline-color: var(--burnt-orange); }
+.edit-buttons {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+}
+.edit-buttons .pencil-mark { font-size: 1.1em; min-height: 2em; }

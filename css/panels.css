@@ -1,0 +1,9 @@
+/*
+ * panels.css - the almanac, binder and twine panels that open over a scene.
+ *
+ * Talks to: js/almanac.js, js/importer.js and js/storage.js build the elements styled here.
+ *
+ * Say it to a judge: "Each panel is drawn on a picture of a real object - an almanac, a binder - instead of a floating window."
+ *
+ * M0 status: empty. Filled in M1 (almanac) and M3 (binder, twine).
+ */

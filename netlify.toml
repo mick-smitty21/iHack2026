@@ -1,0 +1,32 @@
+# netlify.toml - tells Netlify (and `npx netlify dev`) how to serve the site.
+# There is no build step: the repo folder itself is the website.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[dev]
+  # Serve the folder as-is; don't try to detect or start a framework.
+  framework = "#static"
+
+# Missing art and sound.
+# WHY: these rules only apply when the requested file does NOT exist (Netlify always
+# serves a real file first). Instead of a 404 error the browser gets a 1x1 pixel or
+# half a second of silence. js/assets.js spots the 1x1 pixel and draws a labelled grey
+# placeholder. Drop the real file into the folder and it is served instead - no code change.
+[[redirects]]
+  from = "/assets/img/*"
+  to = "/assets/missing.png"
+  status = 200
+
+[[redirects]]
+  from = "/assets/audio/*"
+  to = "/assets/missing.mp3"
+  status = 200
+
+# WHY: always re-check art and sound with the server, so a file the team replaces
+# shows up on the next reload instead of a stale copy from the browser cache.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

@@ -1,0 +1,180 @@
+/*
+ * base.css - colours, fonts, the 16:9 stage and the placeholder look.
+ *
+ * Talks to: every other stylesheet uses the variables defined here.
+ *
+ * Say it to a judge: "All our colours are named once here, and the whole kitchen sits
+ * on a fixed 16:9 stage that shrinks or grows to fit the screen, so the layout is the
+ * same on an iPad and a laptop."
+ */
+
+/* ---------- Fonts (local copies in /fonts, no Google request at runtime) ---------- */
+@font-face {
+  font-family: 'Homemade Apple';
+  src: url('../fonts/homemade-apple-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  font-weight: 400;
+  src: url('../fonts/caveat-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  font-weight: 700;
+  src: url('../fonts/caveat-latin-700-normal.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Reenie Beanie';
+  src: url('../fonts/reenie-beanie-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Special Elite';
+  src: url('../fonts/special-elite-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  /* ---------- Palette: nothing is pure white or pure black ---------- */
+  --harvest-gold: #d9a441;
+  --avocado: #7c8b3f;
+  --burnt-orange: #c2622d;
+  --walnut: #5c3b22;
+  --walnut-dark: #3b2616;
+  --cream: #f3e8cf;
+  --paper: #faf3e0;        /* the lightest colour we use */
+  --gingham-red: #b5524a;
+  --ink: #33261a;          /* the darkest text colour */
+  --pencil: #6f6a63;
+  --night: #17110d;        /* the darkest colour we use */
+  --lamp-glow: #ffcf7a;
+  --placeholder: #8f887c;
+  --placeholder-edge: #6b655c;
+
+  /* ---------- Fonts ---------- */
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  --font-script: 'Homemade Apple', cursive;
+  --font-scrawl: 'Reenie Beanie', cursive;
+  --font-typed: 'Special Elite', 'Courier New', monospace;
+
+  /* ---------- Stage unit ----------
+     WHY: --u is 1% of the stage's width. The stage is the biggest 16:9 box that fits
+     the screen, so sizing text and borders in --u makes them scale with the scene. */
+  --stage-w: min(100vw, calc(100vh * 16 / 9));
+  --u: calc(var(--stage-w) / 100);
+}
+
+/* WHY: on iPad Safari 100vh includes the area under the address bar. 100dvh is the
+   part you can actually see. Older browsers skip this block and keep the vh version. */
+@supports (height: 100dvh) {
+  :root { --stage-w: min(100vw, calc(100dvh * 16 / 9)); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;              /* the stage never scrolls */
+  background: var(--night);      /* the letterbox bars */
+  color: var(--cream);
+  font-family: var(--font-hand);
+  -webkit-text-size-adjust: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  /* WHY: stops iPad Safari's double-tap-to-zoom and the grey tap flash on our objects. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* A visible, warm focus outline for keyboard users. */
+:focus-visible {
+  outline: calc(var(--u) * 0.3) solid var(--lamp-glow);
+  outline-offset: calc(var(--u) * 0.3);
+  border-radius: calc(var(--u) * 0.5);
+}
+
+[hidden] { display: none !important; }
+
+/* ---------- The stage and its three scenes ---------- */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--stage-w);
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background: var(--walnut-dark);
+  font-size: calc(var(--u) * 1.6);
+}
+
+.scene,
+.panels {
+  position: absolute;
+  inset: 0;
+}
+
+.panels { pointer-events: none; }        /* empty until a panel opens */
+.panels > * { pointer-events: auto; }
+
+/* ---------- Assets and their placeholders ---------- */
+.asset {
+  position: relative;
+  width: 100%;
+}
+
+.asset img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.asset-bg img { object-fit: cover; }
+
+/* Images kept on a white background: multiply makes the white disappear into
+   whatever is underneath (see IMAGE-PROMPTS.txt, "ON WHITE"). */
+.asset-onwhite { mix-blend-mode: multiply; }
+
+.asset.is-placeholder {
+  display: grid;
+  place-items: center;
+  background: var(--placeholder);
+  border: calc(var(--u) * 0.15) dashed var(--placeholder-edge);
+  border-radius: calc(var(--u) * 0.6);
+  mix-blend-mode: normal;
+  overflow: hidden;
+}
+
+.asset-bg.is-placeholder {
+  border-radius: 0;
+  background: #7a7368;
+}
+
+.asset-label {
+  padding: 0 0.3em;
+  font-family: var(--font-typed);
+  font-size: calc(var(--u) * 0.85);
+  line-height: 1.1;
+  color: var(--ink);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Reduced motion ----------
+   Scene code checks this too and swaps movement for fades (from M1 on). */
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}

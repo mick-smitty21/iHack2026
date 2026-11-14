@@ -1,0 +1,32 @@
+/*
+ * table.css - scene 1: the kitchen table.
+ *
+ * Talks to: js/table.js builds the elements styled here; base.css supplies colours.
+ *
+ * Say it to a judge: "Each object is absolutely positioned on the stage by
+ * percentages, and a dark layer on top is the kitchen with the lamp off."
+ */
+
+.table-bg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.prop {
+  position: absolute;
+}
+
+/* The right-hand curtain is the left-hand picture flipped. */
+.prop.is-mirrored { transform: scaleX(-1); }
+/* ...but its placeholder label should still read left to right. */
+.prop.is-mirrored .asset-label { transform: scaleX(-1); }
+
+/* The lamp-off darkness. pointer-events: none lets clicks reach the objects below. */
+.table-darkness {
+  position: absolute;
+  inset: 0;
+  background: var(--night);
+  opacity: 0.45;
+  pointer-events: none;
+}

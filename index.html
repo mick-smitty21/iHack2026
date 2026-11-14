@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+  index.html - the one and only page.
+
+  Talks to: css/*.css for looks, js/main.js to start everything, vendor/ for the libraries.
+
+  Say it to a judge: "The whole site is one page with three scenes stacked on a fixed
+  16:9 stage - the table, the recipe box and the stove - and JavaScript shows one at a time."
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grandma's Recipe Box</title>
+  <!-- WHY: an empty icon stops the browser asking for /favicon.ico (a 404 in the console).
+       M5 replaces this with the real favicon. -->
+  <link rel="icon" href="data:,">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/box.css">
+  <link rel="stylesheet" href="css/card.css">
+  <link rel="stylesheet" href="css/cook.css">
+  <link rel="stylesheet" href="css/panels.css">
+</head>
+<body>
+  <!-- The stage is always 16:9 and scales to fit the screen (see base.css). -->
+  <main id="stage" class="stage">
+    <section id="scene-table" class="scene is-active" aria-label="Grandma's kitchen table"></section>
+    <section id="scene-box" class="scene" aria-label="The recipe box" hidden></section>
+    <section id="scene-cook" class="scene" aria-label="Cooking at the stove" hidden></section>
+
+    <!-- Panels (almanac, binder, twine) open on top of whichever scene is showing. -->
+    <div id="panels" class="panels"></div>
+  </main>
+
+  <!-- WHY: GSAP and Howler are classic scripts that create the globals `gsap` and `Howl`.
+       They are local copies in /vendor so the demo survives bad venue Wi-Fi.
+       `defer` keeps them in order and guarantees they run before the module below. -->
+  <script defer src="vendor/gsap.min.js"></script>
+  <script defer src="vendor/howler.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

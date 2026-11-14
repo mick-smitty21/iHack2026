@@ -10,11 +10,33 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- WHY viewport-fit=cover: lets the dark letterbox colour run under the iPad's
+       rounded corners and home bar instead of leaving white strips. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Grandma's Recipe Box</title>
-  <!-- WHY: an empty icon stops the browser asking for /favicon.ico (a 404 in the console).
-       M5 replaces this with the real favicon. -->
-  <link rel="icon" href="data:,">
+  <meta name="description" content="The recipe tin every home used to have: riffle through index cards that age as you cook from them, in Grandma's early-1980s kitchen.">
+  <meta name="theme-color" content="#17110d">
+
+  <!-- Tab icon, and the icon used if the site is added to an iPad's home screen. -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- WHY: opened from the home screen, these hide Safari's address bar so the kitchen
+       fills the whole iPad screen. Handy for the demo. -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Open Graph: the title, blurb and picture shown when the link is shared.
+       AFTER DEPLOYING: sharing sites need the picture's FULL address. Replace the two
+       "assets/img/og-image.jpg" below with https://YOUR-SITE.netlify.app/assets/img/og-image.jpg -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Grandma's Recipe Box">
+  <meta property="og:description" content="The recipe tin every home used to have. Pull the lamp chain and come in.">
+  <meta property="og:image" content="assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1424">
+  <meta property="og:image:height" content="752">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="assets/img/og-image.jpg">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/table.css">
@@ -33,6 +55,12 @@
     <!-- Panels (almanac, binder, twine) open on top of whichever scene is showing. -->
     <div id="panels" class="panels"></div>
   </main>
+
+  <noscript>
+    <p style="position:fixed;inset:0;display:grid;place-items:center;margin:0;padding:2em;color:#f3e8cf;font:1.2em Georgia,serif;text-align:center">
+      Grandma's Recipe Box needs JavaScript switched on to open the kitchen.
+    </p>
+  </noscript>
 
   <!-- WHY: GSAP and Howler are classic scripts that create the globals `gsap` and `Howl`.
        They are local copies in /vendor so the demo survives bad venue Wi-Fi.

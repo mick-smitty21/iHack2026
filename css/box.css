@@ -22,6 +22,11 @@
   transition: filter 0.5s ease;
 }
 .has-focus .box-stage { filter: blur(calc(var(--u) * 0.35)) brightness(0.6); }
+/* WHY: fading a blur in is the costly part on a tablet, so touch devices switch it
+   on in one step (the card's own lift animation hides the jump). */
+@media (hover: none) {
+  .box-stage { transition: none; }
+}
 
 /* The box. Everything inside it is placed in percentages of the box picture
    (obj-box-body-open.png), so the cards stay in the box whatever size it is drawn. */
@@ -79,7 +84,7 @@
 }
 
 .rail-tab {
-  min-height: calc(var(--u) * 3.6);    /* comfortable to tap */
+  min-height: calc(var(--u) * 3.9);    /* about 46px on an iPad: comfortable to tap */
   padding: 0.1em 0.8em;
   font-family: var(--font-hand);
   font-weight: 700;
@@ -209,7 +214,7 @@
   display: flex;
   align-items: center;
   gap: 0.4em;
-  min-height: calc(var(--u) * 3.3);
+  min-height: calc(var(--u) * 3.8);    /* about 45px on an iPad */
   padding: 0 0.4em;
   font-family: var(--font-hand);
   font-size: calc(var(--u) * 1.7);

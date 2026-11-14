@@ -21,6 +21,9 @@ import { playEffect, setCardFocused } from './audio.js';
 import { showNote } from './panels.js';
 import { motionReduced, fadeIn, fadeOut } from './motion.js';
 
+// Devices with a mouse (laptops) can animate a full-screen blur; touch tablets struggle.
+const canBlurSmoothly = window.matchMedia('(hover: hover)').matches;
+
 const FAVORITES_ID = 'favorites';
 const CARDS_VISIBLE_BEHIND = 8;   // how many title strips you can see past the front card
 const STRIP_PERCENT = 8.5;        // how much of each card behind peeks out (% of card height)
@@ -132,8 +135,10 @@ export function openBox() {
   // About 1.2 seconds: zoom toward the box, fade the close-up in, swing the lid, raise the tabs.
   gsap.timeline({ onComplete: finishOpening })
     .to(tableScene, {
-      scale: 1.7, transformOrigin: '66% 64%', filter: 'blur(4px) brightness(0.6)',
-      duration: 0.6, ease: 'power2.in',
+      scale: 1.7, transformOrigin: '53% 56%', duration: 0.6, ease: 'power2.in',
+      // WHY: animating a blur over the whole screen stutters on tablets, so touch
+      // devices just darken the table as it zooms.
+      filter: canBlurSmoothly ? 'blur(4px) brightness(0.6)' : 'brightness(0.6)',
     }, 0)
     .fromTo(scene, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.35)
     .fromTo(parts.lid, { rotationX: 84 }, { rotationX: 6, duration: 0.6, ease: 'power2.out' }, 0.45)
@@ -163,7 +168,10 @@ export function closeBox() {
   gsap.timeline({ onComplete: finish })
     .to(parts.lid, { rotationX: 84, duration: 0.4, ease: 'power2.in' }, 0)
     .to(scene, { opacity: 0, duration: 0.4 }, 0.3)
-    .to(tableScene, { scale: 1, filter: 'blur(0px) brightness(1)', duration: 0.6, ease: 'power2.out' }, 0.3)
+    .to(tableScene, {
+      scale: 1, duration: 0.6, ease: 'power2.out',
+      filter: canBlurSmoothly ? 'blur(0px) brightness(1)' : 'brightness(1)',
+    }, 0.3)
     .set(tableScene, { clearProps: 'filter,transform' });
 }
 

@@ -139,6 +139,7 @@
   margin-top: 0.2em;
 }
 .cook-servings-mark {
+  position: relative;
   width: 1.5em;
   height: 1.35em;
   line-height: 1;
@@ -147,6 +148,14 @@
   color: var(--ink);
   border: 0.08em solid var(--pencil);
   border-radius: 50% 45% 55% 48% / 60% 55% 60% 50%;
+}
+
+/* WHY: the minus and plus are drawn small to fit the card, so an invisible pad
+   around each makes the area a finger can hit about three times bigger. */
+.cook-servings-mark::after {
+  content: '';
+  position: absolute;
+  inset: -0.7em -0.5em;
 }
 
 /* ---------- The steno pad ---------- */
@@ -184,7 +193,7 @@
   justify-content: space-between;
 }
 .steno-arrow {
-  min-height: calc(var(--u) * 3.3);
+  min-height: calc(var(--u) * 3.8);
   padding: 0 0.3em;
   font-family: var(--font-hand);
   font-weight: 700;

@@ -55,7 +55,7 @@ export const IMAGES = {
   'obj-steno':         { kind: 'object', ratio: 0.74 },
   'obj-done-tag':      { kind: 'object', ratio: 0.41 },
   // 4. Cards and dividers
-  'card-front':        { kind: 'bg', ratio: 5 / 3 },
+  'card-front':        { kind: 'bg', ratio: 5 / 3, unused: true },  // see HOW-IT-WORKS, "Art pass"
   'card-back':         { kind: 'bg', ratio: 5 / 3 },
   'divider-tab':       { kind: 'object', ratio: 1.49 },
   // 5. Aging overlays
@@ -82,7 +82,7 @@ export const IMAGES = {
   'doodle-star':       { kind: 'onwhite', ratio: 0.99 },
   'doodle-spoon':      { kind: 'onwhite', ratio: 1.17 },
   // 8. Share image (only used in the page's <meta> tags, never drawn in a scene)
-  'og-image':          { kind: 'bg', ratio: 1200 / 630 },
+  'og-image':          { kind: 'bg', ratio: 1200 / 630, unused: true },
 };
 
 // channel: which volume slider controls it. loop: plays forever with a crossfade.
@@ -168,8 +168,13 @@ function makeLabel(id) {
   return label;
 }
 
-/** Starts downloading every image so later scenes appear instantly. Never rejects. */
-export function preloadImages(ids = Object.keys(IMAGES)) {
+/** Every picture the scenes actually draw (not the share image or spare paper). */
+export function usedImageIds() {
+  return Object.keys(IMAGES).filter((id) => !IMAGES[id].unused);
+}
+
+/** Starts downloading images so later scenes appear instantly. Never rejects. */
+export function preloadImages(ids = usedImageIds()) {
   return Promise.all(ids.map(preloadOneImage));
 }
 

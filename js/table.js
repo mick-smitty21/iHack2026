@@ -162,6 +162,14 @@ export function setLampLit(isLit) {
   }
 }
 
+/** The pictures this scene draws: main.js fetches these first, before the lamp. */
+export const TABLE_ART = [
+  'bg-table', 'view-day', 'view-night', 'obj-curtain', 'obj-clock', 'obj-calendar', 'obj-radio',
+  'obj-radio-dial', 'obj-kettle', 'obj-pitcher', 'obj-petal', 'obj-sugar-body', 'obj-sugar-lid',
+  'obj-mug', 'obj-box-closed', 'obj-binder', 'obj-twine', 'obj-twine-loose', 'obj-lamp-off',
+  'obj-lamp-on', 'obj-done-tag',
+];
+
 /** One of the table's objects, by name (e.g. the box, so a card can slide into it). */
 export function getClickable(name) {
   return clickables[name];

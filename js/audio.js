@@ -105,9 +105,17 @@ class SeamlessLoop {
  * block) audio objects made before the user's first click. A plain fetch is allowed.
  */
 export function preloadSounds() {
-  for (const id of Object.keys(SOUNDS)) {
+  // Small effects first, the big radio songs last, so a slow connection has the
+  // sounds you'll hear first ready first.
+  const smallestFirst = Object.keys(SOUNDS).sort((a, b) => downloadOrder(a) - downloadOrder(b));
+  for (const id of smallestFirst) {
     fetch(soundUrl(id)).catch(() => { /* missing or offline: silence later */ });
   }
+}
+
+function downloadOrder(id) {
+  if (SOUNDS[id].channel === 'music') return 3;
+  return SOUNDS[id].loop ? 2 : 1;
 }
 
 /** Remembers the latest settings and, if sound is running, applies them. */

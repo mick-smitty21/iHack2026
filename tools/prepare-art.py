@@ -22,6 +22,11 @@ What it does, and why:
    background to pure white, then crops to the drawing.
 
 3. age-corner.png: keeps only the folded corner itself.
+
+4. SHRINKS pictures that are far bigger than they are ever shown (a mug that is 60
+   pixels wide on screen doesn't need 600), and re-saves heavy JPGs a little
+   smaller. This makes the site load several times faster on slow Wi-Fi.
+   The originals stay in the project's git history if they are ever needed.
 """
 
 import sys
@@ -42,6 +47,23 @@ SHADED_PAPER_PREFIX = "doodle-"
 # The part of age-corner.png that is the fold itself (fractions of the picture):
 # left, top, right, bottom. The top-right of this box is the card's corner.
 CORNER_FOLD_BOX = (0.36, 0.20, 0.765, 0.52)
+
+# The widest each picture ever needs to be, in pixels: its biggest size on screen at
+# an iPad Pro's full resolution, with a little spare. Anything not listed is left alone.
+MAX_WIDTH = {
+    "obj-lamp-off": 260, "obj-lamp-on": 260, "obj-pitcher": 260, "obj-sugar-body": 240,
+    "obj-sugar-lid": 240, "obj-mug": 200, "obj-box-closed": 420, "obj-binder": 440,
+    "obj-twine": 280, "obj-twine-loose": 280, "obj-radio": 360, "obj-radio-dial": 160,
+    "obj-clock": 400, "obj-calendar": 400, "obj-kettle": 260, "obj-petal": 64,
+    "obj-done-tag": 170, "obj-egg-timer": 220, "obj-wastebasket": 110, "obj-pencil": 110,
+    "ill-main": 280, "ill-bread": 280, "ill-pie": 280, "ill-cake": 280, "ill-cookie": 280,
+    "ill-soup": 280, "ill-sides": 280, "ill-canning": 280,
+    "age-fingerprint": 280, "age-grease": 340, "age-coffee-ring": 440, "age-corner": 280,
+    "age-tape": 420, "age-yellowing": 800, "age-pencil": 800,   # soft textures: fine when stretched
+    "obj-curtain": 480, "divider-tab": 640,
+}
+JPG_QUALITY = 84           # plenty for painted art; well under half the file size
+JPG_HEAVY = 0.42           # bytes per pixel: above this a JPG is worth re-saving
 
 NEARLY_WHITE = 246   # anything this bright becomes pure white
 PADDING = 2          # pixels of breathing room left around a crop
@@ -79,8 +101,9 @@ def trim_objects():
 
     for path, (box, size) in boxes.items():
         box = padded(box, size)
-        if box == (0, 0, *size):
-            continue  # already tidy
+        margins = (box[0], box[1], size[0] - box[2], size[1] - box[3])
+        if max(margins) <= 8:
+            continue  # already tidy (a few stray pixels of margin aren't worth a re-save)
         Image.open(path).crop(box).save(path)
         print(f"trimmed   {path.name}: {size} -> {box[2] - box[0]}x{box[3] - box[1]}")
 
@@ -166,9 +189,34 @@ def clean_on_white():
         print(f"whitened  {path.name}: {original_size} -> {cleaned.size[0]}x{cleaned.size[1]}")
 
 
+def shrink_oversized():
+    for path in sorted(FOLDER.glob("*.png")):
+        limit = MAX_WIDTH.get(path.stem)
+        image = Image.open(path)
+        if not limit or image.size[0] <= limit:
+            continue
+        height = round(image.size[1] * limit / image.size[0])
+        note = PngImagePlugin.PngInfo()
+        if image.info.get("prepared") == "yes":
+            note.add_text("prepared", "yes")  # keep the "already whitened" note
+        before = path.stat().st_size
+        image.resize((limit, height), Image.LANCZOS).save(path, pnginfo=note, optimize=True)
+        print(f"shrunk    {path.name}: {image.size[0]} -> {limit} px wide, "
+              f"{before // 1024} -> {path.stat().st_size // 1024} KB")
+
+    for path in sorted(FOLDER.glob("*.jpg")):
+        image = Image.open(path)
+        before = path.stat().st_size
+        if before / (image.size[0] * image.size[1]) <= JPG_HEAVY:
+            continue  # already light: saving a JPG again and again would wear it out
+        image.convert("RGB").save(path, quality=JPG_QUALITY, optimize=True, progressive=True)
+        print(f"lightened {path.name}: {before // 1024} -> {path.stat().st_size // 1024} KB")
+
+
 if __name__ == "__main__":
     if not FOLDER.is_dir():
         sys.exit(f"Can't find the art folder: {FOLDER}")
     trim_objects()
     clean_on_white()
+    shrink_oversized()
     print("Art is ready.")

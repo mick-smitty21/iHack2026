@@ -10,7 +10,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M2 - The recipe box**
 - [x] **M3 - Adding and moving recipes**
 - [x] **M4 - Cook mode**
-- [ ] M5 - Polish and demo prep
+- [x] **M5 - Polish and demo prep**
 
 ## The big picture
 
@@ -436,4 +436,90 @@ open, otherwise leaves the stove.
 
 ## M5 - Polish and demo prep
 
-_Not built yet._
+**What it does.** Nothing new on screen. This milestone makes the site load faster,
+behave on an iPad, work for keyboards and screen readers, and look right when its
+link is shared.
+
+**Loading faster.**
+
+- *Smaller pictures.* `tools/prepare-art.py` gained a fourth job: shrink pictures
+  that are far bigger than they are ever shown, and re-save heavy JPGs. A mug that is
+  about 60 pixels wide on screen was a 600-pixel file. The art went from about 31 MB
+  to about 12 MB, and the first screen (the table) to about 4 MB.
+- *Lazy loading after the lamp.* Before the lamp is lit, only the 21 pictures the
+  table needs are fetched (`TABLE_ART` in `table.js`). The recipe box and stove scenes
+  are built, and their pictures fetched, the first time the lamp is lit
+  (`prepareOtherScenes()` in `main.js`), while you are looking around the table.
+- *Sounds in order.* Small effects are fetched first and the big radio songs last.
+- *Caching.* `netlify.toml` lets browsers keep the libraries and fonts for a week.
+  Art and sound are always re-checked, so a replaced file shows up on reload.
+- Tesseract (several megabytes) still loads only when someone first reads a photo.
+
+**iPad Safari.**
+
+- *Sound:* created inside the lamp's tap (M1). Nothing else is needed.
+- *No sliding or zooming:* the page is pinned (`position: fixed` on `html, body`) so
+  it can't rubber-band, and `touch-action: manipulation` removes double-tap zoom.
+- *No long-press pop-ups:* `user-select: none` and `-webkit-touch-callout: none` on
+  the stage stop "Copy / Save Image" appearing over the kitchen. Typed text and the
+  card you are holding can still be selected.
+- *Blur:* animating a full-screen blur stutters on tablets. Devices with no mouse
+  (`hover: none`) darken the table instead of blurring it during the zoom, and the
+  blur behind a held card switches on in one step instead of fading in.
+- *Touch targets:* tabs, pencil marks and steno arrows are at least about 45 px tall
+  on an iPad. The servings minus and plus have an invisible pad around them.
+  **Known limit:** ingredient lines in cook mode are about 20 px tall on an iPad,
+  because they sit on the card's ruled lines.
+- *Full screen:* `100dvh` sizes the stage to the visible area, and "Add to Home
+  Screen" opens the site without Safari's bars.
+
+**Accessibility.**
+
+- Every control is a real `<button>`, `<input>` or `role="slider"` with a label.
+- Tab reaches everything; Esc backs out one layer at a time; focus returns to the
+  object that opened a panel or scene; hidden scenes can't be tabbed into.
+- Entering cook mode puts focus on the steno pad's Next button.
+- Notes and each new step are announced to screen readers (`role="status"`,
+  `aria-live`). Pictures are decorative (`alt=""`); the weather canvas is hidden
+  from screen readers.
+- Reduced motion (the device setting or the almanac switch) swaps every movement for
+  a fade.
+- A `<noscript>` message explains that JavaScript is needed.
+
+**Sharing and icons.** `index.html` has Open Graph tags (title, description,
+`og-image.jpg`) and a description for search engines. `favicon.svg` is the tab icon
+and `apple-touch-icon.png` the home-screen icon. **After deploying, the og:image
+address must be changed to the site's full address** (see README, Deploy step 5).
+
+**Not preloaded on purpose.** `card-front.jpg` (unused, see "Art pass") and
+`og-image.jpg` (only for link previews) are marked `unused` in `assets.js`.
+
+---
+
+## Questions a judge might ask
+
+**"Is there AI in the site?"** No. Code and art were made with AI tools beforehand
+(see AI-DISCLOSURE.md), but the live site runs no AI model and calls no AI service.
+Links are read from data sites already publish; photos are read by Tesseract, a
+classic OCR engine, inside the browser.
+
+**"Where is my data stored?"** In this browser, in IndexedDB. Nothing is sent to a
+server. The twine stack exports everything to a file.
+
+**"Why no framework?"** The whole site is plain HTML, CSS and JavaScript modules, so
+there is no build step and every file can be read top to bottom.
+
+**"How does the layout work on different screens?"** Everything sits on a fixed 16:9
+stage that scales to fit, and every position is a percentage of that stage.
+
+**"What does the server do?"** One function. It fetches a recipe page on the
+browser's behalf, because browsers may not read other sites, and refuses private
+addresses so it can't be misused.
+
+**"How do the cards age?"** Each "Cook this recipe" adds one use. The use count picks
+a stage; the stains for that stage were given random positions once, when the card
+was made, and saved with it.
+
+**"What was hardest?"** Honest answers the team can give: fitting generated art to
+exact positions; making riffling feel physical with one position number and friction;
+and iPad Safari's audio rule, which is why the lamp is the way in.

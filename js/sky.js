@@ -114,6 +114,7 @@ const PARTICLE_COUNT = { clouds: 5, rain: 70, snow: 55 };
 export function createWeather(host) {
   const canvas = document.createElement('canvas');
   canvas.className = 'weather';
+  canvas.setAttribute('aria-hidden', 'true'); // decoration only; nothing to read out
   host.append(canvas);
 
   const state = { weather: 'clear', isNight: true, particles: [], frameRequest: null };

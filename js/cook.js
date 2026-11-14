@@ -164,6 +164,7 @@ export function openCook(recipe, picture) {
   showStep(0);
   scene.hidden = false;
   fadeIn(scene, 0.6);
+  parts.next.focus({ preventScroll: true }); // keyboard users land on the steno pad
 }
 
 // The light follows the almanac first, then the clock:

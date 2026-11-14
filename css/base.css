@@ -76,9 +76,14 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {
-  height: 100%;
+  /* WHY fixed: on an iPad a normal page can be dragged and "rubber-bands" at the
+     edges. Pinning it in place stops the kitchen sliding about under a finger. */
+  position: fixed;
+  inset: 0;
   margin: 0;
   overflow: hidden;              /* the stage never scrolls */
+  overscroll-behavior: none;
+  touch-action: manipulation;    /* no double-tap zoom anywhere on the page */
   background: var(--night);      /* the letterbox bars */
   color: var(--cream);
   font-family: var(--font-hand);
@@ -116,6 +121,18 @@ button {
   overflow: hidden;
   background: var(--walnut-dark);
   font-size: calc(var(--u) * 1.6);
+  /* WHY: a long press on an iPad would otherwise select pictures and pop up
+     "Copy / Save Image" over the kitchen. Text you type, and the writing on a card
+     you're holding, can still be selected (see the rule below). */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input,
+textarea,
+.focus-holder .card-face {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .scene,

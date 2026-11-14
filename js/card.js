@@ -61,8 +61,12 @@ function el(tag, className, text) {
   return element;
 }
 
-function makePaper(assetId) {
-  const paper = createAsset(assetId);
+// WHY both faces use card-back.jpg (plain paper): the painted rules on card-front.jpg
+// are spaced for about 9 lines, but a recipe needs about 14. So the paper grain comes
+// from the art and the red line and blue rules are drawn by card.css at exactly the
+// text's line height, which keeps the handwriting sitting on the lines.
+function makePaper() {
+  const paper = createAsset('card-back');
   paper.classList.add('card-paper');
   return paper;
 }
@@ -100,7 +104,8 @@ export function flipCard(element) {
 function buildFront(card, { illustration }) {
   const face = el('div', 'card-face card-front');
   face.append(
-    makePaper('card-front'),
+    makePaper(),
+    el('div', 'card-rules'),
     buildFirstPage(card, illustration),
     buildSecondPage(card),
     buildAgingLayer(card),
@@ -189,7 +194,7 @@ function buildBack(card, { onNotesChange, loadPhoto }) {
   if (card.photoId && loadPhoto) content.append(buildPhoto(card.photoId, loadPhoto, 'The original recipe photo'));
   content.append(buildSource(card.source));
 
-  face.append(makePaper('card-back'), content, buildAgingLayer(card));
+  face.append(makePaper(), content, buildAgingLayer(card, { isBack: true }));
   return face;
 }
 
@@ -277,7 +282,7 @@ export function buildEditForm(card, { onSave, onCancel }) {
   const buttons = el('div', 'edit-buttons');
   buttons.append(save, cancel);
 
-  face.append(makePaper('card-front'), topRow, bottomRow, buttons);
+  face.append(makePaper(), topRow, bottomRow, buttons);
   form.append(face);
 
   form.addEventListener('submit', (event) => {

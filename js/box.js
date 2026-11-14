@@ -22,8 +22,12 @@ import { showNote } from './panels.js';
 import { motionReduced, fadeIn, fadeOut } from './motion.js';
 
 const FAVORITES_ID = 'favorites';
-const CARDS_VISIBLE_BEHIND = 11;  // how many title strips you can see past the front card
+const CARDS_VISIBLE_BEHIND = 8;   // how many title strips you can see past the front card
 const STRIP_PERCENT = 8.5;        // how much of each card behind peeks out (% of card height)
+// The box is painted at an angle, so "further back" is up AND to the left. Each card
+// behind moves by this much (% of its own width and height) to follow the box's sides.
+const BACK_STEP = { x: 7, y: 11 };
+const BOX_SLANT_DEGREES = -11.5;  // the tilt of the painted box's front edge
 const FRICTION = 0.92;            // each frame the riffle keeps 92% of its speed
 const WHEEL_PUSH = 0.0009;        // how hard one wheel "click" pushes the deck
 
@@ -57,12 +61,20 @@ export function initBox(sceneElement, tableSceneElement, callbacks) {
   parts.lid = makePart('box-lid', createAsset('obj-box-lid'));
   parts.rail = makePart('tab-rail');
   parts.deck = makePart('deck');
-  parts.stage = makePart('box-stage',
+  // WHY two copies of the same box picture: the cards must look like they stand
+  // INSIDE the box. The back copy is drawn first, then the cards, then a second copy
+  // that box.css clips to just the front and side walls, which hides the cards' feet.
+  parts.box = makePart('box',
     parts.lid,
-    makePart('box-body', createAsset('obj-box-body-open')),
-    parts.rail,
+    makePart('box-back', createAsset('obj-box-body-open')),
     parts.deck,
+    makePart('box-front', createAsset('obj-box-body-open')),
+    makeBrassLabel(),
   );
+  parts.stage = makePart('box-stage', parts.box, parts.rail);
+  // The cards and the lid lean with the painted box.
+  gsap.set([parts.deck, parts.lid], { skewY: BOX_SLANT_DEGREES });
+  gsap.set(parts.lid, { rotationX: 6 });
   parts.focusLayer = makePart('focus-layer');
 
   scene.append(background, parts.stage, parts.focusLayer, makeCloseButton());
@@ -84,6 +96,12 @@ function makeButton(className, text, onClick) {
   button.textContent = text;
   button.addEventListener('click', onClick);
   return button;
+}
+
+function makeBrassLabel() {
+  const label = makePart('box-brass-label');
+  label.textContent = "Grandma's Recipe Box";
+  return label;
 }
 
 function makeCloseButton() {
@@ -199,7 +217,6 @@ function makeDeckCard(card, index) {
 
 function makeDeckDivider(item, index) {
   const divider = makePart('deck-item deck-divider');
-  divider.style.setProperty('--tab-slot', String(index % 3)); // stagger tabs left, middle, right
   const tab = document.createElement('span');
   tab.className = 'deck-tab';
   tab.textContent = item.label;
@@ -277,13 +294,13 @@ function layoutDeck() {
 
     if (distance >= 0) {
       // Standing in the box: each card back sits a strip higher and a touch smaller.
-      style.transform = `translateY(${-distance * STRIP_PERCENT}%) scale(${1 - distance * 0.012})`;
+      style.transform = `translate(${-distance * BACK_STEP.x}%, ${-distance * BACK_STEP.y}%) scale(${1 - distance * 0.012})`;
       style.opacity = distance > CARDS_VISIBLE_BEHIND - 1 ? String(CARDS_VISIBLE_BEHIND - distance) : '1';
     } else {
       // Flicked forward by the thumb: it tips toward you, drops away and fades.
       const flick = Math.min(1, -distance);
       const tilt = gentle ? 0 : -55 * flick;
-      const drop = gentle ? 0 : 70 * flick;
+      const drop = gentle ? 0 : 45 * flick;
       style.transform = `translateY(${drop}%) rotateX(${tilt}deg)`;
       style.opacity = String(1 - flick);
     }

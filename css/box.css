@@ -19,25 +19,52 @@
 .box-stage {
   position: absolute;
   inset: 0;
-  perspective: calc(var(--u) * 120);   /* gives the lid and the flicked cards depth */
   transition: filter 0.5s ease;
 }
 .has-focus .box-stage { filter: blur(calc(var(--u) * 0.35)) brightness(0.6); }
 
-/* First-pass positions: tune these three against the real box art. */
-.box-body {
+/* The box. Everything inside it is placed in percentages of the box picture
+   (obj-box-body-open.png), so the cards stay in the box whatever size it is drawn. */
+.box {
   position: absolute;
   left: 27%;
-  top: 16%;
-  width: 46%;
+  top: 25%;
+  width: 50%;
+  aspect-ratio: 711 / 630;
+  perspective: calc(var(--u) * 120);
 }
+.box-back,
+.box-front {
+  position: absolute;
+  inset: 0;
+}
+/* The front copy shows only the near walls: everything below the line that runs
+   along the box's left rim and front rim. Cards behind it look like they're inside. */
+.box-front {
+  -webkit-clip-path: polygon(0 13%, 5% 13%, 34.5% 42%, 98.5% 26.5%, 100% 26.5%, 100% 100%, 0 100%);
+  clip-path: polygon(0 13%, 5% 13%, 34.5% 42%, 98.5% 26.5%, 100% 26.5%, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+/* The open lid stands up from the box's back rim. box.js leans it to match the box. */
 .box-lid {
   position: absolute;
-  left: 31%;
-  top: -34%;
-  width: 38%;
-  transform-origin: bottom center;     /* the hinge */
-  transform: rotateX(6deg);
+  left: 5.5%;
+  bottom: 85%;
+  width: 63%;
+  transform-origin: left bottom;
+}
+.box-brass-label {
+  position: absolute;
+  left: 58.5%;
+  top: 62.5%;
+  width: 19%;
+  transform: rotate(-12deg);
+  font-family: var(--font-typed);
+  font-size: calc(var(--u) * 0.72);
+  line-height: 1.05;
+  text-align: center;
+  color: var(--walnut-dark);
+  pointer-events: none;
 }
 
 /* ---------- The tab rail ---------- */
@@ -69,12 +96,15 @@
 .rail-tab-input { border: 0; width: 100%; }
 
 /* ---------- The deck ---------- */
+/* .deck is the front card's place: its feet are down inside the box and box.js
+   leans it to the angle of the box's front edge. */
 .deck {
   position: absolute;
-  left: 30%;
-  top: 46%;
-  width: 40%;
+  left: 37.5%;
+  top: 12.5%;
+  width: 56%;
   aspect-ratio: 5 / 3;
+  transform-origin: left bottom;
   /* WHY: we handle finger drags ourselves; without this the browser would also
      try to scroll or zoom the page with the same gesture. */
   touch-action: none;
@@ -86,14 +116,13 @@
   display: block;
   width: 100%;
   transform-origin: bottom center;
-  border-radius: calc(var(--u) * 0.3);
-  box-shadow: 0 calc(var(--u) * -0.1) calc(var(--u) * 0.4) rgba(23, 17, 13, 0.35);
 }
 
 .deck-card {
   text-align: left;
   color: var(--ink);
-  font-size: calc(var(--u) * 1.75);
+  border-radius: calc(var(--u) * 0.25);
+  box-shadow: 0 calc(var(--u) * -0.08) calc(var(--u) * 0.3) rgba(23, 17, 13, 0.3);
   background:
     linear-gradient(to bottom, transparent 15.5%, rgba(181, 82, 74, 0.55) 15.5% 16.3%, transparent 16.3%),
     var(--paper);
@@ -103,9 +132,10 @@
   left: 4%;
   right: 4%;
   top: 0;
-  height: 8.5%;                         /* exactly the strip that stays visible */
+  height: 9.5%;                         /* the strip that stays visible */
   display: flex;
   align-items: center;
+  font-size: calc(var(--u) * 1.12 * var(--font-scale, 1));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -114,28 +144,34 @@
 /* Cards yellow as they age, even as strips in the deck. */
 .deck-card.stage-1 { background-color: #f6ecd0; }
 .deck-card.stage-2 { background-color: #f0e2bd; }
-.deck-card.stage-3 { background-color: #e8d5a6; border-radius: calc(var(--u) * 0.7); }
+.deck-card.stage-3 { background-color: #e8d5a6; border-radius: calc(var(--u) * 0.6); }
 
-.deck-divider { background: #c9a876; }
+/* A divider is the kraft card with a tab from divider-tab.png. The tab takes up the
+   divider's own title strip, so it never covers the title of the card behind it. */
 .deck-divider > .asset {
   position: absolute;
   inset: 0;
   height: 100%;
+  aspect-ratio: auto !important;
+  filter: drop-shadow(0 calc(var(--u) * -0.08) calc(var(--u) * 0.15) rgba(23, 17, 13, 0.3));
 }
-.deck-divider > .asset.is-placeholder { display: none; }  /* the kraft colour stands in */
-/* A divider's label sits in its top strip, staggered left / middle / right like
-   real tabs, without covering the title of the card behind it. */
+.deck-divider > .asset img { object-fit: fill; }
+.deck-divider > .asset.is-placeholder { background: #c9a876; border: 0; }
+.deck-divider > .asset .asset-label { display: none; }
 .deck-tab {
   position: absolute;
-  left: calc(4% + var(--tab-slot) * 30%);
-  top: 0;
-  height: 8.5%;
+  left: 34%;
+  width: 32%;
+  top: 0.5%;
+  height: 9.5%;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: calc(var(--u) * 1.6);
+  font-size: calc(var(--u) * 0.95);
   white-space: nowrap;
+  overflow: hidden;
   color: var(--ink);
 }
 

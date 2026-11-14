@@ -12,11 +12,11 @@ This is for a 22.5-hour hackathon (iHack 2026). The team does not need to win; t
 
 ## Context
 
-**Team.** Two people. Both have written HTML, CSS, JavaScript and Python before, but neither has built a project this size. Person A makes the art and records the sound clips; Person B drives you. Use plain, readable code they can follow and explain.
+**Team.** Two people. Both have written HTML, CSS, JavaScript and Python before, but neither has built a project this size. Person A makes the art and the three radio songs; Person B drives you. Use plain, readable code they can follow and explain.
 
 **Where you're working.** You are running in the folder `iHack2026`. That folder is the repo root. The team copies it to GitHub and deploys from GitHub to Netlify (free tier). The folder already contains:
 - `IMAGE-PROMPTS.txt` - the 56 images Person A is generating, with the exact file name for each (all go in `assets/img/`).
-- `SOUND-CLIPS.txt` - the 21 sound clips Person A is recording, with exact file names (all go in `assets/audio/`).
+- `SOUND-CLIPS.txt` - the 21 sound clips, with exact file names (all go in `assets/audio/`). 20 are already in `assets/audio/` (18 required plus fx-pageflip and fx-pencil), generated with code by `tools/synth-sounds.py`. Only the three radio songs are still coming from the team.
 - `ihack_project2026.txt` - the team's original concept notes.
 
 Read all three before writing code. Treat their file names as the only correct asset names.
@@ -217,13 +217,15 @@ Samples load only when the box is empty (first visit).
 /vendor/  gsap, howler, tesseract (+ its worker and English data), idb-keyval
 /fonts/
 /assets/img/   /assets/audio/
+/tools/synth-sounds.py   (already exists: Python script that generated the sound effects; not part of the website)
 netlify.toml  README.md  HOW-IT-WORKS.md  AI-DISCLOSURE.md  CREDITS.txt
 ```
 
 ### AI-DISCLOSURE.md must say
 - Code: written with Claude (Anthropic) in Claude Code, reviewed and explained by the team.
 - Artwork: generated with Google Gemini from the prompts in IMAGE-PROMPTS.txt, then cleaned up by the team.
-- Audio: recorded or sourced by the team; outside clips credited in CREDITS.txt.
+- Sound effects and ambient loops: generated with code written by Claude (`tools/synth-sounds.py`), no recordings or samples used.
+- Radio music: provided by the team; any outside tracks credited in CREDITS.txt.
 - Sample recipes: adapted from a public-domain cookbook.
 - The live site uses no AI model: link reading uses recipe data that sites already publish, and photo reading runs Tesseract.js in the browser.
 

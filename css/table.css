@@ -19,7 +19,34 @@
   position: absolute;
   display: block;
   transition: filter 0.6s ease;
+  isolation: isolate;   /* lets the contact shadow below sit behind its own object only */
 }
+
+/* A soft shadow under things that stand on the table, shelf or stove, so they look
+   set down rather than pasted on. */
+.clickable-lamp::before,
+.clickable-flowers::before,
+.clickable-sugar::before,
+.clickable-mug::before,
+.clickable-box::before,
+.clickable-twine::before,
+.clickable-binder::before,
+.clickable-radio::before,
+.clickable-kettle::before {
+  content: '';
+  position: absolute;
+  left: 2%;
+  right: -6%;
+  bottom: -3%;
+  height: 16%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(59, 38, 22, 0.42), transparent 70%);
+  pointer-events: none;
+}
+.clickable-lamp::before { left: 20%; right: 5%; height: 8%; bottom: -2%; }
+.clickable-flowers::before { left: 15%; right: 5%; height: 9%; bottom: -2%; }
+.clickable-binder::before { left: 10%; right: 0; height: 30%; bottom: -2%; }
 
 /* A picture fills its button. Buttons with an explicit height stretch their picture. */
 .clickable > .asset { pointer-events: none; }
@@ -44,10 +71,17 @@
 }
 
 /* ---------- Window ---------- */
+/* The glass sits exactly over the painted panes of bg-table.jpg. The clip-path
+   (seven rectangles made in table.js) cuts it into panes, so the view shows through
+   the glass and the painted wooden bars stay visible between them. */
 .window-glass {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
+  left: 17.1%;
+  top: 0;
+  width: 64.2%;
+  height: 94.4%;
+  -webkit-clip-path: url(#window-panes);
+  clip-path: url(#window-panes);
 }
 
 .view {
@@ -57,15 +91,21 @@
 }
 .view .asset { height: 100%; aspect-ratio: auto !important; }
 
+.view img { object-position: 50% 62%; }   /* keep the barn in the lower pane */
+
 .mode-dark .view-day,
 .mode-light .view-night { opacity: 0; }
+
+/* Rain and snow dull the view, like a heavy sky. */
+.view .asset { transition: filter 1.5s ease; }
+.is-gloomy .view .asset { filter: saturate(0.55) brightness(0.82); }
 
 /* The moon only belongs in the night view, and hides behind heavy weather. */
 .moon {
   position: absolute;
-  top: 10%;
-  right: 27%;
-  width: 14%;
+  top: 5%;
+  right: 6%;
+  width: 17%;
   transition: opacity 1.5s ease;
 }
 .mode-light .moon { opacity: 0; }
@@ -98,51 +138,64 @@
 .curtain-right .asset-label { transform: scaleX(-1); }
 
 /* ---------- Clock ---------- */
+/* A square over the round face: the top part of the clock picture. */
 .clock-hands {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   pointer-events: none;
 }
 .clock-hand { stroke: var(--ink); }
 .clock-pin { fill: var(--walnut); }
 
-/* The pendulum: a thin rod with a brass bob, hung under the clock face. */
+/* The pendulum swings inside the little glass door painted under the face.
+   .pendulum-window is that door's opening; anything outside it is hidden. */
+.pendulum-window {
+  position: absolute;
+  left: 30%;
+  top: 74%;
+  width: 40%;
+  height: 18.5%;
+  overflow: hidden;
+  pointer-events: none;
+}
 .pendulum {
   position: absolute;
-  left: 49.2%;
-  top: 60%;
-  width: 1.6%;
-  height: 26%;
-  background: var(--walnut);
+  left: 48%;
+  top: -40%;
+  width: 4%;
+  height: 105%;
+  background: var(--harvest-gold);
   transform-origin: top center;
   /* WHY: 2s there-and-back means it passes the middle once a second, like the tick. */
   animation: swing 2s ease-in-out infinite;
-  pointer-events: none;
 }
 .pendulum::after {
   content: '';
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 600%;
+  width: 700%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--harvest-gold);
-  transform: translate(-50%, 40%);
+  box-shadow: inset calc(var(--u) * -0.1) calc(var(--u) * -0.1) 0 rgba(92, 59, 34, 0.5);
+  transform: translate(-50%, 0);
 }
 @keyframes swing {
-  0%, 100% { transform: rotate(7deg); }
-  50% { transform: rotate(-7deg); }
+  0%, 100% { transform: rotate(11deg); }
+  50% { transform: rotate(-11deg); }
 }
 
 /* ---------- Radio ---------- */
+/* Sits over the tuning dial painted on the radio. */
 .radio-dial {
   position: absolute;
-  left: 60%;
-  top: 28%;
-  width: 24%;
+  left: 11.7%;
+  top: 25.6%;
+  width: 29%;
   pointer-events: none;
 }
 
@@ -154,23 +207,22 @@
   width: 100%;
   pointer-events: none;
 }
-.sugar-body { bottom: 0; }
+.sugar-body { bottom: 0; left: 4.8%; width: 90.4%; }
 .sugar-lid { top: 0; transform-origin: 50% 80%; }
 
 /* ---------- Recipe box ---------- */
+/* The site's name, typed on the paper slip in the box's painted brass holder. */
 .brass-label {
   position: absolute;
-  left: 30%;
-  top: 62%;
-  width: 40%;
-  padding: 0.1em 0;
+  left: 62.5%;
+  top: 60.5%;
+  width: 19%;
+  transform: rotate(-9deg);
   font-family: var(--font-typed);
-  font-size: calc(var(--u) * 0.5);
-  line-height: 1.1;
+  font-size: calc(var(--u) * 0.3);
+  line-height: 1.05;
   text-align: center;
   color: var(--walnut-dark);
-  background: var(--harvest-gold);
-  border-radius: calc(var(--u) * 0.15);
   pointer-events: none;
 }
 
@@ -193,7 +245,7 @@
 }
 .petal {
   position: absolute;
-  width: 1.4%;
+  width: 0.9%;
 }
 
 .steam-puff {
@@ -225,11 +277,11 @@
   opacity: 0.9;
   transition: opacity 1.5s ease;
   -webkit-mask-image:
-    radial-gradient(ellipse 17% 27% at 18% 22%, rgba(0, 0, 0, 0.45), #000),
-    radial-gradient(ellipse 17% 30% at 86% 52%, rgba(0, 0, 0, 0.5), #000);
+    radial-gradient(ellipse 16% 32% at 31.3% 22%, rgba(0, 0, 0, 0.4), #000),
+    radial-gradient(ellipse 15% 26% at 86.5% 60%, rgba(0, 0, 0, 0.3), #000);
   mask-image:
-    radial-gradient(ellipse 17% 27% at 18% 22%, rgba(0, 0, 0, 0.45), #000),
-    radial-gradient(ellipse 17% 30% at 86% 52%, rgba(0, 0, 0, 0.5), #000);
+    radial-gradient(ellipse 16% 32% at 31.3% 22%, rgba(0, 0, 0, 0.4), #000),
+    radial-gradient(ellipse 15% 26% at 86.5% 60%, rgba(0, 0, 0, 0.3), #000);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
@@ -241,19 +293,19 @@
   background: var(--night);
   opacity: 0;
   transition: opacity 1.5s ease;
-  -webkit-mask-image: radial-gradient(ellipse 60% 85% at 8% 55%, transparent 20%, #000);
-  mask-image: radial-gradient(ellipse 60% 85% at 8% 55%, transparent 20%, #000);
+  -webkit-mask-image: radial-gradient(ellipse 55% 80% at 11.7% 52%, transparent 20%, #000);
+  mask-image: radial-gradient(ellipse 55% 80% at 11.7% 52%, transparent 20%, #000);
 }
 .is-lit.mode-dark .table-evening { opacity: 0.5; }
 
 /* Coloured light, added on top with "screen" so it brightens what's beneath. */
 .glow { mix-blend-mode: screen; }
 .glow-fire {
-  background: radial-gradient(ellipse 16% 26% at 86% 54%, rgba(226, 120, 50, 0.5), transparent);
+  background: radial-gradient(ellipse 15% 24% at 86.5% 61%, rgba(226, 120, 50, 0.45), transparent);
   opacity: 0.75;
 }
 .glow-moon {
-  background: radial-gradient(ellipse 18% 30% at 18% 24%, rgba(150, 170, 215, 0.3), transparent);
+  background: radial-gradient(ellipse 17% 34% at 31.3% 24%, rgba(150, 170, 215, 0.28), transparent);
   transition: opacity 1.5s ease;
 }
 .is-lit .glow-moon,
@@ -289,10 +341,10 @@
 /* The pull-chain: a thin beaded line hanging under the shade, with the tag on its end. */
 .lamp-chain {
   position: absolute;
-  left: 66%;
-  top: 42%;
-  width: calc(var(--u) * 0.18);
-  height: 22%;
+  left: 68%;
+  top: 36%;
+  width: calc(var(--u) * 0.14);
+  height: 20%;
   background: repeating-linear-gradient(var(--harvest-gold) 0 55%, transparent 55% 100%);
   background-size: 100% calc(var(--u) * 0.3);
   transform-origin: top center;
@@ -306,21 +358,26 @@
 
 .lamp-tag {
   position: absolute;
-  top: 100%;
+  top: 92%;
   left: 50%;
-  width: calc(var(--u) * 4.2);
+  width: calc(var(--u) * 2.9);
   transform: translateX(-50%) rotate(-4deg);
   transition: opacity 1.5s ease;
 }
+/* The words sit on the tag's paper, below its loop of string. */
 .lamp-tag-text {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: 40%;
+  bottom: 4%;
   display: grid;
   place-items: center;
-  padding-top: 18%;
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: calc(var(--u) * 1.15);
+  font-size: calc(var(--u) * 1.05);
+  line-height: 0.95;
+  text-align: center;
   color: var(--ink);
 }
 /* On the grey placeholder, hide the asset id so "Pull me" stays readable. */

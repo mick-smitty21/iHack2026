@@ -35,6 +35,14 @@ Use the exact file names from those two lists. Until a file exists the site show
 placeholder labelled with the asset's id (or plays silence). Drop the file in, reload, and
 it appears: no code change. The browser console (F12) lists which images are still missing.
 
+**After adding or replacing pictures**, run this once (needs Python with Pillow:
+`pip install pillow`). It trims the empty margins around objects and cleans the white
+backgrounds of stains and doodles; without it new art looks small and boxed-in:
+
+```
+python tools/prepare-art.py
+```
+
 Don't delete `assets/missing.png` or `assets/missing.mp3`; they are the stand-ins served
 for files that don't exist yet.
 
@@ -56,6 +64,7 @@ netlify/functions/  fetch-recipe.js, the only server code
 vendor/             pinned local copies of the four libraries
 fonts/              the four handwriting / typewriter fonts
 assets/img/         artwork       assets/audio/  sound clips
+tools/              helper scripts for making assets (not part of the website)
 ```
 
 Libraries (all local, nothing loaded from a CDN at runtime):

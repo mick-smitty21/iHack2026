@@ -20,21 +20,32 @@ import { motionReduced, randomBetween, repeatAtRandom, fadeIn } from './motion.j
 
 // Where each clickable sits: x, y, w, h are percentages of the stage (x and w of its
 // width, y and h of its height). Without h, the height comes from the picture's shape.
-// First-pass numbers: tune them against bg-table.jpg when the art arrives.
+// These numbers were measured against bg-table.jpg: the window frame, the round
+// clock mount, the pinned sheet for the calendar, the shelf, the stove top and the
+// table top are all painted into that background, and each object sits on its spot.
 const LAYOUT = {
-  window:   { x: 7,   y: 7,  w: 22, h: 31 },
-  clock:    { x: 45,  y: 4,  w: 10 },
-  calendar: { x: 79,  y: 5,  w: 9 },
-  radio:    { x: 9,   y: 37, w: 11 },
-  kettle:   { x: 81,  y: 36, w: 7 },
-  flowers:  { x: 31,  y: 44, w: 8 },
-  sugar:    { x: 44,  y: 55, w: 5, h: 14 },
-  mug:      { x: 51,  y: 66, w: 5 },
-  box:      { x: 59,  y: 54, w: 14 },
-  binder:   { x: 17,  y: 66, w: 17 },
-  twine:    { x: 79,  y: 72, w: 10 },
-  lamp:     { x: 0.5, y: 40, w: 11 },
+  window:   { x: 19.5, y: 0,    w: 24, h: 46.5 },  // the whole painted window frame
+  clock:    { x: 45.5, y: 5.1,  w: 11.6 },         // its face covers the round wall mount
+  calendar: { x: 59.8, y: 7,    w: 11 },           // covers the pinned sheet of paper
+  radio:    { x: 4,    y: 17.9, w: 9 },            // stands on the wall shelf
+  kettle:   { x: 85.5, y: 34.8, w: 6 },            // on the stove's right-hand burner
+  flowers:  { x: 27.5, y: 46.5, w: 6.5 },          // everything below stands on the table
+  sugar:    { x: 35.5, y: 54.3, w: 4.8, h: 11.7 },
+  mug:      { x: 42.5, y: 61.4, w: 4 },
+  box:      { x: 48.5, y: 47.3, w: 12 },
+  binder:   { x: 16,   y: 54.5, w: 10 },
+  twine:    { x: 58.5, y: 59.8, w: 7 },
+  lamp:     { x: 9.3,  y: 47.4, w: 6.5 },
 };
+
+// The seven panes of glass in the painted window, as fractions of the .window-glass
+// box (left, top, width, height). The view, moon and weather are clipped to these, so
+// they show through the glass and the wooden bars between the panes stay in front.
+const WINDOW_PANES = [
+  [0.012, 0,     0.272, 0.213], [0.351, 0,     0.305, 0.213], [0.719, 0,     0.281, 0.211],
+  [0.012, 0.250, 0.276, 0.252], [0.355, 0.248, 0.301, 0.254], [0.724, 0.248, 0.276, 0.254],
+  [0,     0.574, 1,     0.426],
+];
 
 const CURTAIN_OPEN_SCALE = 0.42;  // how narrow a curtain is when pulled open
 const MAX_PETALS = 8;
@@ -220,8 +231,8 @@ function addFlowers() {
 function dropPetal() {
   const layer = scene.querySelector('.petal-layer');
   const petal = makePart('petal', createAsset('obj-petal'));
-  const start = { left: LAYOUT.flowers.x + randomBetween(1, 6), top: LAYOUT.flowers.y + 3 };
-  const end = { left: start.left + randomBetween(-3, 3), top: randomBetween(72, 80) };
+  const start = { left: LAYOUT.flowers.x + randomBetween(0.5, 5), top: LAYOUT.flowers.y + 3 };
+  const end = { left: start.left + randomBetween(-2.5, 2.5), top: randomBetween(62.5, 67) };
   layer.append(petal);
   if (layer.children.length > MAX_PETALS) layer.firstElementChild.remove();
 
@@ -247,8 +258,20 @@ function addWindow() {
   );
   weather = createWeather(glass);
 
-  button.append(glass, makeCurtain('left'), makeCurtain('right'));
+  button.append(makePaneClip(), glass, makeCurtain('left'), makeCurtain('right'));
   gsap.set(button.querySelectorAll('.curtain'), { scaleX: CURTAIN_OPEN_SCALE });
+}
+
+// An invisible SVG that only holds the pane shapes; table.css points the glass at it
+// with clip-path: url(#window-panes).
+function makePaneClip() {
+  const rects = WINDOW_PANES
+    .map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>`)
+    .join('');
+  const holder = document.createElement('div');
+  holder.innerHTML = `<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <clipPath id="window-panes" clipPathUnits="objectBoundingBox">${rects}</clipPath></svg>`;
+  return holder.firstElementChild;
 }
 
 // .curtain is squeezed to open/close; .curtain-cloth inside it sways in the breeze.
@@ -301,7 +324,11 @@ function rattle(element) {
 
 function addClock() {
   const button = makeClickable('clock', 'Wall clock: hear it chime', () => playEffect('fx-chime'));
-  button.append(createAsset('obj-clock'), makePart('pendulum swings'), createClockHands());
+  button.append(
+    createAsset('obj-clock'),
+    makePart('pendulum-window', makePart('pendulum swings')),  // swings behind the little glass door
+    createClockHands(),
+  );
 }
 
 /* ---------- 10. Radio ---------- */
@@ -387,5 +414,6 @@ export function applySettings(settings) {
   scene.classList.toggle('mode-dark', isEvening);
   scene.classList.toggle('mode-light', !isEvening);
   scene.classList.toggle('is-overcast', settings.weather !== 'clear');
+  scene.classList.toggle('is-gloomy', settings.weather === 'rain' || settings.weather === 'snow');
   weather.set(settings.weather, isEvening);
 }

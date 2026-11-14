@@ -140,10 +140,8 @@ to the object that opened it.
 **Not built yet.** The recipe box, binder and twine stack play their sound and show a
 note saying which milestone they arrive in.
 
-**When the art arrives.** Tune the numbers in `LAYOUT` (top of `table.js`) so each
-object sits where `bg-table.jpg` expects it, `CLOCK_CENTER` (top of `sky.js`) so the
-hands sit on the clock face, and the `.radio-dial`, `.pendulum`, `.lamp-chain` and
-`.brass-label` positions in `table.css`.
+**Positions.** These were first-pass guesses until the art arrived; see "Art pass"
+below for how they were fitted.
 
 ## M2 - The recipe box
 
@@ -210,17 +208,77 @@ corners (pure CSS, no art needed). Stages 2 and 3 add stain pictures. Their posi
 were rolled once in `makeAgingLayout()` when the card was created and saved with it.
 Until the stain art exists you see faint dashed outlines where each will go.
 
-**Paper before the art arrives.** Until `card-front.jpg` exists, the card paper, red
-line and blue rules are drawn with CSS gradients, so cards are fully readable now.
+**Paper.** The red line and blue rules are drawn with CSS gradients (see "Art pass").
 
 **Esc backs out one layer:** slip -> edit form -> held card -> box. The X closes the box.
 
 **Not built yet.** "Cook this recipe" shows a note (M4), so use counts don't change yet;
 the samples start with different use counts so every aging stage is visible.
 
-**When the art arrives.** Tune `.box-body`, `.box-lid` and `.deck` in `box.css` so the
-deck sits inside the painted box, and the `4.2em` / `1.45em` numbers in `card.css` if
-the painted rules are spaced differently.
+
+## Art pass (after M2, when the real art arrived)
+
+**What changed.** The art was fitted to the code and the code to the art.
+
+**`tools/prepare-art.py` (not part of the website).** Run it after adding or replacing
+pictures: `python tools/prepare-art.py`. It does two jobs:
+
+- *Trims objects.* Gemini centres every object in a big empty square. A clock told to
+  be "10% wide" was really a 10%-wide square with a small clock in the middle, which is
+  why things looked small and misplaced. The script crops each cut-out PNG to the
+  object itself. Pictures that swap (lamp off/on, twine tied/loose) share one crop so
+  they don't jump.
+- *Whitens "ON WHITE" pictures.* Multiply blending only hides a background that is
+  pure white. Gemini's "white" was often cream or shaded, which showed as pale boxes on
+  the cards. The script divides each picture by its own background colour so the
+  background becomes true white, then crops to the drawing.
+
+It is safe to run repeatedly. After it runs, each picture's real shape is read when it
+loads (`createAsset` in `assets.js`), so sizes in the code are simply "how wide".
+
+**The table is laid out against the painted background.** `bg-table.jpg` already
+contains a window frame, a round clock mount, a pinned sheet for the calendar, a
+shelf, a stove and a table. `LAYOUT` in `table.js` puts each object on its painted
+spot: the clock covers the mount, the calendar covers the sheet, the radio stands on
+the shelf, the kettle on the burner, everything else on the table top.
+
+**The window.** The view can't go "behind" a painted window, so it is drawn on top and
+cut into the shape of the seven glass panes with a `clip-path` (`WINDOW_PANES` in
+`table.js`). The painted wooden bars between the panes stay visible, so it reads as
+looking through the glass. The moon and the weather are clipped the same way.
+
+**Why the stains had white boxes.** `mix-blend-mode: multiply` blends a picture with
+what is behind it *in the same layer*. Each stain sat in a wrapper that was rotated and
+semi-transparent, and that makes the wrapper its own layer, so the stain blended with
+nothing and stayed white. The fix is to put the blend on the wrapper itself
+(`.age-mark` and friends in `card.css`).
+
+**The cards' rules are drawn in code.** `card-front.jpg` has painted rules spaced for
+about 9 lines of writing; a recipe needs about 14. Both faces therefore use the plain
+paper of `card-back.jpg`, and the red line and blue rules are CSS gradients spaced at
+exactly the text's line height. `card-front.jpg` is currently unused.
+
+**The box holds the cards.** The open box is painted at an angle. To make cards stand
+inside it, the box picture is drawn twice: once behind the cards, and once in front,
+clipped to just the near walls, which hides the cards' feet. The deck and the lid are
+skewed by the angle of the box's front edge (`BOX_SLANT_DEGREES` in `box.js`), and
+cards further back step up and to the left (`BACK_STEP`) to follow the box's sides.
+
+**Dividers.** A divider is `divider-tab.png` drawn the same size as a card. Its tab
+takes up the divider's own title strip, so it never hides the title of the card
+behind it.
+
+**The dog-eared corner.** At the well-loved stage the top-right corner of the card
+front is snipped off with a `clip-path`, and the fold from `age-corner.png` is laid
+over it with its inner edges faded out.
+
+**Small touches.** Objects on the table, shelf and stove get a soft contact shadow.
+The pendulum swings inside the clock's painted glass door. The site name is typed on
+the paper slip in the box's brass holder.
+
+**If art is replaced later.** Run the script, reload, and compare. The numbers to
+nudge are `LAYOUT` and `WINDOW_PANES` (`table.js`), `CLOCK_CENTER` (`sky.js`), and in
+`box.css` the `.box-front` clip, `.deck` and `.box-lid`.
 
 ## M3 - Adding and moving recipes
 

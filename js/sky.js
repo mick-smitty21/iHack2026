@@ -23,16 +23,17 @@ function svgElement(name, attributes = {}) {
 
 /* ---------- Clock ---------- */
 
-// Where the middle of the clock face sits inside obj-clock.png, on a 100x100 grid.
-// Tune these two numbers once the real clock picture exists.
-const CLOCK_CENTER = { x: 50, y: 42 };
+// The hands are drawn on a square that covers the round face (the top of
+// obj-clock.png; table.css sizes it). On that square's 100x100 grid the middle of
+// the face is here. Change these two numbers if the clock art is replaced.
+const CLOCK_CENTER = { x: 50, y: 50.5 };
 
 /** Returns an SVG with an hour and a minute hand that follow the device's clock. */
 export function createClockHands() {
   const svg = svgElement('svg', { viewBox: '0 0 100 100', class: 'clock-hands', 'aria-hidden': 'true' });
-  const hourHand = makeHand(15, 2.6);
-  const minuteHand = makeHand(23, 1.7);
-  const pin = svgElement('circle', { cx: CLOCK_CENTER.x, cy: CLOCK_CENTER.y, r: 1.8, class: 'clock-pin' });
+  const hourHand = makeHand(19, 3.2);
+  const minuteHand = makeHand(29, 2.1);
+  const pin = svgElement('circle', { cx: CLOCK_CENTER.x, cy: CLOCK_CENTER.y, r: 2.6, class: 'clock-pin' });
   svg.append(hourHand, minuteHand, pin);
 
   const update = () => pointHands(hourHand, minuteHand, new Date());
@@ -164,18 +165,10 @@ function drawFrame(context, state, shouldMove) {
   context.clearRect(0, 0, width, height);
   if (state.weather === 'clear' || !width) return;
 
-  drawOvercast(context, state, width, height);
   for (const particle of state.particles) {
     if (shouldMove) moveParticle(particle, state.weather);
     drawParticle(context, particle, state, width, height);
   }
-}
-
-// Rain and snow get a grey wash over the view so the sky looks heavy.
-function drawOvercast(context, state, width, height) {
-  if (state.weather === 'clouds') return;
-  context.fillStyle = state.isNight ? 'rgba(40, 44, 58, 0.35)' : 'rgba(150, 152, 150, 0.4)';
-  context.fillRect(0, 0, width, height);
 }
 
 function moveParticle(particle, weather) {

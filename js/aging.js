@@ -32,7 +32,7 @@ export function makeAgingLayout() {
     coffeeRing:  makeSpot({ x: [62, 86], y: [48, 76], size: 26 }),
     fingerprint: makeSpot({ x: [5, 14],  y: [62, 86], size: 11 }),
     grease:      makeSpot({ x: [70, 90], y: [80, 92], size: 18 }),
-    tape:        { x: randomBetween(30, 60), y: 2, size: 24, rotation: randomBetween(-5, 5) },
+    tape:        { x: randomBetween(35, 65), y: 99, size: 22, rotation: randomBetween(-4, 4) },
     pencil:      { x: 50, y: 50, size: 100, rotation: Math.random() < 0.5 ? 0 : 180 },
   };
 }
@@ -52,20 +52,25 @@ const OVERLAYS = [
   { asset: 'age-coffee-ring', from: 2, spot: 'coffeeRing' },
   { asset: 'age-pencil',      from: 2, spot: 'pencil' },
   { asset: 'age-fingerprint', from: 2, spot: 'fingerprint' },
-  { asset: 'age-corner',      from: 3, fixed: { x: 93, y: 11.5, size: 14, rotation: 0 } },
+  // The folded corner: its top-right must sit exactly on the card's top-right corner,
+  // where card.css also snips the paper away (see .stage-3 .card-front).
+  { asset: 'age-corner',      from: 3, fixed: { x: 93, y: 9.2, size: 14, rotation: 0 }, frontOnly: true },
   { asset: 'age-tape',        from: 3, spot: 'tape' },
   { asset: 'age-grease',      from: 3, spot: 'grease' },
 ];
 
 /** Builds the layer of wear that sits over a card face. */
-export function buildAgingLayer(card) {
+export function buildAgingLayer(card, { isBack = false } = {}) {
   const stage = agingStage(card.uses);
   const layer = document.createElement('div');
   layer.className = 'card-aging';
 
   for (const overlay of OVERLAYS) {
-    if (stage < overlay.from) continue;
-    const place = overlay.fixed || card.agingLayout[overlay.spot];
+    if (stage < overlay.from || (isBack && overlay.frontOnly)) continue;
+    let place = overlay.fixed || card.agingLayout[overlay.spot];
+    // Tape always straddles the bottom edge, clear of the writing. (Cards saved by an
+    // earlier version stored a different spot, so only their x and tilt are reused.)
+    if (overlay.spot === 'tape') place = { ...place, y: 99, size: 22 };
     layer.append(makeOverlay(overlay.asset, place));
   }
   return layer;

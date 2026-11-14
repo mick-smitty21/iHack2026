@@ -12,6 +12,14 @@ HOW TO USE THIS FILE
 5. Save every file with the exact FILE name below into:  assets/img/
    The site shows grey placeholders until a file with that name exists.
 6. If one image doesn't match the others, regenerate just that one in the same chat.
+7. AFTER adding or replacing any image, run:  python tools/prepare-art.py
+   It crops the empty space around objects and makes 'ON WHITE' backgrounds truly
+   white. Without it, new art looks too small and shows pale boxes on the cards.
+8. LAYOUT NOTE: the site is fitted to the current bg-table.jpg (window in the middle-left,
+   round clock mount, pinned sheet for the calendar, shelf on the left, stove on the
+   right). If bg-table.jpg is regenerated, the positions in js/table.js must be re-measured.
+9. card-front.jpg is currently NOT used: its painted lines are too far apart for a
+   recipe, so the site draws the lines itself on the plain paper of card-back.jpg.
 
 STYLE BLOCK
 Hand-painted gouache and colored-pencil illustration in the style of a cozy 1970s-80s children's picture book. Grandma's farmhouse kitchen, early 1980s. Warm, soft, slightly muted palette: harvest gold, avocado green, burnt orange, walnut brown, cream, faded red gingham. Gentle visible brush texture and paper grain. Warm light coming from the left. No text, no lettering, no logos, no people.

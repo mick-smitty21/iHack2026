@@ -5,6 +5,20 @@ GRANDMA'S RECIPE BOX - SOUND CLIP LIST
 Save every file with the exact FILE name below into:  assets/audio/
 The site plays silence for any file that isn't there yet, so add them in any order.
 
+------------------------------------------------------------
+STATUS (updated Nov 13)
+------------------------------------------------------------
+DONE - 18 required clips + 2 optional ones are already in assets/audio/:
+  loop-fire, loop-clock, loop-rain, loop-snow,
+  all 14 fx- files, plus fx-pageflip and fx-pencil.
+  They were generated with code by Claude (tools/synth-sounds.py), not recorded,
+  so there is nothing to credit or license. Any of them can be replaced later by
+  dropping in a real recording with the same file name.
+
+STILL NEEDED - only the 3 radio songs, provided by the team:
+  radio-softrock.mp3, radio-country.mp3, radio-jazz.mp3
+  (rules for these are below under LOOPS and COPYRIGHT)
+
 FORMAT
 - MP3, 128 kbps, stereo or mono.
 - Loops: 60-90 seconds. Trim so the end flows into the start; the code adds a

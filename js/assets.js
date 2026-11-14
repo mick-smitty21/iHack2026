@@ -15,7 +15,9 @@ const AUDIO_FOLDER = 'assets/audio/';
 // kind: 'bg'      = full background, saved as .jpg
 //       'object'  = cut-out object, saved as .png
 //       'onwhite' = kept on a white background (.png); drawn with mix-blend-mode: multiply
-// ratio: width divided by height, used to give placeholders the right shape.
+// ratio: width divided by height. It only shapes the grey placeholder; once the real
+//        picture loads, its own shape is used (see createAsset). The numbers below
+//        match the art after tools/prepare-art.py has trimmed its empty margins.
 export const IMAGES = {
   // 1. Backgrounds
   'bg-table':          { kind: 'bg', ratio: 16 / 9 },
@@ -24,61 +26,61 @@ export const IMAGES = {
   'view-day':          { kind: 'bg', ratio: 4 / 3 },
   'view-night':        { kind: 'bg', ratio: 4 / 3 },
   // 2. Table-scene objects
-  'obj-box-closed':    { kind: 'object', ratio: 1 },
-  'obj-box-body-open': { kind: 'object', ratio: 1 },
-  'obj-box-lid':       { kind: 'object', ratio: 1 },
-  'obj-binder':        { kind: 'object', ratio: 1 },
-  'obj-binder-spread': { kind: 'object', ratio: 16 / 9 },
-  'obj-twine':         { kind: 'object', ratio: 1 },
-  'obj-twine-loose':   { kind: 'object', ratio: 1 },
-  'obj-mug':           { kind: 'object', ratio: 1 },
-  'obj-pitcher':       { kind: 'object', ratio: 3 / 4 },
-  'obj-petal':         { kind: 'object', ratio: 1 },
-  'obj-sugar-body':    { kind: 'object', ratio: 1 },
-  'obj-sugar-lid':     { kind: 'object', ratio: 1 },
-  'obj-lamp-off':      { kind: 'object', ratio: 3 / 4 },
-  'obj-lamp-on':       { kind: 'object', ratio: 3 / 4 },
-  'obj-radio':         { kind: 'object', ratio: 4 / 3 },
+  'obj-box-closed':    { kind: 'object', ratio: 1.14 },
+  'obj-box-body-open': { kind: 'object', ratio: 1.13 },
+  'obj-box-lid':       { kind: 'object', ratio: 1.34 },
+  'obj-binder':        { kind: 'object', ratio: 1.16 },
+  'obj-binder-spread': { kind: 'object', ratio: 1.89 },
+  'obj-twine':         { kind: 'object', ratio: 1.24 },
+  'obj-twine-loose':   { kind: 'object', ratio: 1.24 },
+  'obj-mug':           { kind: 'object', ratio: 1.08 },
+  'obj-pitcher':       { kind: 'object', ratio: 0.75 },
+  'obj-petal':         { kind: 'object', ratio: 0.88 },
+  'obj-sugar-body':    { kind: 'object', ratio: 0.91 },
+  'obj-sugar-lid':     { kind: 'object', ratio: 1.36 },
+  'obj-lamp-off':      { kind: 'object', ratio: 0.61 },
+  'obj-lamp-on':       { kind: 'object', ratio: 0.61 },
+  'obj-radio':         { kind: 'object', ratio: 1.35 },
   'obj-radio-dial':    { kind: 'object', ratio: 1 },
-  'obj-clock':         { kind: 'object', ratio: 1 },
-  'obj-calendar':      { kind: 'object', ratio: 3 / 4 },
-  'obj-almanac-open':  { kind: 'object', ratio: 4 / 3 },
-  'obj-kettle':        { kind: 'object', ratio: 1 },
-  'obj-curtain':       { kind: 'object', ratio: 1 / 2 },
+  'obj-clock':         { kind: 'object', ratio: 0.74 },
+  'obj-calendar':      { kind: 'object', ratio: 0.63 },
+  'obj-almanac-open':  { kind: 'object', ratio: 1.47 },
+  'obj-kettle':        { kind: 'object', ratio: 0.9 },
+  'obj-curtain':       { kind: 'object', ratio: 0.5 },
   // 3. Card controls and cook-mode props
-  'obj-wastebasket':   { kind: 'object', ratio: 1 },
-  'obj-pencil':        { kind: 'object', ratio: 1 },
-  'obj-card-stand':    { kind: 'object', ratio: 1 },
-  'obj-egg-timer':     { kind: 'object', ratio: 1 },
-  'obj-steno':         { kind: 'object', ratio: 3 / 4 },
-  'obj-done-tag':      { kind: 'object', ratio: 1 },
+  'obj-wastebasket':   { kind: 'object', ratio: 0.9 },
+  'obj-pencil':        { kind: 'object', ratio: 1.82 },
+  'obj-card-stand':    { kind: 'object', ratio: 1.18 },
+  'obj-egg-timer':     { kind: 'object', ratio: 0.87 },
+  'obj-steno':         { kind: 'object', ratio: 0.74 },
+  'obj-done-tag':      { kind: 'object', ratio: 0.41 },
   // 4. Cards and dividers
   'card-front':        { kind: 'bg', ratio: 5 / 3 },
   'card-back':         { kind: 'bg', ratio: 5 / 3 },
-  'divider-tab':       { kind: 'object', ratio: 5 / 3 },
+  'divider-tab':       { kind: 'object', ratio: 1.49 },
   // 5. Aging overlays
-  'age-yellowing':     { kind: 'onwhite', ratio: 5 / 3 },
-  'age-coffee-ring':   { kind: 'onwhite', ratio: 1 },
-  'age-grease':        { kind: 'onwhite', ratio: 1 },
-  'age-fingerprint':   { kind: 'onwhite', ratio: 1 },
-  'age-tape':          { kind: 'onwhite', ratio: 2 },
-  'age-corner':        { kind: 'onwhite', ratio: 1 },
-  'age-pencil':        { kind: 'onwhite', ratio: 5 / 3 },
+  'age-yellowing':     { kind: 'onwhite', ratio: 1.72 },
+  'age-coffee-ring':   { kind: 'onwhite', ratio: 1.01 },
+  'age-grease':        { kind: 'onwhite', ratio: 1.14 },
+  'age-fingerprint':   { kind: 'onwhite', ratio: 0.98 },
+  'age-tape':          { kind: 'onwhite', ratio: 4.05 },
+  'age-corner':        { kind: 'onwhite', ratio: 1.26 },
+  'age-pencil':        { kind: 'onwhite', ratio: 1.72 },
   // 6. Category illustrations
-  'ill-main':          { kind: 'onwhite', ratio: 1 },
-  'ill-bread':         { kind: 'onwhite', ratio: 1 },
-  'ill-pie':           { kind: 'onwhite', ratio: 1 },
-  'ill-cake':          { kind: 'onwhite', ratio: 1 },
-  'ill-cookie':        { kind: 'onwhite', ratio: 1 },
-  'ill-soup':          { kind: 'onwhite', ratio: 1 },
-  'ill-sides':         { kind: 'onwhite', ratio: 1 },
-  'ill-canning':       { kind: 'onwhite', ratio: 1 },
+  'ill-main':          { kind: 'onwhite', ratio: 0.99 },
+  'ill-bread':         { kind: 'onwhite', ratio: 0.84 },
+  'ill-pie':           { kind: 'onwhite', ratio: 1.5 },
+  'ill-cake':          { kind: 'onwhite', ratio: 1.11 },
+  'ill-cookie':        { kind: 'onwhite', ratio: 0.7 },
+  'ill-soup':          { kind: 'onwhite', ratio: 0.88 },
+  'ill-sides':         { kind: 'onwhite', ratio: 2.04 },
+  'ill-canning':       { kind: 'onwhite', ratio: 1.21 },
   // 7. Margin doodles
   'doodle-daisy':      { kind: 'onwhite', ratio: 1 },
-  'doodle-cup':        { kind: 'onwhite', ratio: 1 },
-  'doodle-heart':      { kind: 'onwhite', ratio: 1 },
-  'doodle-star':       { kind: 'onwhite', ratio: 1 },
-  'doodle-spoon':      { kind: 'onwhite', ratio: 1 },
+  'doodle-cup':        { kind: 'onwhite', ratio: 0.9 },
+  'doodle-heart':      { kind: 'onwhite', ratio: 0.89 },
+  'doodle-star':       { kind: 'onwhite', ratio: 0.99 },
+  'doodle-spoon':      { kind: 'onwhite', ratio: 1.17 },
   // 8. Share image (only used in the page's <meta> tags, never drawn in a scene)
   'og-image':          { kind: 'bg', ratio: 1200 / 630 },
 };
@@ -136,6 +138,8 @@ export function createAsset(id) {
   img.draggable = false;
   img.addEventListener('load', () => {
     if (isMissingMarker(img)) showPlaceholder(holder, id);
+    // The real picture decides the shape, so replacing art never needs a code change.
+    else holder.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
   });
   img.addEventListener('error', () => showPlaceholder(holder, id));
   img.src = imageUrl(id);

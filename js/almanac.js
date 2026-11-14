@@ -12,11 +12,12 @@
 
 import { createAsset } from './assets.js';
 import { loadSettings, saveSettings, DEFAULT_SETTINGS } from './storage.js';
-import { openPanel } from './panels.js';
+import { openPanel, closePanel } from './panels.js';
 import { setReducedMotionSwitch, deviceAsksForReducedMotion } from './motion.js';
 
 let settings = structuredClone(DEFAULT_SETTINGS);
 const listeners = [];
+let showMeAround = () => {};   // main.js swaps in the function that replays the tour
 
 /** Loads saved settings once at startup. */
 export async function initSettings() {
@@ -32,6 +33,11 @@ export function getSettings() {
 /** Other modules register a function to be told about every change. */
 export function onSettingsChange(listener) {
   listeners.push(listener);
+}
+
+/** main.js registers what "Show me around again" should do (see intro.js). */
+export function onShowMeAround(action) {
+  showMeAround = action;
 }
 
 /** Merges `changes` into the settings, saves, and tells everyone. */
@@ -81,6 +87,7 @@ function buildAlmanac() {
     makeHeading('The Almanac'),
     makeChoiceGroup('Light', 'mode', MODES, settings.mode),
     makeChoiceGroup('Weather', 'weather', WEATHERS, settings.weather),
+    makeShowMeAroundButton(),
   );
   const rightPage = makePage(
     makeHeading('Sound'),
@@ -91,6 +98,19 @@ function buildAlmanac() {
 
   book.append(createAsset('obj-almanac-open'), leftPage, rightPage);
   return book;
+}
+
+// A handwritten line at the foot of the page that replays the first-visit notes.
+function makeShowMeAroundButton() {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'almanac-replay';
+  button.textContent = 'Show me around again';
+  button.addEventListener('click', () => {
+    closePanel();      // the notes point at things on the table, so clear the book away
+    showMeAround();
+  });
+  return button;
 }
 
 function makePage(...children) {

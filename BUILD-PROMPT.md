@@ -283,12 +283,13 @@ CHECK: body and tail match [57] in size and position; head up, eyes open; lookin
 
 **Step 1 - the dark kitchen.** One note with an arrow to the lamp: "Pull the chain to come in." (The lamp's own "Pull me" tag stays.) It fades when the lamp is lit.
 
-**Step 2 - the lit table (first time the lamp is lit).** Exactly three notes, the vitals only:
+**Step 2 - the lit table (first time the lamp is lit).** Exactly four notes, the vitals only (the twine stack was added by the team when M7 was built):
 - Recipe box: "Your recipes live in here."
 - Binder: "Add a recipe: a link, a photo, or write it out."
+- Twine-tied stack: "Save your whole box to a file, or load one."
 - Wall calendar: "Sound, light and weather."
 Plus one line of encouragement with no arrow, low on the screen: "Everything else is yours to find. Go on, poke around."
-Nothing is said about the mug, flowers, window, sugar pot, clock, radio, kettle, twine stack or cat; those are left to be discovered.
+Nothing is said about the mug, flowers, window, sugar pot, clock, radio, kettle or cat; those are left to be discovered.
 
 **Step 3 - one-line hints inside (first time each is opened).** A single unobtrusive note, no arrows:
 - Recipe box: "Scroll or drag to riffle. Tap a card to pick it up."
@@ -305,7 +306,7 @@ Nothing is said about the mug, flowers, window, sugar pot, clock, radio, kettle,
 
 **Files.** New module `js/intro.js` (notes, arrows, when to show them); styles in `css/panels.css`; one line each in `main.js`, `box.js` and `cook.js` to announce "the lamp was lit / the box opened / cooking started"; the replay control in `almanac.js`.
 
-**Done when:** a fresh browser shows the lamp note, then the three table notes and the encouragement; none of them blocks a click; they do not return on reload; "Show me around again" brings step 2 back; and with a screen reader each step is announced once.
+**Done when:** a fresh browser shows the lamp note, then the four table notes and the encouragement; none of them blocks a click; they do not return on reload; "Show me around again" brings step 2 back; and with a screen reader each step is announced once.
 
 ### ADD LATER (only if the team asks after M5)
 A beagle curled by the stove that sometimes wanders; a Commodore 64 easter egg; a phone layout; page-flip and pencil-scratch sounds.

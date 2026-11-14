@@ -22,6 +22,7 @@ import { saveCard, savePhoto, loadPhotoUrl } from './storage.js';
 import { playEffect } from './audio.js';
 import { showNote } from './panels.js';
 import { motionReduced, fadeIn, fadeOut } from './motion.js';
+import { introCookStarted } from './intro.js';
 
 const MAX_TIMERS = 3;
 const MAX_MINUTES = 60;
@@ -164,6 +165,7 @@ export function openCook(recipe, picture) {
   showStep(0);
   scene.hidden = false;
   fadeIn(scene, 0.6);
+  introCookStarted();   // first time only: a one-line hint about ticking off ingredients
   parts.next.focus({ preventScroll: true }); // keyboard users land on the steno pad
 }
 

@@ -24,6 +24,8 @@ export const DEFAULT_SETTINGS = {
   ambient: { fire: true, clock: true, purr: true, weather: true },
   reducedMotion: false,
   station: 0,              // 0 soft rock, 1 country, 2 jazz
+  // Which parts of the first-visit tour have already been shown (see intro.js).
+  introSeen: { lamp: false, table: false, box: false, cook: false },
 };
 
 /** Returns the saved settings, with defaults filling any gaps. Never throws. */
@@ -36,6 +38,7 @@ export async function loadSettings() {
     // WHY merged separately: settings saved before the cat arrived have no `ambient`
     // at all, and those visitors should get every sound switched on, not an error.
     ambient: { ...DEFAULT_SETTINGS.ambient, ...(saved && saved.ambient) },
+    introSeen: { ...DEFAULT_SETTINGS.introSeen, ...(saved && saved.introSeen) },
   };
 }
 

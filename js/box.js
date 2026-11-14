@@ -20,6 +20,7 @@ import { agingStage } from './aging.js';
 import { playEffect, setCardFocused } from './audio.js';
 import { showNote } from './panels.js';
 import { motionReduced, fadeIn, fadeOut } from './motion.js';
+import { introBoxOpened } from './intro.js';
 
 // Devices with a mouse (laptops) can animate a full-screen blur; touch tablets struggle.
 const canBlurSmoothly = window.matchMedia('(hover: hover)').matches;
@@ -124,6 +125,7 @@ export function openBox() {
   jumpTo(firstCardIndex(), false);
   scene.hidden = false;
   playEffect('fx-lid');
+  introBoxOpened();   // first time only: a one-line hint about riffling
 
   if (motionReduced()) {
     fadeIn(scene, 0.6);

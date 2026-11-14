@@ -11,7 +11,7 @@
  */
 
 import { preloadImages, usedImageIds } from './assets.js';
-import { initSettings, onSettingsChange } from './almanac.js';
+import { initSettings, onSettingsChange, onShowMeAround } from './almanac.js';
 import {
   buildTable, setLampLit, focusClickable, getClickable, TABLE_ART,
   applySettings as applyTableSettings,
@@ -23,6 +23,7 @@ import {
   preloadSounds, lampSwitchedOn, lampSwitchedOff, applySettings as applyAudioSettings,
 } from './audio.js';
 import { closePanel, showNote, slideCardInto } from './panels.js';
+import { initIntro, introLampChanged, replayIntro } from './intro.js';
 
 const scenes = {
   table: document.getElementById('scene-table'),
@@ -40,6 +41,8 @@ async function start() {
   buildTable(scenes.table, { onLampClick: toggleLamp, onBoxClick: openBox });
   applySettingsEverywhere(settings);
   onSettingsChange(applySettingsEverywhere);
+  initIntro(document.getElementById('stage'));   // first visit: a note points at the lamp
+  onShowMeAround(replayIntro);
 
   // While the kitchen is dark, fetch only what the table needs, plus the sounds.
   // Everything else waits for the lamp (see prepareOtherScenes).
@@ -65,6 +68,7 @@ function toggleLamp() {
     lampSwitchedOff();
   }
   setLampLit(lampIsOn);
+  introLampChanged(lampIsOn);
 }
 
 // The first time the lamp is lit, build the recipe box and the stove and start

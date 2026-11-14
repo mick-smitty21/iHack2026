@@ -176,6 +176,21 @@
 /* WHY the padding: it makes each row tall enough to hit with a thumb on the iPad. */
 .almanac-ambient .almanac-switch { margin-top: 0; padding: 0.42em 0; }
 
+/* "Show me around again": a handwritten line, underlined in pencil like a link. */
+.almanac-replay {
+  display: block;
+  margin-top: 1.1em;
+  padding: 0.45em 0.2em;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--pencil);
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
 /* On the cream paper the gold outline would vanish, so use burnt orange here. */
 .almanac :focus-visible { outline-color: var(--burnt-orange); }
 
@@ -387,3 +402,71 @@
   font-size: 1.05em;
 }
 .twine-slip .binder-status { align-self: stretch; }
+
+/* ---------- First-visit notes (intro.js) ---------- */
+/* WHY pointer-events: none: the notes only point. Every click and tap goes straight
+   through them to the kitchen underneath. */
+.intro-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;            /* above the scenes and the lamp, below any open panel */
+  pointer-events: none;
+}
+.intro-arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* A dark pencil line with a pale edge, so it reads on the dark kitchen and the lit one. */
+.intro-arrow {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;   /* the path's length is set to 1, so this is "one whole line" */
+  filter: drop-shadow(0 0 calc(var(--u) * 0.18) var(--paper)) drop-shadow(0 0 calc(var(--u) * 0.1) var(--paper));
+}
+/* A scrap of cream paper with slightly uneven edges. */
+.intro-note {
+  position: absolute;
+  margin: 0;
+  max-width: calc(var(--u) * 19);
+  padding: 0.3em 0.75em 0.38em;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.75);
+  line-height: 1.08;
+  text-align: center;
+  clip-path: polygon(1% 6%, 34% 0, 68% 4%, 99% 1%, 100% 52%, 98% 96%, 61% 100%, 30% 95%, 0 99%, 2% 47%);
+  filter: drop-shadow(0 calc(var(--u) * 0.2) calc(var(--u) * 0.3) rgba(23, 17, 13, 0.45));
+}
+.intro-pointing { transform: translate(-50%, -50%) rotate(var(--tilt, -1.5deg)); }
+/* The last line has no arrow and sits low, clear of the cat. */
+.intro-encouragement {
+  left: 72%;
+  top: 92%;
+  max-width: calc(var(--u) * 34);
+  transform: translate(-50%, -50%) rotate(-1deg);
+  font-size: calc(var(--u) * 1.9);
+}
+/* The one-line hints inside the box and at the stove sit at the top, out of the way. */
+.intro-hint {
+  left: 50%;
+  top: 5%;
+  max-width: calc(var(--u) * 46);
+  transform: translate(-50%, -50%) rotate(-0.6deg);
+}
+/* Only for screen readers: one sentence per step. */
+.intro-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

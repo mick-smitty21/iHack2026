@@ -12,7 +12,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M4 - Cook mode**
 - [x] **M5 - Polish and demo prep**
 - [x] **M6 - The cat, its purr, and a switch for each background sound**
-- [ ] **M7 - First-visit intro** (specified in BUILD-PROMPT.md, not built)
+- [x] **M7 - First-visit intro**
 
 ## The big picture
 
@@ -553,6 +553,66 @@ the pre-M6 shape load with all four on; each switch stops only its own loop; the
 choices survive a reload; the cat can be reached and patted with the keyboard; the
 chime still plays with the tick off. **Not checked:** how the purr actually sounds
 (it was tuned by measuring it, not by ear) and anything on a real iPad.
+
+---
+
+## M7 - First-visit intro
+
+**What it does.** On a first visit, scraps of paper with handwriting point out the
+few things a visitor must know, then leave. They never block a click.
+
+1. *Dark kitchen:* one note with an arrow to the lamp, "Pull the chain to come in."
+2. *Lit table, first time:* four notes with arrows (recipe box, binder, twine stack,
+   wall calendar) and one line with no arrow: "Everything else is yours to find. Go
+   on, poke around." Nothing is said about the mug, flowers, window, sugar pot,
+   clock, radio, kettle or cat. (The twine stack was added to the vitals by the team
+   when M7 was built; the original spec had three.)
+3. *First time inside:* one line at the top of the recipe box ("Scroll or drag to
+   riffle...") and one at the stove ("Tap an ingredient to tick it off.").
+
+**Where the code is.** All of it is in the new `js/intro.js`. Three other files each
+tell it one thing: `main.js` says the lamp changed (`introLampChanged`), `box.js` says
+the box opened (`introBoxOpened`), `cook.js` says cooking started
+(`introCookStarted`). The look is at the bottom of `css/panels.css`.
+
+**How a note finds its object.** Each note is one line in a list, for example
+`{ target: 'twine', text: '...', across: 3, down: 15 }`. `intro.js` asks `table.js`
+for that button, measures where it is on the stage, and puts the note's centre
+`across` and `down` percent away from the object's centre. Move the object in
+`LAYOUT` and its note follows. To change the wording or add a note, edit that list.
+
+**How an arrow is drawn.** One SVG is stretched over the stage. For each note,
+`drawArrow()` finds the point on the note's edge facing the object and the point on
+the object's edge facing the note, joins them with a gentle curve (the middle of the
+line nudged sideways), and adds a two-stroke arrowhead. The line is "drawn on" by
+sliding a dash that is exactly as long as the line. With reduced motion the notes and
+arrows simply fade in.
+
+**Getting out of the way.**
+
+- The whole layer has `pointer-events: none`, so clicks and taps pass straight through.
+- The lamp note leaves when the lamp is lit. The table notes leave on the first click,
+  tap, key press or scroll, or after 15 seconds. The inside hints leave after 6 seconds
+  or on the first interaction.
+- The listeners for "first click or key" start half a second late, so the same click
+  that brought the notes up doesn't also dismiss them.
+
+**Seen once.** `Settings` gained `introSeen: { lamp, table, box, cook }`. A step is
+marked the moment it is shown, so a reload part-way through doesn't repeat it.
+Settings saved before M7 have no `introSeen`; `loadSettings()` fills it in as "not
+seen", so returning visitors get the tour once too. "Show me around again" at the foot
+of the almanac's left page sets all four back to false, closes the book and shows the
+table notes at once (the lamp note and the two inside hints come back as you reach them).
+
+**Screen readers.** The paper notes are hidden from screen readers and one hidden
+line (`role="status"`) carries the whole step as a single sentence, so each step is
+read once, politely, and nothing is read twice.
+
+**How it was checked.** Automated browser test on desktop Chrome: fresh visit shows
+the lamp note, then four notes and the encouragement; a click, a key and a scroll each
+dismiss; nothing returns on reload; the replay works by keyboard; arrows stay attached
+when the window is resized; reduced motion gives no errors. **Not checked:** a real
+screen reader, and a real iPad.
 
 ---
 

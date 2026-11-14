@@ -1,9 +1,321 @@
 /*
- * cook.css - scene 3: the stove, card stand, steno pad and egg timers.
+ * cook.css - scene 3: the stove, the card in its stand, the steno pad, the egg
+ * timers and the cook-log form.
  *
- * Talks to: js/cook.js builds the elements styled here.
+ * Talks to: js/cook.js builds the elements styled here. card.css styles the card.
  *
- * Say it to a judge: "Cook mode reuses the same card styles, so the recipe looks identical in the box and at the stove."
- *
- * M0 status: empty. Filled in M4.
+ * Say it to a judge: "Cook mode reuses the same card, so the recipe looks identical
+ * in the box and at the stove. The colour of the light comes from the real time of
+ * day: one class on the scene picks the sky in the window and a soft wash over the room."
  */
+
+.cook-bg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+/* ---------- The window and the time of day ---------- */
+/* Sits exactly over the painted window glass of bg-kitchen-cook.jpg; the clip-path
+   (two panes, made in cook.js) keeps the painted bar between the sashes visible. */
+.cook-window {
+  position: absolute;
+  left: 48.3%;
+  top: 0;
+  width: 20.75%;
+  height: 41.8%;
+  pointer-events: none;
+}
+.cook-glass {
+  position: absolute;
+  inset: 0;
+  -webkit-clip-path: url(#cook-panes);
+  clip-path: url(#cook-panes);
+}
+.cook-sky,
+.cook-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Night shows the night view; every other time shows the day view, tinted. */
+#scene-cook .view-night { opacity: 0; }
+#scene-cook.time-night .view-night { opacity: 1; }
+#scene-cook.time-night .view-day { opacity: 0; }
+
+/* 5-9 am: peach dawn */
+.time-dawn .cook-sky { background: linear-gradient(to top, rgba(255, 176, 138, 0.7), rgba(255, 224, 190, 0.3)); }
+.time-dawn .cook-wash { background: rgba(255, 196, 160, 0.14); }
+/* 9 am-4 pm: pale gold */
+.time-day .cook-sky { background: linear-gradient(to top, rgba(255, 236, 170, 0.3), rgba(255, 248, 220, 0.1)); }
+.time-day .cook-wash { background: rgba(255, 236, 170, 0.07); }
+/* 4-8 pm: orange-rose dusk */
+.time-dusk .cook-sky { background: linear-gradient(to top, rgba(240, 128, 84, 0.7), rgba(206, 116, 140, 0.4)); }
+.time-dusk .cook-wash { background: rgba(236, 138, 96, 0.16); }
+/* 8 pm-5 am: deep indigo night */
+.time-night .cook-sky { background: linear-gradient(to top, rgba(44, 40, 96, 0.35), rgba(20, 22, 60, 0.45)); }
+.time-night .cook-wash { background: rgba(34, 32, 84, 0.32); mix-blend-mode: multiply; }
+
+/* ---------- The card in its stand ---------- */
+.cook-card {
+  position: absolute;
+  left: 1.5%;
+  top: 9%;
+  --card-w: 52;
+  filter: drop-shadow(0 calc(var(--u) * 0.5) calc(var(--u) * 1) rgba(23, 17, 13, 0.45));
+}
+.cook-card .card { --card-w: 52; }
+
+/* The stand is drawn over the card's bottom edge, so the card sits in its slot. */
+.cook-stand {
+  position: absolute;
+  left: 17%;
+  top: 58.5%;
+  width: 18%;
+  pointer-events: none;
+}
+
+/* Tool 1: ingredients you can tick off. */
+.cook-ingredient {
+  display: block;
+  width: 100%;
+  text-align: left;
+  text-indent: 0;
+  line-height: inherit;
+  transition: opacity 0.4s ease, color 0.4s ease;
+}
+.cook-ingredient.is-checked {
+  color: var(--pencil);
+  opacity: 0.55;
+}
+.cook-ingredient.is-checked::before {
+  content: '\2713\00a0';            /* a pencil tick and a space */
+  color: var(--ink);
+}
+.cook-card .card-ingredients li { padding-left: 0; text-indent: 0; }
+.cook-card :focus-visible { outline-color: var(--burnt-orange); }
+
+/* Tool 2: the current step is underlined in pencil. */
+.card-steps li.is-current {
+  text-decoration: underline;
+  text-decoration-color: var(--pencil);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.16em;
+}
+
+/* Tool 4: "- Makes 4 +" */
+.cook-card .card-servings {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 0.2em;
+}
+.cook-servings-mark {
+  width: 1.5em;
+  height: 1.35em;
+  line-height: 1;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  color: var(--ink);
+  border: 0.08em solid var(--pencil);
+  border-radius: 50% 45% 55% 48% / 60% 55% 60% 50%;
+}
+
+/* ---------- The steno pad ---------- */
+.cook-steno {
+  position: absolute;
+  left: 76%;
+  top: 19%;
+  width: 20%;
+  filter: drop-shadow(0 calc(var(--u) * 0.4) calc(var(--u) * 0.8) rgba(23, 17, 13, 0.4));
+}
+.steno-page {
+  position: absolute;
+  inset: 13% 9% 5% 10%;             /* below the spiral, inside the paper */
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+}
+.steno-count {
+  margin: 0;
+  font-family: var(--font-typed);
+  font-size: calc(var(--u) * 0.8);
+  color: var(--walnut);
+}
+.steno-step {
+  flex: 1;
+  margin: 0.3em 0;
+  overflow-y: auto;
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.75);
+  line-height: 1.2;
+}
+.steno-arrows {
+  display: flex;
+  justify-content: space-between;
+}
+.steno-arrow {
+  min-height: calc(var(--u) * 3.3);
+  padding: 0 0.3em;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.5);
+  color: var(--ink);
+  transition: opacity 0.3s ease;
+}
+.steno-arrow:disabled { opacity: 0.25; }
+.cook-steno :focus-visible { outline-color: var(--burnt-orange); }
+
+/* ---------- Egg timers ---------- */
+.cook-timers {
+  position: absolute;
+  left: 60%;
+  top: 71%;
+  display: flex;
+  gap: calc(var(--u) * 1);
+}
+.timer-row {
+  display: flex;
+  gap: calc(var(--u) * 1);
+}
+.timer-add,
+.timer {
+  position: relative;
+  width: calc(var(--u) * 7);
+  flex: none;
+  filter: drop-shadow(0 calc(var(--u) * 0.3) calc(var(--u) * 0.4) rgba(23, 17, 13, 0.4));
+}
+.timer-add::after {
+  content: '+';
+  position: absolute;
+  right: -4%;
+  top: -6%;
+  width: 1.3em;
+  line-height: 1.3em;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.6);
+  text-align: center;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: 50%;
+}
+.timer {
+  touch-action: none;               /* the drag sets the dial; it must not scroll the page */
+  border-radius: 50%;
+}
+/* The pointer: a thin hand from the middle of the egg that turns with the minutes. */
+.timer-hand {
+  position: absolute;
+  left: 49%;
+  top: 14%;
+  width: 3%;
+  height: 40%;
+  background: var(--burnt-orange);
+  border-radius: calc(var(--u) * 0.2);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+.timer-readout {
+  position: absolute;
+  left: 50%;
+  bottom: -18%;
+  transform: translateX(-50%);
+  padding: 0 0.4em;
+  font-family: var(--font-typed);
+  font-size: calc(var(--u) * 1.05);
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: calc(var(--u) * 0.2);
+  pointer-events: none;
+}
+.timer.is-ringing .timer-readout { color: var(--paper); background: var(--burnt-orange); }
+.timer .asset,
+.timer-add .asset { pointer-events: none; }
+
+/* ---------- Done Cooking and Not today ---------- */
+.cook-done-tag {
+  position: absolute;
+  left: 36%;
+  top: 60%;
+  width: 4.6%;
+  transform: rotate(5deg);
+  transform-origin: 50% 0;
+}
+.cook-done-text {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 42%;
+  bottom: 6%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: calc(var(--u) * 1.05);
+  line-height: 1;
+  text-align: center;
+  color: var(--ink);
+}
+.cook-done-tag .asset-label { display: none; }
+
+.cook-not-today {
+  position: absolute;
+  left: 2%;
+  bottom: 4%;
+  min-height: calc(var(--u) * 3.4);
+  padding: 0.2em 1em;
+  transform: rotate(-2deg);
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 1.7);
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: calc(var(--u) * 0.2);
+  box-shadow: 0 calc(var(--u) * 0.2) calc(var(--u) * 0.5) rgba(23, 17, 13, 0.4);
+}
+
+/* The cook-log form, written on the back of the card. */
+.cook-log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+  height: 100%;
+}
+.cook-log-heading {
+  margin: 0;
+  font-size: calc(1.4em * var(--font-scale));
+}
+.cook-log-field {
+  display: grid;
+  grid-template-columns: 9em 1fr;
+  align-items: start;
+  gap: 0.5em;
+}
+.cook-log-field span {
+  font-family: var(--font-typed);
+  font-size: 0.6em;
+  color: var(--pencil);
+}
+.cook-log-field input,
+.cook-log-field textarea {
+  width: 100%;
+  min-height: 1.9em;
+  padding: 0 0.3em;
+  border: 0;
+  border-bottom: 0.08em solid rgba(90, 130, 170, 0.5);
+  resize: none;
+  background: rgba(250, 243, 224, 0.6);
+  font-family: var(--font-hand);
+  font-size: 1em;
+  color: var(--ink);
+}
+.cook-log-field input[type='file'] { border: 0; background: none; font-size: 0.75em; }
+.cook-log-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2em;
+  margin-top: auto;
+}
+.cook-log-buttons .pencil-mark { font-size: 1.15em; min-height: 2em; }

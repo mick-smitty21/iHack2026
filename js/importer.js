@@ -5,7 +5,8 @@
  * Talks to: netlify/functions/fetch-recipe.js (reads a recipe page), vendor/tesseract
  *           (reads a photo, in the browser), fractions.js (spots ingredient lines),
  *           card.js (new card, preview), box.js (illustration), storage.js (saving,
- *           bundles), panels.js, assets.js, audio.js, motion.js. Opened by table.js.
+ *           bundles), panels.js (panel, filing animation), assets.js, audio.js.
+ *           Opened by table.js.
  *
  * Say it to a judge: "All three ways of adding a recipe just fill in the same card
  * form, which you can correct before filing. Links are read from the recipe data
@@ -20,9 +21,8 @@ import { illustrationFor } from './box.js';
 import {
   getDividers, saveCard, savePhoto, makeBundle, bundleFileName, mergeBundle,
 } from './storage.js';
-import { openPanel, closePanel, showNote } from './panels.js';
+import { openPanel, closePanel, showNote, slideCardInto } from './panels.js';
 import { playEffect } from './audio.js';
-import { motionReduced, fadeIn, fadeOut } from './motion.js';
 
 const GRANDMAS_NOTE = "I couldn't make that one out. Want to write it out instead?";
 const PHOTO_MAX_SIZE = 1200;   // saved photos are at most this many pixels wide or tall
@@ -493,40 +493,7 @@ async function fileCard(card) {
   await saveCard(card);
   const divider = getDividers().find((d) => d.id === card.dividerId);
   closePanel();
-  slideCardIntoBox(card, () => showNote(`Filed under ${divider.label}.`));
-}
-
-/** A little card slides from the middle of the screen into the recipe box: ting! */
-function slideCardIntoBox(card, onDone) {
-  const layer = document.getElementById('panels');
-  const flyer = el('div', `flying-card font-${card.font}`, card.title);
-  layer.append(flyer);
-
-  const finish = () => {
-    playEffect('fx-ting');
-    flyer.remove();
-    onDone();
-  };
-  if (motionReduced()) {
-    fadeIn(flyer, 0.4);
-    setTimeout(() => fadeOut(flyer, finish, 0.4), 700);
-    return;
-  }
-  const target = offsetBetween(flyer, boxButton);
-  gsap.timeline({ onComplete: finish })
-    .from(flyer, { opacity: 0, scale: 0.8, duration: 0.35, ease: 'power1.out' })
-    .to(flyer, { x: target.x, y: target.y, scale: 0.18, rotation: -6, duration: 0.9, ease: 'power2.inOut' }, '+=0.25')
-    .to(flyer, { opacity: 0, duration: 0.2 }, '-=0.2');
-}
-
-// How far (in pixels) the middle of one element is from the middle of another.
-function offsetBetween(from, to) {
-  const a = from.getBoundingClientRect();
-  const b = to.getBoundingClientRect();
-  return {
-    x: b.left + b.width / 2 - (a.left + a.width / 2),
-    y: b.top + b.height * 0.3 - (a.top + a.height / 2),
-  };
+  slideCardInto(boxButton, card, () => showNote(`Filed under ${divider.label}.`));
 }
 
 /* ---------- The twine stack: save or load the whole box ---------- */

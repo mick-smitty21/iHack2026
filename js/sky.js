@@ -8,7 +8,7 @@
  * Say it to a judge: "Nothing in the window is faked: the clock shows the device's
  * real time and the moon's shape is calculated from today's date."
  *
- * Status: clock, moon and weather (M1). The time-of-day gradient arrives in M4.
+ * Status: clock, moon and weather (M1), time of day for the cook scene (M4).
  */
 
 import { motionReduced, randomBetween } from './motion.js';
@@ -217,4 +217,26 @@ function drawSnowflake(context, x, y, radius) {
   context.beginPath();
   context.arc(x, y, Math.max(1, radius), 0, Math.PI * 2);
   context.fill();
+}
+
+/* ---------- Time of day (cook scene) ---------- */
+
+// Each part of the day starts at `from` o'clock. cook.css has one sky gradient and
+// one soft colour wash per name (.time-dawn, .time-day, .time-dusk, .time-night).
+const PARTS_OF_DAY = [
+  { name: 'night', from: 0 },   // midnight to 5 am: deep indigo
+  { name: 'dawn', from: 5 },    // 5-9 am: peach
+  { name: 'day', from: 9 },     // 9 am-4 pm: pale gold
+  { name: 'dusk', from: 16 },   // 4-8 pm: orange-rose
+  { name: 'night', from: 20 },  // 8 pm on: deep indigo
+];
+
+/** "dawn", "day", "dusk" or "night", from the device's own clock. */
+export function timeOfDay(date = new Date()) {
+  const hour = date.getHours();
+  let current = PARTS_OF_DAY[0];
+  for (const part of PARTS_OF_DAY) {
+    if (hour >= part.from) current = part;
+  }
+  return current.name;
 }

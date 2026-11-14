@@ -9,7 +9,7 @@ Plain-language notes on how Grandma's Recipe Box is built, one section per miles
 - [x] **M1 - The table scene**
 - [x] **M2 - The recipe box**
 - [x] **M3 - Adding and moving recipes**
-- [ ] M4 - Cook mode
+- [x] **M4 - Cook mode**
 - [ ] M5 - Polish and demo prep
 
 ## The big picture
@@ -212,8 +212,8 @@ Until the stain art exists you see faint dashed outlines where each will go.
 
 **Esc backs out one layer:** slip -> edit form -> held card -> box. The X closes the box.
 
-**Not built yet.** "Cook this recipe" shows a note (M4), so use counts don't change yet;
-the samples start with different use counts so every aging stage is visible.
+**Starting uses.** The samples start with different use counts so every aging stage
+is visible straight away.
 
 
 ## Art pass (after M2, when the real art arrived)
@@ -349,7 +349,64 @@ function. Photos, writing out and bundles work anywhere.
 
 ## M4 - Cook mode
 
-_Not built yet._
+**What it does.** "Cook this recipe" on a held card closes the box and takes you to
+Grandma's stove. The card stands in a holder. You can tick off ingredients, follow one
+step at a time on the steno pad, run up to three egg timers, and change the servings.
+The "Done cooking" tag writes the date, your notes and an optional photo on the back
+of the card, then the card slides back into the box. "Not today" just goes back.
+
+**Which files.**
+
+- `js/cook.js` + `css/cook.css` - the whole scene and its four tools.
+- `js/fractions.js` - `formatKitchenFraction()` and `formatIngredient()` for scaling.
+- `js/sky.js` - `timeOfDay()`.
+- `js/box.js` - "Cook this recipe" now calls back to `main.js`.
+- `js/main.js` - passes the card from the box to the stove, and brings you back.
+- `js/panels.js` - `slideCardInto()`, the card-into-the-box animation, now shared by
+  the binder and the stove.
+
+**How they connect.** `box.js` doesn't know about the stove; it just tells `main.js`
+"cook this card". `main.js` calls `openCook(card, illustration)`. When you leave,
+`cook.js` tells `main.js` whether the cook was logged, and `main.js` shows the table
+and, if it was, slides the card into the box with the ting.
+
+**It is the same card.** `cook.js` asks `card.js` for the normal card, then adjusts
+it: each ingredient line becomes a button you can tick, the "Makes" line gains a
+minus and a plus, and the current step gets a pencil underline. Nothing about the
+card's look is duplicated.
+
+**When a use is counted.** The moment cooking starts, `card.uses` goes up by one and
+is saved; that is the only thing that ages a card. During the cook the card is drawn
+as it looked *before*. On "Done cooking", if that use pushed it into a new stage,
+`showNewWear()` swaps in the new wear layer and the new stains bloom in. "Not today"
+skips the log, but the use still counts, as the spec says.
+
+**Servings and kitchen fractions.** Changing "Makes" gives a scale (new servings
+divided by the written servings). Each ingredient's amount is multiplied by it and
+`formatKitchenFraction()` rounds to the nearest fraction a cook actually measures
+(eighths, quarters, thirds, halves), so you never see a decimal. Lines with no amount
+("salt to taste") are left exactly as written. Big batches (12 or more) change by six
+at a time.
+
+**Tricky part: timers that stay right.** A timer stores the clock time it should
+*end* at, and four times a second works out how long is left. It does not count down
+a number, because browsers slow timers down in background tabs and the count would
+drift. Dragging round the egg sets the minutes from the angle of your finger
+(straight up is 0, a quarter turn is 15); the arrow keys do the same for keyboards.
+
+**Time of day.** `timeOfDay()` reads the device clock and returns dawn, day, dusk or
+night. That one word becomes a class on the scene (`time-dusk`), and `cook.css` has a
+sky tint for the window and a faint colour wash for the room for each. At night the
+window shows the night view.
+
+**The window** uses the same trick as the table's: the view is clipped to the painted
+panes (`WINDOW_PANES` in `cook.js`).
+
+**Keys.** Left and Right arrows change the step. Esc closes the log form if it is
+open, otherwise leaves the stove.
+
+**If the art is replaced.** Positions live at the top of each block in `cook.css`
+(`.cook-card`, `.cook-stand`, `.cook-steno`, `.cook-timers`, `.cook-window`).
 
 ## M5 - Polish and demo prep
 

@@ -2,7 +2,8 @@
  * panels.js - opens and closes the panels that sit on top of a scene (the almanac
  * now; the binder and twine stack in M3), and shows Grandma's little notes.
  *
- * Talks to: index.html (#panels layer), css/panels.css. Used by almanac.js and table.js.
+ * Talks to: index.html (#panels layer), css/panels.css, audio.js (the ting).
+ *           Used by almanac.js, importer.js, box.js and cook.js.
  *
  * Say it to a judge: "Every pop-up goes through this one file, so they all behave the
  * same way: Esc or the X closes them, and the keyboard focus goes back to the object
@@ -12,7 +13,8 @@
  * almanac, binder and twine panels can share one open/close routine.
  */
 
-import { fadeIn, fadeOut } from './motion.js';
+import { fadeIn, fadeOut, motionReduced } from './motion.js';
+import { playEffect } from './audio.js';
 
 const layer = document.getElementById('panels');
 let openPanelState = null; // { wrapper, opener, onClose }
@@ -105,4 +107,43 @@ function getNoteElement() {
     layer.append(note);
   }
   return note;
+}
+
+/* ---------- Filing a card: it slides into the recipe box with a ting ---------- */
+
+/**
+ * A little paper card appears in the middle of the screen and slides into `target`
+ * (the recipe box on the table). Used when a new recipe is filed and after cooking.
+ */
+export function slideCardInto(target, card, onDone) {
+  const flyer = document.createElement('div');
+  flyer.className = `flying-card font-${card.font}`;
+  flyer.textContent = card.title;
+  layer.append(flyer);
+
+  const finish = () => {
+    playEffect('fx-ting');
+    flyer.remove();
+    if (onDone) onDone();
+  };
+  if (motionReduced()) {
+    fadeIn(flyer, 0.4);
+    setTimeout(() => fadeOut(flyer, finish, 0.4), 700);
+    return;
+  }
+  const journey = offsetBetween(flyer, target);
+  gsap.timeline({ onComplete: finish })
+    .from(flyer, { opacity: 0, scale: 0.8, duration: 0.35, ease: 'power1.out' })
+    .to(flyer, { x: journey.x, y: journey.y, scale: 0.18, rotation: -6, duration: 0.9, ease: 'power2.inOut' }, '+=0.25')
+    .to(flyer, { opacity: 0, duration: 0.2 }, '-=0.2');
+}
+
+// How far (in pixels) the middle of one element is from the upper middle of another.
+function offsetBetween(from, to) {
+  const a = from.getBoundingClientRect();
+  const b = to.getBoundingClientRect();
+  return {
+    x: b.left + b.width / 2 - (a.left + a.width / 2),
+    y: b.top + b.height * 0.3 - (a.top + a.height / 2),
+  };
 }

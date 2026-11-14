@@ -34,6 +34,7 @@ const WHEEL_PUSH = 0.0009;        // how hard one wheel "click" pushes the deck
 let scene;          // #scene-box
 let tableScene;     // #scene-table (we zoom it during the opening)
 let onClosed;       // main.js callback: the box has finished closing
+let onCook;         // main.js callback: "Cook this recipe" was chosen for a card
 const parts = {};   // stage, lid, rail, deck, focusLayer
 
 let isOpen = false;
@@ -54,6 +55,7 @@ export function initBox(sceneElement, tableSceneElement, callbacks) {
   scene = sceneElement;
   tableScene = tableSceneElement;
   onClosed = callbacks.onClosed;
+  onCook = callbacks.onCook;
 
   const background = createAsset('bg-box-closeup');
   background.classList.add('box-bg');
@@ -163,6 +165,18 @@ export function closeBox() {
     .to(scene, { opacity: 0, duration: 0.4 }, 0.3)
     .to(tableScene, { scale: 1, filter: 'blur(0px) brightness(1)', duration: 0.6, ease: 'power2.out' }, 0.3)
     .set(tableScene, { clearProps: 'filter,transform' });
+}
+
+/** "Cook this recipe": the lid closes and we go to the stove instead of the table. */
+function cookFocusedCard() {
+  const { card } = focused;
+  unfocusCard(false);
+  isOpen = false;
+  playEffect('fx-lid-close');
+  // The table was zoomed and blurred for the box; put it right while it's out of sight.
+  gsap.set(tableScene, { clearProps: 'transform,filter' });
+  fadeOut(scene, () => { scene.hidden = true; }, 0.5);
+  onCook(card);
 }
 
 /* ---------- What's in the deck ---------- */
@@ -513,9 +527,7 @@ function makePencilMarks(card, element) {
   marks.append(
     makeButton('pencil-mark', 'Turn over', () => flipCard(element)),
     pageMark,
-    makeButton('pencil-mark mark-cook', 'Cook this recipe', () => {
-      showNote('The stove is not lit yet. Cook mode arrives in milestone 4.');
-    }),
+    makeButton('pencil-mark mark-cook', 'Cook this recipe', () => cookFocusedCard()),
     heartMark,
     makeIconMark('obj-pencil', 'Edit', () => editFocusedCard()),
     makeButton('pencil-mark', 'Move to...', () => chooseDivider(card)),

@@ -162,6 +162,11 @@ export function setLampLit(isLit) {
   }
 }
 
+/** One of the table's objects, by name (e.g. the box, so a card can slide into it). */
+export function getClickable(name) {
+  return clickables[name];
+}
+
 /** Puts keyboard focus back on one of the table's objects (after a scene closes). */
 export function focusClickable(name) {
   clickables[name].focus({ preventScroll: true });

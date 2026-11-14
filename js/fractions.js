@@ -1,9 +1,9 @@
 /*
- * fractions.js - reads quantities like "1 1/2 cups flour" out of a line of text.
- * (M4 adds scaling and showing kitchen fractions such as ½ and ¾.)
+ * fractions.js - reads quantities like "1 1/2 cups flour" out of a line of text,
+ * scales them for more or fewer servings, and shows kitchen fractions such as ½ and ¾.
  *
- * Talks to: nothing; pure text and maths. Used by card.js (editing a card) and,
- *           from M3, importer.js.
+ * Talks to: nothing; pure text and maths. Used by card.js (editing a card),
+ *           importer.js (spotting ingredient lines) and cook.js (scaling).
  *
  * Say it to a judge: "Each ingredient line is split into an amount, a unit and the
  * item, so later we can scale '1 1/2 cups' when you change the servings."
@@ -81,4 +81,50 @@ export function parseIngredient(line) {
 
   if (unit) return { qty, unit, item: otherWords.join(' '), raw };
   return { qty, unit: '', item: rest, raw };
+}
+
+/* ---------- Scaling and showing amounts ---------- */
+
+// The only fractions a kitchen uses, with their symbols. Amounts are rounded to the
+// nearest one, so you never see "0.375 cups".
+const KITCHEN_FRACTIONS = [
+  { value: 0, symbol: '' },
+  { value: 1 / 8, symbol: '⅛' },
+  { value: 1 / 4, symbol: '¼' },
+  { value: 1 / 3, symbol: '⅓' },
+  { value: 1 / 2, symbol: '½' },
+  { value: 2 / 3, symbol: '⅔' },
+  { value: 3 / 4, symbol: '¾' },
+  { value: 1, symbol: '' },
+];
+
+/** 1.5 -> "1½", 0.3333 -> "⅓", 2 -> "2". Never a decimal, and never nothing. */
+export function formatKitchenFraction(amount) {
+  let whole = Math.floor(amount);
+  const leftover = amount - whole;
+
+  let nearest = KITCHEN_FRACTIONS[0];
+  for (const fraction of KITCHEN_FRACTIONS) {
+    if (Math.abs(fraction.value - leftover) < Math.abs(nearest.value - leftover)) nearest = fraction;
+  }
+  if (nearest.value === 1) whole += 1;               // e.g. 1.97 rounds up to 2
+  if (whole === 0 && !nearest.symbol) return '⅛';    // too small to measure: call it an eighth
+  return (whole || '') + nearest.symbol;
+}
+
+const PLURAL_UNITS = { cup: 'cups', quart: 'quarts', pint: 'pints', gallon: 'gallons', clove: 'cloves',
+  slice: 'slices', can: 'cans', stick: 'sticks', pinch: 'pinches', dash: 'dashes' };
+
+/**
+ * The text for one ingredient at `scale` times the written amount (2 = double).
+ * At scale 1, or when the line had no amount we could read, the cook's own words
+ * are shown untouched.
+ */
+export function formatIngredient(ingredient, scale = 1) {
+  if (scale === 1 || ingredient.qty === null) return ingredient.raw;
+  const amount = formatKitchenFraction(ingredient.qty * scale);
+  // "1 cup" and "½ cup", but "1½ cups" and "2 cups".
+  const isSingular = amount === '1' || /^[⅛¼⅓½⅔¾]$/.test(amount);
+  const unit = !isSingular && PLURAL_UNITS[ingredient.unit] ? PLURAL_UNITS[ingredient.unit] : ingredient.unit;
+  return [amount, unit, ingredient.item].filter(Boolean).join(' ');
 }

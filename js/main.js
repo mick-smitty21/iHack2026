@@ -2,8 +2,8 @@
  * main.js - startup, the lamp, and switching between the three scenes.
  *
  * Talks to: almanac.js (settings), storage.js (loads the cards), table.js (scene 1),
- *           box.js (scene 2), audio.js (sound), assets.js (preloading), panels.js.
- *           Later: cook.js (scene 3).
+ *           box.js (scene 2), cook.js (scene 3), audio.js (sound), assets.js
+ *           (preloading), panels.js (notes, the card sliding into the box).
  *
  * Say it to a judge: "This is the front door. It loads your saved settings, builds
  * the kitchen table, and owns the lamp: one click on the lamp is what lights the
@@ -13,14 +13,15 @@
 import { IMAGES, preloadImages } from './assets.js';
 import { initSettings, onSettingsChange } from './almanac.js';
 import {
-  buildTable, setLampLit, focusClickable, applySettings as applyTableSettings,
+  buildTable, setLampLit, focusClickable, getClickable, applySettings as applyTableSettings,
 } from './table.js';
 import { loadBox } from './storage.js';
-import { initBox, openBox } from './box.js';
+import { initBox, openBox, illustrationFor } from './box.js';
+import { initCook, openCook } from './cook.js';
 import {
   preloadSounds, lampSwitchedOn, lampSwitchedOff, applySettings as applyAudioSettings,
 } from './audio.js';
-import { closePanel } from './panels.js';
+import { closePanel, showNote, slideCardInto } from './panels.js';
 
 const scenes = {
   table: document.getElementById('scene-table'),
@@ -34,7 +35,11 @@ async function start() {
   const settings = await initSettings();
   await loadBox();
   buildTable(scenes.table, { onLampClick: toggleLamp, onBoxClick: openBox });
-  initBox(scenes.box, scenes.table, { onClosed: () => focusClickable('box') });
+  initBox(scenes.box, scenes.table, {
+    onClosed: () => focusClickable('box'),
+    onCook: (card) => openCook(card, illustrationFor(card)),
+  });
+  initCook(scenes.cook, { onLeave: returnFromStove });
   applySettingsEverywhere(settings);
   onSettingsChange(applySettingsEverywhere);
 
@@ -46,6 +51,14 @@ async function start() {
 function applySettingsEverywhere(settings) {
   applyTableSettings(settings);
   applyAudioSettings(settings);
+}
+
+// Back at the table after cooking. If the cook was logged ("Done Cooking"), the card
+// slides back into the box with a ting; after "Not today" it just goes back quietly.
+function returnFromStove(card, wasCooked) {
+  scenes.table.hidden = false;
+  focusClickable('box');
+  if (wasCooked) slideCardInto(getClickable('box'), card, () => showNote('Filed back in the box.'));
 }
 
 // WHY: the audio calls happen directly inside this click handler (not after an

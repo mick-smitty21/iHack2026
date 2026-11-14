@@ -258,4 +258,7 @@
   font-size: calc(var(--u) * 3.6);
   line-height: 1;
   color: var(--cream);
+  /* A dark disc behind it, so the X shows up on light walls as well as dark ones. */
+  background: rgba(23, 17, 13, 0.5);
+  border-radius: 50%;
 }

@@ -50,6 +50,10 @@ const WINDOW_PANES = [
 
 const CURTAIN_OPEN_SCALE = 0.42;  // how narrow a curtain is when pulled open
 const MAX_PETALS = 8;
+// Where steam leaves the kettle and the mug, in percent of each one's own box.
+// The kettle's spout is the lip at its far left, a little under half-way down.
+const KETTLE_SPOUT = { left: -14, top: 20, spread: 3 };
+const MUG_RIM = { left: 30, top: -15 };
 
 let scene;                 // the #scene-table element
 const clickables = {};     // name -> <button>
@@ -232,7 +236,7 @@ function addMug() {
     if (!motionReduced()) {
       gsap.to(button, { xPercent: mugNudged ? 14 : 0, duration: 0.9, ease: 'power2.out' });
     }
-    puffSteam(button, 3, { left: 30, top: -15 });
+    puffSteam(button, 3, MUG_RIM);
   });
   button.append(createAsset('obj-mug'));
 }
@@ -367,7 +371,7 @@ function addKettle() {
   const button = makeClickable('kettle', 'Kettle: make it whistle', () => {
     playEffect('fx-kettle');
     // The whistle builds first; the steam bursts out a moment later.
-    setTimeout(() => puffSteam(button, 7, { left: 55, top: -10 }), 1200);
+    setTimeout(() => puffSteam(button, 7, KETTLE_SPOUT), 1200);
   });
   button.append(createAsset('obj-kettle'));
 }
@@ -408,12 +412,14 @@ function catLooksUp(seconds) {
 
 /* ---------- Steam (drawn in code) ---------- */
 
-// Adds soft round puffs to `host` that rise and fade. `at` is where they start,
-// in percent of the host's box. With reduced motion they only fade in and out.
+// Adds soft round puffs to `host` that rise and fade. `at` is where each puff's
+// top-left corner starts, in percent of the host's box, and `at.spread` is how far
+// puffs may stray sideways. With reduced motion they only fade in and out.
 function puffSteam(host, puffCount, at) {
+  const spread = at.spread ?? 8;
   for (let i = 0; i < puffCount; i += 1) {
     const puff = makePart('steam-puff');
-    puff.style.left = at.left + randomBetween(-8, 8) + '%';
+    puff.style.left = at.left + randomBetween(-spread, spread) + '%';
     puff.style.top = at.top + '%';
     host.append(puff);
 
@@ -432,7 +438,7 @@ function puffSteam(host, puffCount, at) {
 function startAmbientMotion() {
   repeatAtRandom(6, 10, swayCurtains);
   repeatAtRandom(20, 40, () => {
-    if (isLit()) puffSteam(clickables.kettle, 2, { left: 55, top: -10 });
+    if (isLit()) puffSteam(clickables.kettle, 2, KETTLE_SPOUT);
   });
   // The cat only stirs while the lamp is on: nothing should move in the dark.
   repeatAtRandom(25, 60, () => {

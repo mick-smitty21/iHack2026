@@ -14,6 +14,7 @@
 import { createAsset } from './assets.js';
 import {
   getCards, getDividers, saveCard, deleteCard, addDivider, loadPhotoUrl,
+  removeDivider, canRemoveDivider, countCardsBehind,
 } from './storage.js';
 import { buildCard, buildEditForm, flipCard, paginateCard, turnPage } from './card.js';
 import { agingStage } from './aging.js';
@@ -254,7 +255,37 @@ function makeRailTab(item, index) {
   if (item.id === 'new') return makeNewDividerTab();
   const tab = makeButton('rail-tab', item.label, () => jumpTo(index));
   tab.setAttribute('aria-label', 'Jump to ' + item.label);
-  return tab;
+  if (item.id === FAVORITES_ID) return tab;   // Favorites is built in and can't be taken out
+
+  // Every other divider gets a small x beside its tab for taking it out of the box.
+  const remove = makeButton('rail-remove', '×', () => askToRemoveDivider(item, remove));
+  remove.setAttribute('aria-label', `Take out the ${item.label} divider`);
+  return makePart('rail-row', tab, remove);
+}
+
+// Taking a divider out never throws cards away: they move behind "Unfiled".
+function askToRemoveDivider(item, opener) {
+  if (!canRemoveDivider(item.id)) {
+    showNote('Move these cards somewhere else first.');
+    return;
+  }
+  const cardCount = countCardsBehind(item.id);
+  const whereCardsGo = cardCount === 0 ? '' : cardCount === 1
+    ? ' Its card moves to Unfiled.'
+    : ` Its ${cardCount} cards move to Unfiled.`;
+  openSlip(`Take out the "${item.label}" divider?${whereCardsGo}`, [
+    { text: 'No, keep it', action: () => { closeSlip(); opener.focus(); } },
+    {
+      text: 'Yes, take it out',
+      action: () => {
+        closeSlip();
+        removeDivider(item.id);
+        rebuildDeck();
+        showNote(cardCount ? 'Divider taken out. Its cards are under Unfiled.' : 'Divider taken out.');
+        parts.rail.querySelector('.rail-tab').focus();
+      },
+    },
+  ]);
 }
 
 function makeNewDividerTab() {
@@ -630,7 +661,9 @@ function openSlip(question, choices) {
   for (const choice of choices) slip.append(makeButton('pencil-mark', choice.text, choice.action));
 
   parts.focusLayer.append(slip);
-  parts.focusLayer.firstElementChild.inert = true;
+  // While a slip is up, the card behind it (if one is being held) can't be used.
+  const heldCard = parts.focusLayer.querySelector('.focus-holder');
+  if (heldCard) heldCard.inert = true;
   fadeIn(slip, 0.3);
   slip.querySelector('button').focus();
 }

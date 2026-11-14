@@ -96,7 +96,29 @@
   box-shadow: 0 calc(var(--u) * 0.15) calc(var(--u) * 0.3) rgba(23, 17, 13, 0.4);
   transition: filter 0.4s ease;
 }
-.rail-tab:hover { filter: brightness(1.08); }
+.rail-tab:hover,
+.rail-remove:hover { filter: brightness(1.08); }
+/* A divider's tab with the small x that takes it out of the box. */
+.rail-row {
+  display: flex;
+  gap: calc(var(--u) * 0.35);
+}
+.rail-row .rail-tab { flex: 1; min-width: 0; }
+.rail-remove {
+  flex: none;
+  width: calc(var(--u) * 3.9);          /* square, and as tall as the tab: easy to tap */
+  font-family: var(--font-hand);
+  font-size: calc(var(--u) * 2);
+  line-height: 1;
+  color: var(--walnut);
+  background: #c9a876;
+  border-radius: calc(var(--u) * 0.6) calc(var(--u) * 0.6) calc(var(--u) * 0.15) calc(var(--u) * 0.15);
+  box-shadow: 0 calc(var(--u) * 0.15) calc(var(--u) * 0.3) rgba(23, 17, 13, 0.4);
+  opacity: 0.75;
+  transition: filter 0.4s ease, opacity 0.4s ease;
+}
+.rail-remove:hover,
+.rail-remove:focus-visible { opacity: 1; }
 .rail-tab-new { color: var(--walnut); font-weight: 400; }
 .rail-tab-input { border: 0; width: 100%; }
 
@@ -236,6 +258,7 @@
   flex-direction: column;
   gap: calc(var(--u) * 0.2);
   min-width: calc(var(--u) * 24);
+  max-width: calc(var(--u) * 34);
   max-height: 86%;
   overflow-y: auto;
   padding: calc(var(--u) * 1.4) calc(var(--u) * 2);

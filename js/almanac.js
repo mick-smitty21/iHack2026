@@ -94,6 +94,7 @@ function buildAlmanac() {
     ...VOLUMES.map(makeVolumeSlider),
     makeAmbientSwitches(),
     makeMotionSwitch(),
+    makeCredit(),
   );
 
   book.append(createAsset('obj-almanac-open'), leftPage, rightPage);
@@ -111,6 +112,14 @@ function makeShowMeAroundButton() {
     showMeAround();
   });
   return button;
+}
+
+// A small line at the foot of the page saying who made the site.
+function makeCredit() {
+  const credit = document.createElement('p');
+  credit.className = 'almanac-credit';
+  credit.textContent = 'Created by Kaden Jones and Jacob Wagner for iHack2026';
+  return credit;
 }
 
 function makePage(...children) {

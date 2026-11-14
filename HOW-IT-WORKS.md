@@ -653,6 +653,31 @@ still appear. **Not checked:** a real iPad.
 
 ---
 
+## Polishing touches (after M8)
+
+**Taking a divider out of the box.** In the open box, every divider tab on the left
+except Favorites and "+ new" has a small x beside it. Clicking it asks first ("Take
+out the "Soups" divider?"), then removes it.
+
+- *Cards are never thrown away.* If the divider had cards, they move behind a divider
+  called "Unfiled", which is made the first time it is needed. The question says how
+  many cards will move.
+- *"Unfiled" can only go once it is empty*, or its cards would have nowhere to live;
+  a note says "Move these cards somewhere else first."
+- Where: `removeDivider()`, `canRemoveDivider()` and `countCardsBehind()` in
+  `storage.js`; `askToRemoveDivider()` in `box.js`; `.rail-row` and `.rail-remove` in
+  `box.css`. It reuses the same "slip" question the wastebasket uses.
+
+**Kettle steam.** The steam used to rise from the middle of the lid. It now starts at
+the spout's lip. The two starting points are named at the top of `table.js`
+(`KETTLE_SPOUT`, `MUG_RIM`), in percent of each object's own picture, so they are easy
+to nudge if the art changes.
+
+**Credit.** The almanac's right-hand page ends with "Created by Kaden Jones and Jacob
+Wagner for iHack2026" (`makeCredit()` in `almanac.js`).
+
+---
+
 ## Questions a judge might ask
 
 **"Is there AI in the site?"** No. Code and art were made with AI tools beforehand

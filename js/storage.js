@@ -137,6 +137,40 @@ export function addDivider(label) {
   return divider;
 }
 
+// Cards whose divider has been taken out are kept behind this one.
+const UNFILED_ID = 'unfiled';
+
+/** How many cards sit behind a divider. */
+export function countCardsBehind(dividerId) {
+  return cards.filter((card) => card.dividerId === dividerId).length;
+}
+
+/**
+ * Takes a divider out of the box. Its cards are never thrown away: they move behind
+ * a divider called "Unfiled", which is made the first time it is needed.
+ * Returns how many cards were moved.
+ */
+export function removeDivider(dividerId) {
+  const orphans = cards.filter((card) => card.dividerId === dividerId);
+  dividers = dividers.filter((divider) => divider.id !== dividerId);
+
+  if (orphans.length) {
+    if (!dividers.some((divider) => divider.id === UNFILED_ID)) {
+      const lastOrder = Math.max(0, ...dividers.map((divider) => divider.order));
+      dividers.push({ id: UNFILED_ID, label: 'Unfiled', order: lastOrder + 1, illustration: 'ill-main' });
+    }
+    for (const card of orphans) card.dividerId = UNFILED_ID;
+    writeSafely(CARDS_KEY, cards);
+  }
+  writeSafely(DIVIDERS_KEY, dividers);
+  return orphans.length;
+}
+
+/** The "Unfiled" divider can only go once it is empty, or its cards would have nowhere to live. */
+export function canRemoveDivider(dividerId) {
+  return dividerId !== UNFILED_ID || countCardsBehind(UNFILED_ID) === 0;
+}
+
 /* ---------- Photos ---------- */
 
 /** Stores a picture (a Blob) under its own key and returns the id to keep on the card. */

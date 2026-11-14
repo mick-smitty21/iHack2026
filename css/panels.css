@@ -191,6 +191,15 @@
   cursor: pointer;
 }
 
+/* The makers' credit: small typewriter print at the foot of the right-hand page. */
+.almanac-credit {
+  margin: 1.6em 0 0;
+  font-family: var(--font-typed);
+  font-size: 0.62em;
+  line-height: 1.3;
+  color: var(--pencil);
+}
+
 /* On the cream paper the gold outline would vanish, so use burnt orange here. */
 .almanac :focus-visible { outline-color: var(--burnt-orange); }
 
